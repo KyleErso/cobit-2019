@@ -1,15 +1,21 @@
 <p align="center">
-  <a href="#">
-    <img src="https://via.placeholder.com](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThFdeZX6lAiGB_sXnAztoVIWE8KGWzAR6Cpw&s)/400x200.png?text=COBIT+Logo" alt="COBIT Logo" width="400">
-  </a>
+  <pre>
+
+ ░▒▓██████▓▒░  ░▒▓██████▓▒░ ░▒▓███████▓▒░ ░▒▓█▓▒░░▒▓████████▓▒░      ░▒▓███████▓▒░ ░▒▓████████▓▒░   ░▒▓█▓▒░ ░▒▓██████▓▒░  
+░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░                 ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓████▓▒░░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░       ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░                 ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░ 
+░▒▓█▓▒░       ░▒▓█▓▒░░▒▓█▓▒░░▒▓███████▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░           ░▒▓██████▓▒░ ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░ ░▒▓███████▓▒░ 
+░▒▓█▓▒░       ░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░          ░▒▓█▓▒░       ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░       ░▒▓█▓▒░ 
+░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░          ░▒▓█▓▒░       ░▒▓█▓▒░░▒▓█▓▒░   ░▒▓█▓▒░       ░▒▓█▓▒░ 
+ ░▒▓██████▓▒░  ░▒▓██████▓▒░ ░▒▓███████▓▒░ ░▒▓█▓▒░   ░▒▓█▓▒░          ░▒▓████████▓▒░░▒▓████████▓▒░   ░▒▓█▓▒░ ░▒▓██████▓▒░  
+                                                                                                                          
+                                                                                                                        
+  </pre>
 </p>
 
 <p align="center">
   <a href="#">
     <img src="https://img.shields.io/badge/Version-1.0.0-blue" alt="Version">
-  </a>
-  <a href="#">
-    <img src="https://img.shields.io/badge/License-MIT-green" alt="License">
   </a>
   <a href="#">
     <img src="https://img.shields.io/badge/Status-Active-brightgreen" alt="Status">
@@ -97,5 +103,5 @@ Jika Anda memiliki pertanyaan atau masukan, silakan hubungi:
 ---
 
 <p align="center">
-  <em>Dibangun dengan ❤️ oleh Tim COBIT</em>
+  <em>Dibangun dengan ❤️ oleh <a href="https://www.instagram.com/evankristiannn">Evan Kristian</a></em>
 </p>
