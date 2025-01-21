@@ -1,6 +1,3 @@
-Berikut adalah versi `README.md` yang menggunakan simbol ASCII untuk menulis "COBIT" di awal:
-
----
 
 ```markdown
 #  ____  ____  ____  ___  _____
