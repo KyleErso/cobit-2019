@@ -1,13 +1,6 @@
-#  ____  ____  ____  ___  _____
-# / ___|| __ )| __ )|_ _||_   _|
-#| |    |  _ \|  _ \ | |   | |
-#| |___ | |_) | |_) || |   | |
-# \____||____/|____/|___|  |_|
-# Control Objectives for Information and Related Technologies
-
 <p align="center">
   <a href="#">
-    <img src="https://via.placeholder.com/400x200.png?text=COBIT+Logo" alt="COBIT Logo" width="400">
+    <img src="https://via.placeholder.com](https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcThFdeZX6lAiGB_sXnAztoVIWE8KGWzAR6Cpw&s)/400x200.png?text=COBIT+Logo" alt="COBIT Logo" width="400">
   </a>
 </p>
 
@@ -95,15 +88,11 @@ Kami sangat menghargai kontribusi dari komunitas. Jika Anda ingin berkontribusi 
    ```
 5. Buat Pull Request.
 
-## License
-
-Proyek ini dilisensikan di bawah [MIT License](https://opensource.org/licenses/MIT). Lihat file `LICENSE` untuk detail lebih lanjut.
 
 ## Contact
 
 Jika Anda memiliki pertanyaan atau masukan, silakan hubungi:
-- **Email**: support@cobit-website.com
-- **Website**: [https://cobit-website.com](https://cobit-website.com)
+- **Email**: evankristian03@gmail.com
 
 ---
 
