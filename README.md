@@ -1,5 +1,3 @@
-
-```markdown
 #  ____  ____  ____  ___  _____
 # / ___|| __ )| __ )|_ _||_   _|
 #| |    |  _ \|  _ \ | |   | |
@@ -29,7 +27,7 @@
 
 **COBIT (Control Objectives for Information and Related Technologies)** adalah sebuah framework yang digunakan untuk manajemen dan governance teknologi informasi (TI). Website ini dirancang untuk membantu organisasi dalam mengimplementasikan dan mengelola praktik terbaik COBIT untuk mencapai tujuan bisnis mereka.
 
-Fitur utama dari website ini meliputi:
+### Fitur Utama
 - **Panduan Implementasi COBIT**: Langkah-langkah praktis untuk mengimplementasikan COBIT dalam organisasi.
 - **Alat Penilaian**: Alat untuk menilai tingkat kematangan TI organisasi berdasarkan framework COBIT.
 - **Studi Kasus**: Contoh studi kasus dari organisasi yang telah berhasil mengimplementasikan COBIT.
@@ -37,7 +35,7 @@ Fitur utama dari website ini meliputi:
 
 ## Getting Started
 
-Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal Anda:
+Ikuti langkah-langkah berikut untuk menjalankan proyek ini di lingkungan lokal Anda:
 
 ### Prerequisites
 - PHP >= 8.0
@@ -83,9 +81,18 @@ Berikut adalah langkah-langkah untuk menjalankan proyek ini di lingkungan lokal 
 
 Kami sangat menghargai kontribusi dari komunitas. Jika Anda ingin berkontribusi pada proyek ini, silakan ikuti langkah-langkah berikut:
 1. Fork repository ini.
-2. Buat branch baru (`git checkout -b fitur-baru`).
-3. Commit perubahan Anda (`git commit -am 'Menambahkan fitur baru'`).
-4. Push ke branch (`git push origin fitur-baru`).
+2. Buat branch baru:
+   ```bash
+   git checkout -b fitur-baru
+   ```
+3. Commit perubahan Anda:
+   ```bash
+   git commit -am 'Menambahkan fitur baru'
+   ```
+4. Push ke branch:
+   ```bash
+   git push origin fitur-baru
+   ```
 5. Buat Pull Request.
 
 ## License
@@ -98,8 +105,8 @@ Jika Anda memiliki pertanyaan atau masukan, silakan hubungi:
 - **Email**: support@cobit-website.com
 - **Website**: [https://cobit-website.com](https://cobit-website.com)
 
+---
 
 <p align="center">
   <em>Dibangun dengan ❤️ oleh Tim COBIT</em>
 </p>
-
