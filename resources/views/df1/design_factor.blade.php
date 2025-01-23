@@ -6,10 +6,8 @@
         <div class="col-md-10">
             <div class="card">
                 <div class="card-header">Design Factor</div>
-
                 <div class="card-body">
                     <!-- Chart Container -->
-                  
                     <form action="{{ route('df1.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="df_id" value="{{ $id }}">
@@ -57,14 +55,10 @@
                             </div>
                         </div>
                     </div>
-
-                   
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-primary btn-lg px-5">Submit Assessment</button>
                         </div>
                     </form>
-
-                    
                 </div>
             </div>
         </div>
@@ -200,4 +194,20 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
+
+<style>
+.assessment-item {
+    transition: transform 0.2s;
+}
+.assessment-item:hover {
+    transform: translateY(-2px);
+}
+.form-check-input {
+    cursor: pointer;
+}
+.form-check-label {
+    cursor: pointer;
+    user-select: none;
+}
+</style>
 @endsection
