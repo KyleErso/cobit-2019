@@ -18,7 +18,6 @@ class Df2Controller extends Controller
         return view('df2.design_factor2', compact('id'));
     }
 
-    // Method untuk menyimpan data dari form
     public function store(Request $request)
     {
         // Validasi input dari form

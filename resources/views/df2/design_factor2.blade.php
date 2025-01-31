@@ -12,47 +12,51 @@
                         <input type="hidden" name="df_id" value="{{ $id }}">
 
                         <!-- 13 Input Fields dalam Format Radio Button -->
-                        <div class="form-group">
-                            @foreach([
-                                'EG01' => 'Portfolio of competitive products and services',
-                                'EG02' => 'Managed business risk',
-                                'EG03' => 'Compliance with external laws and regulations',
-                                'EG04' => 'Quality of financial information',
-                                'EG05' => 'Customer-oriented service culture',
-                                'EG06' => 'Business-service continuity and availability',
-                                'EG07' => 'Quality of management information',
-                                'EG08' => 'Optimization of internal business process functionality',
-                                'EG09' => 'Optimization of business process costs',
-                                'EG10' => 'Staff skills, motivation and productivity',
-                                'EG11' => 'Compliance with internal policies',
-                                'EG12' => 'Managed digital transformation programs',
-                                'EG13' => 'Product and business innovation'
-                            ] as $code => $label)
-                                <div class="assessment-item card mb-3">
-                                    <div class="card-body">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-6">
-                                                <h6 class="mb-0 text-primary">{{ $code }} - {{ $label }}</h6>
-                                            </div>
-                                            <div class="col-md-6">
-                                                <div class="d-flex justify-content-between">
-                                                    @for($i = 1; $i <= 5; $i++)
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" 
-                                                                   name="{{ strtolower($code) }}" 
-                                                                   id="{{ $code }}{{ $i }}" 
-                                                                   value="{{ $i }}" required>
-                                                            <label class="form-check-label small" 
-                                                                   for="{{ $code }}{{ $i }}">{{ $i }}</label>
-                                                        </div>
-                                                    @endfor
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
+<div class="form-group">
+    @php
+        $inputs = [
+            'input1df2' => 'EG01 - Portfolio of competitive products and services',
+            'input2df2' => 'EG02 - Managed business risk',
+            'input3df2' => 'EG03 - Compliance with external laws and regulations',
+            'input4df2' => 'EG04 - Quality of financial information',
+            'input5df2' => 'EG05 - Customer-oriented service culture',
+            'input6df2' => 'EG06 - Business-service continuity and availability',
+            'input7df2' => 'EG07 - Quality of management information',
+            'input8df2' => 'EG08 - Optimization of internal business process functionality',
+            'input9df2' => 'EG09 - Optimization of business process costs',
+            'input10df2' => 'EG10 - Staff skills, motivation and productivity',
+            'input11df2' => 'EG11 - Compliance with internal policies',
+            'input12df2' => 'EG12 - Managed digital transformation programs',
+            'input13df2' => 'EG13 - Product and business innovation'
+        ];
+    @endphp
+
+    @foreach($inputs as $name => $label)
+        <div class="assessment-item card mb-3">
+            <div class="card-body">
+                <div class="row align-items-center">
+                    <div class="col-md-6">
+                        <h6 class="mb-0 text-primary">{{ $label }}</h6>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="d-flex justify-content-between">
+                            @for($i = 1; $i <= 5; $i++)
+                                <div class="form-check">
+                                    <input class="form-check-input" type="radio" 
+                                           name="{{ $name }}" 
+                                           id="{{ $name }}_{{ $i }}" 
+                                           value="{{ $i }}" required>
+                                    <label class="form-check-label small" 
+                                           for="{{ $name }}_{{ $i }}">{{ $i }}</label>
                                 </div>
-                            @endforeach
+                            @endfor
                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    @endforeach
+</div>
 
                         <!-- Chart Container -->
                         <div class="row mb-4">
@@ -84,12 +88,17 @@ document.addEventListener('DOMContentLoaded', function () {
     const barCtx = document.getElementById('barChart').getContext('2d');
     const radarCtx = document.getElementById('radarChart').getContext('2d');
     
-    // Labels sesuai dengan 13 EG
-    const egLabels = [
-        @foreach(['EG01','EG02','EG03','EG04','EG05','EG06','EG07',
-                 'EG08','EG09','EG10','EG11','EG12','EG13'] as $eg)
-            '{{ $eg }}',
-        @endforeach
+// Labels tetap EG01 - EG13
+const egLabels = [
+        'EG01', 'EG02', 'EG03', 'EG04', 'EG05', 'EG06', 'EG07',
+        'EG08', 'EG09', 'EG10', 'EG11', 'EG12', 'EG13'
+    ];
+
+    // Nama input dari form (input1df2 - input13df2)
+    const inputNames = [
+        'input1df2', 'input2df2', 'input3df2', 'input4df2', 'input5df2', 
+        'input6df2', 'input7df2', 'input8df2', 'input9df2', 'input10df2', 
+        'input11df2', 'input12df2', 'input13df2'
     ];
 
     const initialData = {
@@ -176,8 +185,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const radarChart = new Chart(radarCtx, radarConfig);
 
     function updateCharts() {
-        const scores = egLabels.map(eg => {
-            const selected = document.querySelector(`input[name="${eg.toLowerCase()}"]:checked`);
+        const scores = inputNames.map(name => {
+            const selected = document.querySelector(`input[name="${name}"]:checked`);
             return selected ? parseFloat(selected.value) : 0;
         });
 
