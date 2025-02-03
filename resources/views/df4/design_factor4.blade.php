@@ -3,400 +3,77 @@
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
-        <div class="col-md-8">
+        <div class="col-md-10">
             <div class="card">
-                <div class="card-header">Design Factor 4</div>
-
+                <div class="card-header text-center font-weight-bold">Design Factor 4</div>
                 <div class="card-body">
-                    <form action="{{ route('df4.store') }}" method="POST">
+                    <form id="df4Form" action="{{ route('df4.store') }}" method="POST">
                         @csrf
+                        <input type="hidden" name="df_id" value="{{ $id }}">
 
-                        <!-- Tambahkan input untuk df_id -->
-                        <input type="hidden" name="df_id" value="{{ $id }}"> <!-- Mengambil $id yang dikirim dari controller -->
+                        @php
+                        $labels = [
+                            "Frustration between different IT entities across the organization",
+                            "Frustration between business departments and the IT department",
+                            "Significant IT-related incidents (e.g., data loss, security breaches)",
+                            "Service delivery problems by IT outsourcers",
+                            "Failures to meet IT-related regulatory or contractual requirements",
+                            "Regular audit findings about poor IT performance",
+                            "Substantial hidden and rogue IT spending",
+                            "Duplications or overlaps causing wasted resources",
+                            "Insufficient IT resources or staff dissatisfaction",
+                            "IT-enabled projects failing to meet business needs",
+                            "Reluctance by senior management to engage with IT",
+                            "Complex IT operating model and unclear decision mechanisms",
+                            "Excessively high IT costs",
+                            "Obstructed implementation of new initiatives due to IT architecture",
+                            "Gap between business and technical knowledge",
+                            "Issues with data quality and integration across sources",
+                            "High level of end-user computing causing oversight issues",
+                            "Business units implementing IT solutions without enterprise IT involvement",
+                            "Noncompliance with privacy regulations",
+                            "Inability to exploit new technologies or innovate using IT"
+                        ];
+                        @endphp
 
-                        <!-- Field 1 -->
-                        <div class="form-group text-center">
-                            <label>Frustration between different IT entities across the organization because of a perception of low contribution to business value</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input1df4" id="input1df4_1" value="1" required>
-                                    <label class="form-check-label" for="input1df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input1df4" id="input1df4_2" value="2">
-                                    <label class="form-check-label" for="input1df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input1df4" id="input1df4_3" value="3">
-                                    <label class="form-check-label" for="input1df4_3">3</label>
+                        @foreach ($labels as $index => $label)
+                        <div class="assessment-item card mb-3">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <h6 class="mb-0 text-primary">{{ $label }}</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="d-flex justify-content-between">
+                                            @for ($i = 1; $i <= 3; $i++)
+                                            <div class="form-check">
+                                                <input class="form-check-input input-score" type="radio" 
+                                                       name="input{{ $index+1 }}df4" 
+                                                       id="input{{ $index+1 }}df4_{{ $i }}" 
+                                                       value="{{ $i }}" required>
+                                                <label class="form-check-label small" 
+                                                       for="input{{ $index+1 }}df4_{{ $i }}">{{ $i }}</label>
+                                            </div>
+                                            @endfor
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
+                        @endforeach
 
-                        <!-- Field 2 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Frustration between business departments (i.e., the IT customer) and the IT department because of failed initiatives or a perception of low contribution to business value</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input2df4" id="input2df4_1" value="1" required>
-                                    <label class="form-check-label" for="input2df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input2df4" id="input2df4_2" value="2">
-                                    <label class="form-check-label" for="input2df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input2df4" id="input2df4_3" value="3">
-                                    <label class="form-check-label" for="input2df4_3">3</label>
+                        <!-- Chart Container -->
+                        <div class="row mb-4">
+                            <div class="col-md">
+                                <div class="chart-container" style="height: 400px; width: 100%;">
+                                    <canvas id="barChart"></canvas>
                                 </div>
                             </div>
+
                         </div>
 
-                        <!-- Field 3 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Significant IT-related incidents, such as data loss, security breaches, project failure and application errors, linked to IT</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input3df4" id="input3df4_1" value="1" required>
-                                    <label class="form-check-label" for="input3df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input3df4" id="input3df4_2" value="2">
-                                    <label class="form-check-label" for="input3df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input3df4" id="input3df4_3" value="3">
-                                    <label class="form-check-label" for="input3df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 4 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Service delivery problems by the IT outsourcer(s)</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input4df4" id="input4df4_1" value="1" required>
-                                    <label class="form-check-label" for="input4df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input4df4" id="input4df4_2" value="2">
-                                    <label class="form-check-label" for="input4df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input4df4" id="input4df4_3" value="3">
-                                    <label class="form-check-label" for="input4df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 5 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Failures to meet IT-related regulatory or contractual requirements</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input5df4" id="input5df4_1" value="1" required>
-                                    <label class="form-check-label" for="input5df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input5df4" id="input5df4_2" value="2">
-                                    <label class="form-check-label" for="input5df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input5df4" id="input5df4_3" value="3">
-                                    <label class="form-check-label" for="input5df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 6 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Regular audit findings or other assessment reports about poor IT performance or reported IT quality or service problems</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input6df4" id="input6df4_1" value="1" required>
-                                    <label class="form-check-label" for="input6df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input6df4" id="input6df4_2" value="2">
-                                    <label class="form-check-label" for="input6df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input6df4" id="input6df4_3" value="3">
-                                    <label class="form-check-label" for="input6df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 7 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Substantial hidden and rogue IT spending, that is, IT spending by user departments outside the control of the normal IT investment decision mechanisms and approved budgets</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input7df4" id="input7df4_1" value="1" required>
-                                    <label class="form-check-label" for="input7df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input7df4" id="input7df4_2" value="2">
-                                    <label class="form-check-label" for="input7df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input7df4" id="input7df4_3" value="3">
-                                    <label class="form-check-label" for="input7df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 8 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Duplications or overlaps between various initiatives, or other forms of wasted resources</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input8df4" id="input8df4_1" value="1" required>
-                                    <label class="form-check-label" for="input8df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input8df4" id="input8df4_2" value="2">
-                                    <label class="form-check-label" for="input8df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input8df4" id="input8df4_3" value="3">
-                                    <label class="form-check-label" for="input8df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 9 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Insufficient IT resources, staff with inadequate skills or staff burnout/dissatisfaction</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input9df4" id="input9df4_1" value="1" required>
-                                    <label class="form-check-label" for="input9df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input9df4" id="input9df4_2" value="2">
-                                    <label class="form-check-label" for="input9df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input9df4" id="input9df4_3" value="3">
-                                    <label class="form-check-label" for="input9df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 10 -->
-                        <div class="form-group text-center mt-3">
-                            <label>IT-enabled changes or projects frequently failing to meet business needs and delivered late or over budget</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input10df4" id="input10df4_1" value="1" required>
-                                    <label class="form-check-label" for="input10df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input10df4" id="input10df4_2" value="2">
-                                    <label class="form-check-label" for="input10df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input10df4" id="input10df4_3" value="3">
-                                    <label class="form-check-label" for="input10df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 11 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Reluctance by board members, executives or senior management to engage with IT, or a lack of committed business sponsorship for IT</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input11df4" id="input11df4_1" value="1" required>
-                                    <label class="form-check-label" for="input11df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input11df4" id="input11df4_2" value="2">
-                                    <label class="form-check-label" for="input11df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input11df4" id="input11df4_3" value="3">
-                                    <label class="form-check-label" for="input11df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 12 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Complex IT operating model and/or unclear decision mechanisms for IT-related decisions</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input12df4" id="input12df4_1" value="1" required>
-                                    <label class="form-check-label" for="input12df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input12df4" id="input12df4_2" value="2">
-                                    <label class="form-check-label" for="input12df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input12df4" id="input12df4_3" value="3">
-                                    <label class="form-check-label" for="input12df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 13 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Excessively high cost of IT</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input13df4" id="input13df4_1" value="1" required>
-                                    <label class="form-check-label" for="input13df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input13df4" id="input13df4_2" value="2">
-                                    <label class="form-check-label" for="input13df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input13df4" id="input13df4_3" value="3">
-                                    <label class="form-check-label" for="input13df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 14 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Obstructed or failed implementation of new initiatives or innovations caused by the current IT architecture and systems</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input14df4" id="input14df4_1" value="1" required>
-                                    <label class="form-check-label" for="input14df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input14df4" id="input14df4_2" value="2">
-                                    <label class="form-check-label" for="input14df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input14df4" id="input14df4_3" value="3">
-                                    <label class="form-check-label" for="input14df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 15 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Gap between business and technical knowledge, which leads to business users and information and/or technology specialists speaking different languages</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input15df4" id="input15df4_1" value="1" required>
-                                    <label class="form-check-label" for="input15df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input15df4" id="input15df4_2" value="2">
-                                    <label class="form-check-label" for="input15df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input15df4" id="input15df4_3" value="3">
-                                    <label class="form-check-label" for="input15df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 16 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Regular issues with data quality and integration of data across various sources</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input16df4" id="input16df4_1" value="1" required>
-                                    <label class="form-check-label" for="input16df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input16df4" id="input16df4_2" value="2">
-                                    <label class="form-check-label" for="input16df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input16df4" id="input16df4_3" value="3">
-                                    <label class="form-check-label" for="input16df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 17 -->
-                        <div class="form-group text-center mt-3">
-                            <label>High level of end-user computing, creating (among other problems) a lack of oversight and quality control over the applications that are being developed and put in operation</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input17df4" id="input17df4_1" value="1" required>
-                                    <label class="form-check-label" for="input17df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input17df4" id="input17df4_2" value="2">
-                                    <label class="form-check-label" for="input17df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input17df4" id="input17df4_3" value="3">
-                                    <label class="form-check-label" for="input17df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 18 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Business departments implementing their own information solutions with little or no involvement of the enterprise IT department (related to end-user computing, which often stems from dissatisfaction with IT solutions and services)</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input18df4" id="input18df4_1" value="1" required>
-                                    <label class="form-check-label" for="input18df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input18df4" id="input18df4_2" value="2">
-                                    <label class="form-check-label" for="input18df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input18df4" id="input18df4_3" value="3">
-                                    <label class="form-check-label" for="input18df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 19 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Ignorance of and/or noncompliance with privacy regulations</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input19df4" id="input19df4_1" value="1" required>
-                                    <label class="form-check-label" for="input19df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input19df4" id="input19df4_2" value="2">
-                                    <label class="form-check-label" for="input19df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input19df4" id="input19df4_3" value="3">
-                                    <label class="form-check-label" for="input19df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Field 20 -->
-                        <div class="form-group text-center mt-3">
-                            <label>Inability to exploit new technologies or innovate using I&T</label>
-                            <div class="d-flex justify-content-center gap-3">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input20df4" id="input20df4_1" value="1" required>
-                                    <label class="form-check-label" for="input20df4_1">1</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input20df4" id="input20df4_2" value="2">
-                                    <label class="form-check-label" for="input20df4_2">2</label>
-                                </div>
-                                <div class="form-check">
-                                    <input class="form-check-input" type="radio" name="input20df4" id="input20df4_3" value="3">
-                                    <label class="form-check-label" for="input20df4_3">3</label>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Tombol Submit -->
                         <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-primary">Submit</button>
+                            <button type="submit" class="btn btn-primary btn-lg px-5">Submit Assessment</button>
                         </div>
                     </form>
                 </div>
@@ -404,4 +81,111 @@
         </div>
     </div>
 </div>
+<!-- Sertakan Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const labels = [
+            "Frustration between different IT entities",
+            "Frustration between business and IT",
+            "Significant IT-related incidents",
+            "Service delivery problems",
+            "Failures to meet IT-related requirements",
+            "Audit findings on poor IT performance",
+            "Hidden and rogue IT spending",
+            "Duplications or wasted resources",
+            "Insufficient IT resources/staff dissatisfaction",
+            "IT-enabled projects failing",
+            "Management reluctance to engage with IT",
+            "Complex IT operating model",
+            "High IT costs",
+            "Obstructed IT implementation",
+            "Business vs. technical knowledge gap",
+            "Data quality and integration issues",
+            "High end-user computing reliance",
+            "Business units implementing IT independently",
+            "Noncompliance with privacy regulations",
+            "Inability to innovate with IT"
+        ];
+
+        let scores = new Array(labels.length).fill(0);
+
+        // Inisialisasi Bar Chart
+        const barChart = new Chart(document.getElementById('barChart').getContext('2d'), {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Risk Score',
+                    data: scores,
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                indexAxis: 'y',
+                scales: {
+                    x: {
+                        beginAtZero: true,
+                        max: 3,
+                        ticks: {
+                            stepSize: 1,
+                            autoSkip: false
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            font: {
+                                size: 12
+                            },
+                            autoSkip: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: { display: false },
+                    tooltip: { enabled: true }
+                }
+            }
+        });
+
+
+        // Update Chart berdasarkan input pengguna
+        document.querySelectorAll('.input-score').forEach(input => {
+            input.addEventListener('change', function () {
+                let index = parseInt(this.name.replace('input', '').replace('df4', '')) - 1;
+                scores[index] = parseInt(this.value);
+                barChart.data.datasets[0].data = scores;
+                barChart.update();
+            });
+        });
+    });
+</script>
+<style>
+    .assessment-item {
+        transition: transform 0.2s;
+    }
+
+    .assessment-item:hover {
+        transform: translateY(-2px);
+    }
+
+    .form-check-input {
+        cursor: pointer;
+    }
+
+    .form-check-label {
+        cursor: pointer;
+        user-select: none;
+    }
+
+    .chart-container {
+        position: relative;
+    }
+</style>
 @endsection
+
