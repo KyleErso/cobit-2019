@@ -1,35 +1,56 @@
 @extends('layouts.app')
-
 @section('content')
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-8">
             <div class="card">
                 <div class="card-header">Design Factor 5</div>
-
                 <div class="card-body">
                     <form action="{{ route('df5.store') }}" method="POST" onsubmit="return validateForm()">
                         @csrf
                         <input type="hidden" name="df_id" value="{{ $id }}">
-
-                        <div class="form-group">
-                            <label for="input1df5">High</label>
-                            <input type="number" name="input1df5" id="input1df5" class="form-control" required>
-                            <small class="text-muted">Masukkan nilai dalam persen (contoh: 33 untuk 33%).</small>
+                        
+                        <!-- High Input -->
+                        <div class="assessment-item card mb-3">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <h6 class="mb-0 text-primary">High</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" name="input1df5" id="input1df5" class="form-control" required>
+                                        <small class="text-muted">Masukkan nilai dalam persen (contoh: 33 untuk 33%).</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
-                        <div class="form-group mt-3">
-                            <label for="input2df5">Normal</label>
-                            <input type="number" name="input2df5" id="input2df5" class="form-control" required>
-                            <small class="text-muted">Masukkan nilai dalam persen (contoh: 67 untuk 67%).</small>
+                        <!-- Normal Input -->
+                        <div class="assessment-item card mb-3">
+                            <div class="card-body">
+                                <div class="row align-items-center">
+                                    <div class="col-md-6">
+                                        <h6 class="mb-0 text-primary">Normal</h6>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="number" name="input2df5" id="input2df5" class="form-control" required>
+                                        <small class="text-muted">Masukkan nilai dalam persen (contoh: 67 untuk 67%).</small>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
 
+                        <!-- Error Message -->
                         <div id="error-message" class="alert alert-danger mt-3" role="alert" style="display: none;">
                             The sum of High and Normal must be exactly 100%.
                         </div>
 
-                        <canvas id="pieChart" style="max-height: 300px; margin-top: 20px;"></canvas>
+                        <!-- Pie Chart -->
+                        <div class="chart-container mt-4" style="height: 300px;">
+                            <canvas id="pieChart"></canvas>
+                        </div>
 
+                        <!-- Submit Button -->
                         <div class="text-center mt-4">
                             <button type="submit" class="btn btn-primary btn-lg px-5">Submit Assessment</button>
                         </div>
@@ -40,6 +61,7 @@
     </div>
 </div>
 
+<!-- Include Chart.js -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
     const ctx = document.getElementById('pieChart').getContext('2d');
@@ -47,17 +69,18 @@
         type: 'pie',
         data: {
             datasets: [{
-                data: [50,50], // Default data
+                data: [50, 50], // Default data
                 backgroundColor: [
-                    'rgba(169, 169, 169, 0.6)', // Default gray color
-                    'rgba(169, 169, 169, 0.6)'  // Default gray color
+                    'rgba(255, 99, 132, 0.6)', // Red for High
+                    'rgba(54, 162, 235, 0.6)'  // Blue for Normal
                 ],
                 borderColor: [
-                    'rgba(169, 169, 169, 1)', // Default gray border
-                    'rgba(169, 169, 169, 1)'  // Default gray border
+                    'rgba(255, 99, 132, 1)', // Red border
+                    'rgba(54, 162, 235, 1)'  // Blue border
                 ],
                 borderWidth: 1
-            }]
+            }],
+            labels: ['High', 'Normal']
         },
         options: {
             responsive: true,
@@ -77,12 +100,6 @@
         // Update data for pie chart
         pieChart.data.datasets[0].data = [input1, input2];
 
-        // Update color when input is provided
-        pieChart.data.datasets[0].backgroundColor = [
-            input1 > 0 ? 'rgba(255, 99, 132, 0.6)' : 'rgba(169, 169, 169, 0.6)', // Red if input1 is greater than 0, otherwise gray
-            input2 > 0 ? 'rgba(54, 162, 235, 0.6)' : 'rgba(169, 169, 169, 0.6)'  // Blue if input2 is greater than 0, otherwise gray
-        ];
-
         // Update chart
         pieChart.update();
     }
@@ -95,14 +112,28 @@
         const input2 = parseFloat(document.getElementById('input2df5').value) || 0;
         const total = input1 + input2;
 
-        if (total !== 100) { // Check if the total is exactly 100
+        // Check if the total is exactly 100
+        if (total !== 100) {
             document.getElementById('error-message').style.display = 'block';
             return false;
         }
-        
+
         document.getElementById('error-message').style.display = 'none';
         return true;
     }
 </script>
-
+<style>
+.assessment-item {
+    transition: transform 0.2s;
+}
+.assessment-item:hover {
+    transform: translateY(-2px);
+}
+.chart-container {
+    transition: transform 0.2s;
+}
+.chart-container:hover {
+    transform: translateY(-2px);
+}
+</style>
 @endsection
