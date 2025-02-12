@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -17,7 +18,8 @@
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
 </head>
-<body class="{{ Route::is('login','register') ? 'login' : '' }}">
+
+<body class="{{ Route::is('login', 'register') ? 'login' : '' }}">
     <div id="app">
         <!-- Navbar Utama -->
         <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
@@ -25,7 +27,9 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ asset('images/logo.png') }}" alt="COBIT Logo" style="height: 40px;">
                 </a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
@@ -49,13 +53,13 @@
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
-                                   <strong>Selamat Datang 🤗,  {{ Auth::user()->name }}</strong>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
+                                    data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                    <strong>Selamat Datang 🤗, {{ Auth::user()->name }}</strong>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('logout') }}"
-                                       onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
+                                    <a class="dropdown-item" href="{{ route('logout') }}" onclick="event.preventDefault();
+                                                         document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -74,31 +78,32 @@
             <div class="row">
                 <!-- Sidebar Hanya Muncul Setelah Login -->
                 @auth
-                <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block collapse shadow-lg">
-                    <div class="position-sticky pt-3 mt-3">
-                        <ul class="nav flex-column">
-                            <li class="nav-item">
-                                <a class="nav-link active" href="#">
-                                    <i class="fas fa-tasks me-2"></i> Assessment
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="fas fa-chart-bar me-2"></i> Assessment Result
-                                </a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="#">
-                                    <i class="fas fa-user-circle me-2"></i> Profile
-                                </a>
-                            </li>
-                        </ul>
-                    </div>
-                </nav>
+                    <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block collapse shadow-lg">
+                        <div class="position-sticky pt-3 mt-3">
+                            <ul class="nav flex-column">
+                                <li class="nav-item">
+                                    <a class="nav-link active" href="#">
+                                        <i class="fas fa-tasks me-2"></i> Assessment
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">
+                                        <i class="fas fa-chart-bar me-2"></i> Assessment Result
+                                    </a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="#">
+                                        <i class="fas fa-user-circle me-2"></i> Profile
+                                    </a>
+                                </li>
+                            </ul>
+                        </div>
+                    </nav>
                 @endauth
 
                 <!-- Main Content -->
-                <main class="col-md-{{ auth()->check() ? 9 : 12 }} ms-sm-auto col-lg-{{ auth()->check() ? 10 : 12 }} px-md-4">
+                <main
+                    class="col-md-{{ auth()->check() ? 9 : 12 }} ms-sm-auto col-lg-{{ auth()->check() ? 10 : 12 }} px-md-4">
                     <div class="py-4">
                         @yield('content')
                     </div>
@@ -106,5 +111,15 @@
             </div>
         </div>
     </div>
+    <footer class="container-fluid bg-light text-center py-3 mt-4">
+        <p class="mb-1">By: Evan Kristian Pratama</p>
+        <p class="mb-0">
+            <a href="https://www.linkedin.com/in/evan-pratama-196119271/">
+                LinkedIn
+            </a>
+        </p>
+    </footer>
+
 </body>
+
 </html>
