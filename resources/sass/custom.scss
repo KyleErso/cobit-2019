@@ -1,0 +1,68 @@
+// Import Bootstrap and Variables
+@import "variables";
+
+// Sidebar Fixed Styling
+#sidebar {
+    position: fixed; // Tetap di tempatnya saat scroll
+    top: 56px; // Tinggi navbar
+    left: 0;
+    bottom: 0;
+    width: $sidebar-fixed-width;
+    background-color: $sidebar-fixed-bg;
+    border-right: 1px solid $sidebar-fixed-border;
+    overflow-y: auto; // Scroll jika konten terlalu panjang
+    z-index: 1020;
+
+    .nav-link {
+        color: $sidebar-text-color;
+        font-size: $sidebar-font-size; // Ukuran font lebih besar
+        transition: all 0.3s ease;
+
+        &:hover {
+            background-color: $sidebar-hover-bg; // Warna hover lebih tipis
+            color: $sidebar-hover-text-color;
+            transform: scale(1.05);
+        }
+
+        &.active {
+            background-color: $sidebar-active-bg;
+            color: $primary;
+            font-weight: bold;
+        }
+
+        i {
+            margin-right: 10px;
+            font-size: 1.2rem;
+        }
+    }
+}
+
+// Main Content Offset
+main {
+    margin-left: $sidebar-fixed-width; // Memberi ruang untuk sidebar fixed
+    padding: 20px;
+}
+
+// Styling untuk halaman login
+body.login {
+    background: $login-bg;
+    background-size: $login-bg-size;
+    position: relative;
+
+    &::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: $login-overlay-color; // Overlay gelap
+        z-index: 1;
+    }
+
+    .container {
+        position: relative;
+        z-index: 2; // Pastikan konten tetap di atas overlay
+    }
+}
+

@@ -5,54 +5,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <title>COBIT 2019</title> <!-- Ubah title di sini menjadi 'COBIT' -->
+    <title>COBIT 2019</title>
     <!-- Favicon -->
     <link rel="icon" href="{{ asset('images/cobit.png') }}" type="image/png">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <!-- Fonts -->
     <link rel="dns-prefetch" href="//fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=Nunito" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <!-- Scripts -->
     @vite(['resources/sass/app.scss', 'resources/js/app.js'])
-    <style>
-        /* CSS untuk animasi gradient */
-        body {
-            margin: 0;
-            padding: 0;
-            overflow-x: hidden;
-            background: linear-gradient(270deg,rgb(255, 249, 237),rgb(169, 228, 255),rgb(255, 210, 164));
-            background-size: 600% 600%;
-            animation: gradient-animation 100s ease infinite;
-        }
-
-        /* Keyframes untuk animasi gradient */
-        @keyframes gradient-animation {
-            0% {
-                background-position: 0% 50%;
-            }
-            50% {
-                background-position: 100% 50%;
-            }
-            100% {
-                background-position: 0% 50%;
-            }
-        }
-
-        /* Styling tambahan agar konten tetap terlihat baik */
-        #app {
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        main {
-            flex: 1;
-        }
-    </style>
 </head>
-<body>
+<body class="{{ Route::is('login','register') ? 'login' : '' }}">
     <div id="app">
-        <nav class="navbar navbar-expand-md navbar-light bg-white shadow-lg sticky-top">
+        <!-- Navbar Utama -->
+        <nav class="navbar navbar-expand-md navbar-dark bg-primary fixed-top">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
                     <img src="{{ asset('images/logo.png') }}" alt="COBIT Logo" style="height: 40px;">
@@ -71,17 +39,17 @@
                         @guest
                             @if (Route::has('login'))
                                 <li class="nav-item">
-                                    <a class="nav-link text-primary" href="{{ route('login') }}">{{ __('Login') }}</a>
+                                    <a class="nav-link text-white" href="{{ route('login') }}">{{ __('Login') }}</a>
                                 </li>
                             @endif
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link text-primary" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link text-white" href="{{ route('register') }}">{{ __('Register') }}</a>
                                 </li>
                             @endif
                         @else
                             <li class="nav-item dropdown">
-                                <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
+                                <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                    <strong>Selamat Datang 🤗,  {{ Auth::user()->name }}</strong>
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdown">
@@ -100,9 +68,43 @@
                 </div>
             </div>
         </nav>
-        <main class="py-4">
-            @yield('content')
-        </main>
+
+        <!-- Sidebar dan Main Content -->
+        <div class="container-fluid mt-5">
+            <div class="row">
+                <!-- Sidebar Hanya Muncul Setelah Login -->
+                @auth
+                <nav id="sidebar" class="col-md-3 col-lg-2 d-md-block collapse shadow-lg">
+                    <div class="position-sticky pt-3 mt-3">
+                        <ul class="nav flex-column">
+                            <li class="nav-item">
+                                <a class="nav-link active" href="#">
+                                    <i class="fas fa-tasks me-2"></i> Assessment
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-chart-bar me-2"></i> Assessment Result
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fas fa-user-circle me-2"></i> Profile
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </nav>
+                @endauth
+
+                <!-- Main Content -->
+                <main class="col-md-{{ auth()->check() ? 9 : 12 }} ms-sm-auto col-lg-{{ auth()->check() ? 10 : 12 }} px-md-4">
+                    <div class="py-4">
+                        @yield('content')
+                    </div>
+                </main>
+            </div>
+        </div>
     </div>
 </body>
 </html>

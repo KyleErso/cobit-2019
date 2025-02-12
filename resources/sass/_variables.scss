@@ -13,3 +13,25 @@ $custom-orange: #e47929;
 // Override Bootstrap Variables
 $primary: $custom-blue;
 $warning: $custom-orange;
+
+// Sidebar Styling Variables
+$sidebar-fixed-width: 250px; // Lebar sidebar fixed
+$sidebar-fixed-bg: #ffffff; // Warna latar belakang sidebar
+$sidebar-fixed-border: rgba(0, 0, 0, 0.1); // Warna border kanan sidebar
+$sidebar-font-size: 1rem; // Ukuran font di sidebar
+$sidebar-text-color: #343a40; // Warna teks default di sidebar
+$sidebar-hover-bg: rgba(0, 0, 0, 0.05); // Warna hover lebih tipis (transparan)
+$sidebar-hover-text-color: $primary; // Warna teks saat hover
+$sidebar-active-bg: #e4f5ff; // Warna latar belakang item aktif
+$sidebar-active-text-color: $primary; // Warna teks item aktif
+
+
+// Transition Variables
+$transition-duration: 0.3s; // Durasi transisi untuk efek hover
+$transition-timing: ease; // Timing function untuk transisi
+
+// Login Background
+$login-bg: url('images/login-background.png') no-repeat center center;
+$login-bg-size: cover;
+$login-overlay-color: rgba(208, 208, 208, 0.654); // Overlay gelap untuk meningkatkan kontras teks
+
