@@ -4,59 +4,75 @@
 <div class="container">
     <div class="row justify-content-center">
         <div class="col-md-10">
-            <div class="card">
-                <div class="card-header">Design Factor</div>
-                <div class="card-body">
-                    <!-- Chart Container -->
+            <div class="card shadow-lg border-0 rounded-lg">
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">Design Factor 1</h4>
+                </div>
+
+                <!-- Card Body -->
+                <div class="card-body p-5">
+                    <!-- Form Assessment -->
                     <form action="{{ route('df1.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="df_id" value="{{ $id }}">
 
-                        <div class="form-group">
-                            @foreach([
-                                'strategy_archetype' => 'Growth/Acquisition',
-                                'current_performance' => 'Innovation/Differentiation',
-                                'future_goals' => 'Cost Leadership',
-                                'alignment_with_it' => 'Client Service/Stability'
-                            ] as $name => $label)
-                                <div class="assessment-item card mb-3">
-                                    <div class="card-body">
-                                        <div class="row align-items-center">
-                                            <div class="col-md-4">
-                                                <h6 class="mb-0 text-primary">{{ $label }}</h6>
-                                            </div>
-                                            <div class="col-md-8">
-                                                <div class="d-flex justify-content-between">
-                                                    @for($i = 1; $i <= 5; $i++)
-                                                        <div class="form-check">
-                                                            <input class="form-check-input" type="radio" 
-                                                                   name="{{ $name }}" id="{{ $name }}{{ $i }}" 
-                                                                   value="{{ $i }}" required>
-                                                            <label class="form-check-label small" 
-                                                                   for="{{ $name }}{{ $i }}">{{ $i }}</label>
-                                                        </div>
-                                                    @endfor
-                                                </div>
+                        <!-- Assessment Items -->
+                        @foreach([
+                            'strategy_archetype' => 'Growth/Acquisition',
+                            'current_performance' => 'Innovation/Differentiation',
+                            'future_goals' => 'Cost Leadership',
+                            'alignment_with_it' => 'Client Service/Stability'
+                        ] as $name => $label)
+                            <div class="assessment-item card mb-3">
+                                <div class="card-body">
+                                    <div class="row align-items-center">
+                                        <!-- Label -->
+                                        <div class="col-md-4">
+                                            <h6 class="mb-0 text-primary">{{ $label }}</h6>
+                                        </div>
+
+                                        <!-- Rating Options -->
+                                        <div class="col-md-8">
+                                            <div class="d-flex justify-content-between">
+                                                @for ($i = 1; $i <= 5; $i++)
+                                                    <div class="form-check">
+                                                        <input class="form-check-input" type="radio" 
+                                                               name="{{ $name }}" id="{{ $name }}{{ $i }}" 
+                                                               value="{{ $i }}" required>
+                                                        <label class="form-check-label small" 
+                                                               for="{{ $name }}{{ $i }}">{{ $i }}</label>
+                                                    </div>
+                                                @endfor
                                             </div>
                                         </div>
                                     </div>
                                 </div>
-                            @endforeach
-                        </div>
+                            </div>
+                        @endforeach
+
+                        <!-- Chart Section -->
                         <div class="row mb-4">
-                        <div class="col-md-6">
-                            <div class="chart-container" style="height: 200px;">
-                                <canvas id="barChart"></canvas>
+                            <!-- Bar Chart -->
+                            <div class="col-md-6">
+                                <div class="chart-container" style="height: 200px;">
+                                    <canvas id="barChart"></canvas>
+                                </div>
+                            </div>
+
+                            <!-- Radar Chart -->
+                            <div class="col-md-6">
+                                <div class="chart-container" style="height: 200px;">
+                                    <canvas id="radarChart"></canvas>
+                                </div>
                             </div>
                         </div>
-                        <div class="col-md-6">
-                            <div class="chart-container" style="height: 200px;">
-                                <canvas id="radarChart"></canvas>
-                            </div>
-                        </div>
-                    </div>
+
+                        <!-- Submit Button -->
                         <div class="text-center mt-4">
-                            <button type="submit" class="btn btn-primary btn-lg px-5">Submit Assessment</button>
+                            <button type="submit" class="btn btn-primary btn-lg px-5">
+                                Submit Assessment
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -65,14 +81,14 @@
     </div>
 </div>
 
-
+<!-- Chart.js Script -->
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     // Inisialisasi chart
     const barCtx = document.getElementById('barChart').getContext('2d');
     const radarCtx = document.getElementById('radarChart').getContext('2d');
-    
+
     // Data awal dengan label yang sesuai form
     const initialData = {
         labels: [
@@ -90,7 +106,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }]
     };
 
-    // Konfigurasi Bar Chart (tetap sama)
+    // Konfigurasi Bar Chart
     const barConfig = {
         type: 'bar',
         data: initialData,
@@ -118,11 +134,11 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     };
 
-    // Konfigurasi Radar Chart dengan label yang diperbarui
+    // Konfigurasi Radar Chart
     const radarConfig = {
         type: 'radar',
         data: {
-            labels: initialData.labels, // Menggunakan label yang sama
+            labels: initialData.labels,
             datasets: [{
                 label: 'Score Profile',
                 data: initialData.datasets[0].data,
@@ -163,7 +179,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const barChart = new Chart(barCtx, barConfig);
     const radarChart = new Chart(radarCtx, radarConfig);
 
-    // Fungsi update chart (tetap sama)
+    // Fungsi update chart
     function updateCharts() {
         const scores = {
             strategy: document.querySelector('input[name="strategy_archetype"]:checked')?.value || 0,
@@ -171,7 +187,6 @@ document.addEventListener('DOMContentLoaded', function () {
             goals: document.querySelector('input[name="future_goals"]:checked')?.value || 0,
             alignment: document.querySelector('input[name="alignment_with_it"]:checked')?.value || 0
         };
-
         const newData = [
             parseFloat(scores.strategy),
             parseFloat(scores.performance),
@@ -182,19 +197,20 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update Bar Chart
         barChart.data.datasets[0].data = newData;
         barChart.update();
-        
+
         // Update Radar Chart
         radarChart.data.datasets[0].data = newData;
         radarChart.update();
     }
 
-    // Event listener untuk radio button (tetap sama)
+    // Event listener untuk radio button
     document.querySelectorAll('input[type="radio"]').forEach(radio => {
         radio.addEventListener('change', updateCharts);
     });
 });
 </script>
 
+<!-- Custom CSS -->
 <style>
 .assessment-item {
     transition: transform 0.2s;
@@ -208,6 +224,11 @@ document.addEventListener('DOMContentLoaded', function () {
 .form-check-label {
     cursor: pointer;
     user-select: none;
+}
+.chart-container {
+    position: relative;
+    margin: auto;
+    width: 100%;
 }
 </style>
 @endsection

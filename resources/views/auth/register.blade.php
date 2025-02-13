@@ -64,21 +64,22 @@
                                 </span>
                             @enderror
                         </div>
-                    </form>
-                </div>
 
-                <!-- Register Button Outside Scroll -->
-                <div class="p-4">
-                    <div class="d-grid">
-                        <button type="submit" class="btn btn-warning btn-lg text-white fw-bold">
-                            {{ __('Register') }}
-                        </button>
-                    </div>
+                        <!-- Register Button (Tombol berada di dalam form) -->
+                        <div class="p-4">
+                            <div class="d-grid">
+                                <button type="submit" class="btn btn-warning btn-lg text-white fw-bold">
+                                    {{ __('Register') }}
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
 
                 <!-- Footer Card -->
                 <div class="card-footer text-center bg-light py-3 rounded-bottom">
-                    <small class="text-muted">Already have an account? 
+                    <small class="text-muted">
+                        Already have an account?
                         <a href="{{ route('login') }}" class="text-decoration-none text-primary fw-bold">Login here</a>
                     </small>
                 </div>

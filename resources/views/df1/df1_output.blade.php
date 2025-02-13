@@ -127,71 +127,19 @@
         </table>
     </div>
 
-    <!-- Diagram Canvas untuk Performance Analysis -->
-    <h3>Performance Analysis Diagram</h3>
-    <canvas id="dfChart" width="400" height="100"></canvas>
 
     <!-- Diagram Canvas untuk Relative Importance -->
-    <h3>Performance Analysis Diagram (Relative Importance)</h3>
+    <h3>Relative Importance</h3>
     <canvas id="relativeImportanceChart" width="400" height="150"></canvas>
 
     <!-- Diagram Radar untuk Relative Importance -->
-    <h3>Radar Chart for Relative Importance</h3>
+    <h3>Radar Chart</h3>
     <canvas id="radarChart" width="400" height="400"></canvas>
 
     <!-- Script untuk inisialisasi Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', function () {
-            // Grafik untuk Performance Analysis
-            const ctx = document.getElementById('dfChart').getContext('2d');
-            const dataValues = [
-                {{ $designFactor->input1df1 }},
-                {{ $designFactor->input2df1 }},
-                {{ $designFactor->input3df1 }},
-                {{ $designFactor->input4df1 }}
-            ];
-            const labels = ['Strategy Archetype', 'Current Performance', 'Future Goals', 'Alignment with IT'];
-
-            const dfChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Score',
-                        data: dataValues,
-                        backgroundColor: dataValues.map(value => value >= 0 ? 'rgba(54, 162, 235, 0.6)' : 'rgba(255, 99, 132, 0.6)'),
-                        borderColor: dataValues.map(value => value >= 0 ? 'rgba(54, 162, 235, 1)' : 'rgba(255, 99, 132, 1)'),
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    scales: {
-                        x: {
-                            max: 5,
-                            beginAtZero: true
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    label += context.raw >= 0 ? '+' + context.raw : context.raw;
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
 
             // Grafik untuk Relative Importance (Horizontal Bar Chart)
             const ctxRelativeImportance = document.getElementById('relativeImportanceChart').getContext('2d');
