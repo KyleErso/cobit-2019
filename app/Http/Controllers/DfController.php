@@ -101,44 +101,79 @@ class DfController extends Controller
         $average_E7_E10 = array_sum($DF1_BASELINE) / count($DF1_BASELINE);
         $E14 = ($E12 != 0) ? $average_E7_E10 / $E12 : 0;
 
-        // Menghitung B22
-        $B22 = [];
+        // Menghitung DF1_SCORE
+        $DF1_SCORE = [];
         foreach ($DF1map as $row) {
-            $B22[] = array_sum(array_map(function ($a, $b) {
+            $DF1_SCORE[] = array_sum(array_map(function ($a, $b) {
                 return $a * $b;
             }, $row, $DF1_INPUT));
         }
 
-        // Menghitung C22
-        $C22 = [];
-        foreach ($DF1map as $row) {
-            $C22[] = array_sum(array_map(function ($a, $b) {
-                return $a * $b;
-            }, $row, $DF1_BASELINE));
-        }
+        $DF1_BASELINE_SCORE = [
+            15,
+            24,
+            15,
+            22.5,
+            18,
+            12,
+            28.5,
+            24,
+            21,
+            33,
+            22.5,
+            15,
+            21,
+            22.5,
+            21,
+            21,
+            18,
+            16.5,
+            12,
+            27,
+            13.5,
+            13.5,
+            18,
+            25.5,
+            19.5,
+            18,
+            19.5,
+            12,
+            12,
+            27,
+            13.5,
+            21,
+            18,
+            21,
+            16.5,
+            13.5,
+            12,
+            12,
+            12,
+            12
+        ];
 
-        // Menghitung D22 dengan pembulatan
-        $D22 = [];
-        foreach ($B22 as $index => $b) {
-            $c = $C22[$index];
+        // Menghitung DF1_RELATIVE_IMPORTANCE dengan pembulatan
+        $DF1_RELATIVE_IMPORTANCE = [];
+        foreach ($DF1_SCORE as $index => $b) {
+            $c = $DF1_BASELINE_SCORE[$index];
             if ($c != 0) {
                 $result = round($E14 * 100 * $b / $c / 5) * 5 - 100;
             } else {
                 $result = 0;
             }
-            $D22[] = $result;
+            $DF1_RELATIVE_IMPORTANCE[] = $result;
         }
         //==========================================================================
         // Siapkan data untuk tabel design_factor_1_score
         $dataForScore = ['id' => Auth::id(), 'df1_id' => $designFactor->df_id];
-        foreach ($B22 as $index => $value) {
+        foreach ($DF1_SCORE as $index => $value) {
             $dataForScore['s_df1_' . ($index + 1)] = $value;
         }
         DesignFactor1Score::create($dataForScore);
 
         // Siapkan data untuk tabel design_factor_1_relative_importance
         $dataForRelativeImportance = ['id' => Auth::id(), 'df1_id' => $designFactor->df_id];
-        foreach ($D22 as $index => $value) {
+        foreach ($DF1_RELATIVE_IMPORTANCE as $index => $value) {
             $dataForRelativeImportance['r_df1_' . ($index + 1)] = $value;
         }
         DesignFactor1RelativeImportance::create($dataForRelativeImportance);

@@ -118,6 +118,8 @@
                 LinkedIn
             </a>
         </p>
+        <p class="mb-0"> Version : 0.0.0
+        </p>
     </footer>
 
 </body>
