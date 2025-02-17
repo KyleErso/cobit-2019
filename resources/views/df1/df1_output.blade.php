@@ -1,347 +1,301 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-    <h2>Output Data Design Factor 1</h2>
+<div class="container my-5">
+    <!-- Card Utama: Output Data Design Factor 1 -->
+    <div class="row justify-content-center">
+        <div class="col-lg-10">
+            <div class="card shadow border-0 rounded">
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">Design Factor 1 Output</h4>
+                </div>
 
-    <!-- Menampilkan pesan sukses jika ada -->
-    @if(session('success'))
-        <div class="alert alert-success">
-            {{ session('success') }}
+                <!-- Card Body: Data Verifikasi -->
+                <div class="card-body p-4">
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>DF ID</th>
+                                    <th>Strategy Archetype</th>
+                                    <th>Current Performance</th>
+                                    <th>Future Goals</th>
+                                    <th>Alignment with IT</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>{{ $designFactor->df_id }}</td>
+                                    <td>{{ $designFactor->input1df1 }}</td>
+                                    <td>{{ $designFactor->input2df1 }}</td>
+                                    <td>{{ $designFactor->input3df1 }}</td>
+                                    <td>{{ $designFactor->input4df1 }}</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Card Body: Row untuk Chart -->
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Relative Importance Scores Table -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-header text-center text-primary">
+                                    Relative Importance Scores
+                                </div>
+                                <div class="card-body" style="max-height: 600px; overflow-y: auto;">
+                                    <table class="table table-bordered table-sm">
+                                        <thead class="table-light">
+                                            <tr>
+                                                <th class="text-center text-primary">Index</th>
+                                                <th class="text-center text-primary">Label</th>
+                                                <th class="text-center text-primary">Score</th>
+                                                <th class="text-center text-primary">Relative Importance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @php
+                                                $labels = [
+                                                    'EDM01', 'EDM02', 'EDM03', 'EDM04', 'EDM05',
+                                                    'APO01', 'APO02', 'APO03', 'APO04', 'APO05',
+                                                    'APO06', 'APO07', 'APO08', 'APO09', 'APO10',
+                                                    'APO11', 'APO12', 'APO13', 'APO14',
+                                                    'BAI01', 'BAI02', 'BAI03', 'BAI04', 'BAI05', 'BAI06', 'BAI07', 'BAI08', 'BAI09', 'BAI10', 'BAI11',
+                                                    'DSS01', 'DSS02', 'DSS03', 'DSS04', 'DSS05', 'DSS06',
+                                                    'MEA01', 'MEA02', 'MEA03', 'MEA04'
+                                                ];
+                                            @endphp
+
+                                            @foreach($labels as $index => $label)
+                                                @php
+                                                    $score = $designFactorRelativeImportance->{'r_df1_' . ($index + 1)};
+                                                    // Jika score > 0 (positif): gunakan bg-primary (biru), jika score < 0: gunakan bg-danger (merah)
+                                                    $scoreClass = $score > 0 ? 'bg-primary-subtle' : ($score < 0 ? 'bg-danger-subtle' : '');
+                                                @endphp
+                                                <tr>
+                                                    <td class="text-center">{{ $index + 1 }}</td>
+                                                    <td class="text-center">{{ $label }}</td>
+                                                    <td class="text-center">{{ $designFactorScore->{'s_df1_' . ($index + 1)} }}</td>
+                                                    <td class="text-center {{ $scoreClass }}">{{ $score }}</td>
+                                                </tr>
+                                            @endforeach
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Relative Importance Bar Chart -->
+                        <div class="col-lg-6 mb-4">
+                            <div class="card">
+                                <div class="card-header text-center text-primary">
+                                    Relative Importance (Bar Chart)
+                                </div>
+                                <div class="card-body">
+                                    <div class="w-100" style="height: 600px;">
+                                        <canvas id="relativeImportanceChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Radar Chart: Full-width -->
+                    <div class="row">
+                        <div class="col-lg-12 mb-4">
+                            <div class="card">
+                                <div class="card-header text-center">
+                                    Radar Chart
+                                </div>
+                                <div class="card-body">
+                                    <div class="w-100" style="height: 500px;">
+                                        <canvas id="radarChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div> <!-- End Card Utama -->
         </div>
-    @endif
-
-    <!-- Tabel data untuk verifikasi (opsional) -->
-    <table class="table table-striped">
-        <thead>
-            <tr>
-                <th>DF ID</th>
-                <th>Strategy Archetype</th>
-                <th>Current Performance</th>
-                <th>Future Goals</th>
-                <th>Alignment with IT</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>{{ $designFactor->df_id }}</td>
-                <td>{{ $designFactor->input1df1 }}</td>
-                <td>{{ $designFactor->input2df1 }}</td>
-                <td>{{ $designFactor->input3df1 }}</td>
-                <td>{{ $designFactor->input4df1 }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <!-- Tabel untuk Relative Importance Scores -->
-    <div class="table-responsive">
-        <table class="table table-striped table-bordered">
-            <thead>
-                <tr>
-                    <th>EDM01</th>
-                    <th>EDM02</th>
-                    <th>EDM03</th>
-                    <th>EDM04</th>
-                    <th>EDM05</th>
-                    <th>APO01</th>
-                    <th>APO02</th>
-                    <th>APO03</th>
-                    <th>APO04</th>
-                    <th>APO05</th>
-                    <th>APO06</th>
-                    <th>APO07</th>
-                    <th>APO08</th>
-                    <th>APO09</th>
-                    <th>APO10</th>
-                    <th>APO11</th>
-                    <th>APO12</th>
-                    <th>APO13</th>
-                    <th>APO14</th>
-                    <th>BAI01</th>
-                    <th>BAI02</th>
-                    <th>BAI03</th>
-                    <th>BAI04</th>
-                    <th>BAI05</th>
-                    <th>BAI06</th>
-                    <th>BAI07</th>
-                    <th>BAI08</th>
-                    <th>BAI09</th>
-                    <th>BAI10</th>
-                    <th>BAI11</th>
-                    <th>DSS01</th>
-                    <th>DSS02</th>
-                    <th>DSS03</th>
-                    <th>DSS04</th>
-                    <th>DSS05</th>
-                    <th>DSS06</th>
-                    <th>MEA01</th>
-                    <th>MEA02</th>
-                    <th>MEA03</th>
-                    <th>MEA04</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>{{ ($designFactorScore->s_df1_1) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_2) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_3) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_4) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_5) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_6) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_7) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_8) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_9) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_10) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_11) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_12) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_13) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_14) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_15) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_16) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_17) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_18) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_19) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_20) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_21) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_22) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_23) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_24) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_25) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_26) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_27) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_28) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_29) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_30) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_31) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_32) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_33) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_34) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_35) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_36) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_37) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_38) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_39) }}</td>
-                    <td>{{ ($designFactorScore->s_df1_40) }}</td>
-                </tr>
-            </tbody>
-        </table>
     </div>
-
-
-    <!-- Diagram Canvas untuk Relative Importance -->
-    <h3>Relative Importance</h3>
-    <canvas id="relativeImportanceChart" width="400" height="150"></canvas>
-
-    <!-- Diagram Radar untuk Relative Importance -->
-    <h3>Radar Chart</h3>
-    <canvas id="radarChart" width="400" height="400"></canvas>
-
-    <!-- Script untuk inisialisasi Chart.js -->
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-
-            // Grafik untuk Relative Importance (Horizontal Bar Chart)
-            const ctxRelativeImportance = document.getElementById('relativeImportanceChart').getContext('2d');
-            const relativeImportanceValues = [
-                {{ $designFactorRelativeImportance->r_df1_1 }},
-                {{ $designFactorRelativeImportance->r_df1_2 }},
-                {{ $designFactorRelativeImportance->r_df1_3 }},
-                {{ $designFactorRelativeImportance->r_df1_4 }},
-                {{ $designFactorRelativeImportance->r_df1_5 }},
-                {{ $designFactorRelativeImportance->r_df1_6 }},
-                {{ $designFactorRelativeImportance->r_df1_7 }},
-                {{ $designFactorRelativeImportance->r_df1_8 }},
-                {{ $designFactorRelativeImportance->r_df1_9 }},
-                {{ $designFactorRelativeImportance->r_df1_10 }},
-                {{ $designFactorRelativeImportance->r_df1_11 }},
-                {{ $designFactorRelativeImportance->r_df1_12 }},
-                {{ $designFactorRelativeImportance->r_df1_13 }},
-                {{ $designFactorRelativeImportance->r_df1_14 }},
-                {{ $designFactorRelativeImportance->r_df1_15 }},
-                {{ $designFactorRelativeImportance->r_df1_16 }},
-                {{ $designFactorRelativeImportance->r_df1_17 }},
-                {{ $designFactorRelativeImportance->r_df1_18 }},
-                {{ $designFactorRelativeImportance->r_df1_19 }},
-                {{ $designFactorRelativeImportance->r_df1_20 }},
-                {{ $designFactorRelativeImportance->r_df1_21 }},
-                {{ $designFactorRelativeImportance->r_df1_22 }},
-                {{ $designFactorRelativeImportance->r_df1_23 }},
-                {{ $designFactorRelativeImportance->r_df1_24 }},
-                {{ $designFactorRelativeImportance->r_df1_25 }},
-                {{ $designFactorRelativeImportance->r_df1_26 }},
-                {{ $designFactorRelativeImportance->r_df1_27 }},
-                {{ $designFactorRelativeImportance->r_df1_28 }},
-                {{ $designFactorRelativeImportance->r_df1_29 }},
-                {{ $designFactorRelativeImportance->r_df1_30 }},
-                {{ $designFactorRelativeImportance->r_df1_31 }},
-                {{ $designFactorRelativeImportance->r_df1_32 }},
-                {{ $designFactorRelativeImportance->r_df1_33 }},
-                {{ $designFactorRelativeImportance->r_df1_34 }},
-                {{ $designFactorRelativeImportance->r_df1_35 }},
-                {{ $designFactorRelativeImportance->r_df1_36 }},
-                {{ $designFactorRelativeImportance->r_df1_37 }},
-                {{ $designFactorRelativeImportance->r_df1_38 }},
-                {{ $designFactorRelativeImportance->r_df1_39 }},
-                {{ $designFactorRelativeImportance->r_df1_40 }}
-            ];
-            const relativeImportanceLabels = [
-                'EDM01', 'EDM02', 'EDM03', 'EDM04', 'EDM05',
-                'APO01', 'APO02', 'APO03', 'APO04', 'APO05',
-                'APO06', 'APO07', 'APO08', 'APO09', 'APO10',
-                'APO11', 'APO12', 'APO13', 'APO14', 'BAI01',
-                'BAI02', 'BAI03', 'BAI04', 'BAI05', 'BAI06',
-                'BAI07', 'BAI08', 'BAI09', 'BAI10', 'BAI11',
-                'DSS01', 'DSS02', 'DSS03', 'DSS04', 'DSS05',
-                'DSS06', 'MEA01', 'MEA02', 'MEA03', 'MEA04'
-            ];
-
-            const relativeImportanceChart = new Chart(ctxRelativeImportance, {
-                type: 'bar',
-                data: {
-                    labels: relativeImportanceLabels,
-                    datasets: [{
-                        label: 'Relative Importance Score',
-                        data: relativeImportanceValues,
-                        backgroundColor: relativeImportanceValues.map(value => {
-                            return value > 0 ? 'rgba(54, 162, 235, 0.6)' :
-                                value < 0 ? 'rgba(255, 99, 132, 0.6)' :
-                                    'rgba(201, 201, 201, 0.6)';
-                        }),
-                        borderColor: relativeImportanceValues.map(value => {
-                            return value > 0 ? 'rgba(54, 162, 235, 1)' :
-                                value < 0 ? 'rgba(255, 99, 132, 1)' :
-                                    'rgba(201, 201, 201, 1)';
-                        }),
-                    }]
-                },
-                options: {
-                    indexAxis: 'y',
-                    maintainAspectRatio: true,
-                    responsive: true,
-                    scales: {
-                        x: {
-                            max: 100,
-                            min: -100,
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 20
-                            },
-                            grid: {
-                                color: function (context) {
-                                    if (context.tick.value === 0) {
-                                        return 'rgba(0, 0, 0, 0.3)';
-                                    }
-                                    return 'rgba(200, 200, 200, 0.3)';
-                                },
-                                lineWidth: function (context) {
-                                    return context.tick.value === 0 ? 2 : 1;
-                                }
-                            }
-                        },
-                        y: {
-                            ticks: {
-                                maxTicksLimit: 40,
-                                autoSkip: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    label += context.raw >= 0 ? '+' + context.raw : context.raw;
-                                    return label;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-            const ctxRadar = document.getElementById('radarChart').getContext('2d');
-
-            // Membalik urutan label dan data untuk membuat label terbalik dari arah jam
-            const reversedLabels = [...relativeImportanceLabels].reverse();
-            const reversedValues = [...relativeImportanceValues].reverse();
-
-            const radarChart = new Chart(ctxRadar, {
-                type: 'radar',
-                data: {
-                    labels: relativeImportanceLabels,
-                    datasets: [{
-                        label: 'Relative Importance',
-                        data: relativeImportanceValues,
-                        backgroundColor: 'rgba(235, 54, 54, 0.2)', // Warna latar belakang
-                        borderColor: relativeImportanceValues.map(value =>
-                            value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)' // Warna garis: merah untuk negatif, biru untuk positif
-                        ),
-                        borderWidth: 2,
-                        pointBackgroundColor: relativeImportanceValues.map(value =>
-                            value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)' // Warna titik: merah untuk negatif, biru untuk positif
-                        ),
-                        pointBorderColor: '#fff', // Warna border titik
-                        pointHoverBackgroundColor: '#fff', // Warna latar titik saat dihover
-                        pointHoverBorderColor: relativeImportanceValues.map(value =>
-                            value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)' // Warna border titik saat dihover
-                        ),
-                        borderJoinStyle: 'round', // Membuat garis terlihat halus
-                        tension: 0.4 // Membuat garis lebih melengkung dan halus
-                    }]
-                },
-                options: {
-                    scales: {
-                        r: {
-                            suggestedMin: -100,
-                            suggestedMax: 100,
-                            ticks: {
-                                stepSize: 25,
-                                backdropColor: 'transparent' // Menghilangkan backdrop pada angka skala
-                            },
-                            pointLabels: {
-                                fontSize: 10,
-                                color: '#333' // Warna font untuk label
-                            },
-                            angleLines: {
-                                color: 'rgba(200, 200, 200, 0.3)' // Warna garis sudut
-                            },
-                            grid: {
-                                color: 'rgba(200, 200, 200, 0.3)' // Warna grid
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false // Menyembunyikan legenda
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    let label = context.dataset.label || '';
-                                    if (label) {
-                                        label += ': ';
-                                    }
-                                    label += context.raw >= 0 ? '+' + context.raw : context.raw;
-                                    return label;
-                                }
-                            }
-                        }
-                    },
-                    elements: {
-                        line: {
-                            tension: 0.4 // Membuat garis lebih melengkung dan halus
-                        }
-                    }
-                }
-            });
-
-        });
-    </script>
 </div>
+
+<!-- Script Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    // Data untuk Bar Chart Relative Importance
+    const ctxRelativeImportance = document.getElementById('relativeImportanceChart').getContext('2d');
+    const relativeImportanceValues = [
+        {{ $designFactorRelativeImportance->r_df1_1 }},
+        {{ $designFactorRelativeImportance->r_df1_2 }},
+        {{ $designFactorRelativeImportance->r_df1_3 }},
+        {{ $designFactorRelativeImportance->r_df1_4 }},
+        {{ $designFactorRelativeImportance->r_df1_5 }},
+        {{ $designFactorRelativeImportance->r_df1_6 }},
+        {{ $designFactorRelativeImportance->r_df1_7 }},
+        {{ $designFactorRelativeImportance->r_df1_8 }},
+        {{ $designFactorRelativeImportance->r_df1_9 }},
+        {{ $designFactorRelativeImportance->r_df1_10 }},
+        {{ $designFactorRelativeImportance->r_df1_11 }},
+        {{ $designFactorRelativeImportance->r_df1_12 }},
+        {{ $designFactorRelativeImportance->r_df1_13 }},
+        {{ $designFactorRelativeImportance->r_df1_14 }},
+        {{ $designFactorRelativeImportance->r_df1_15 }},
+        {{ $designFactorRelativeImportance->r_df1_16 }},
+        {{ $designFactorRelativeImportance->r_df1_17 }},
+        {{ $designFactorRelativeImportance->r_df1_18 }},
+        {{ $designFactorRelativeImportance->r_df1_19 }},
+        {{ $designFactorRelativeImportance->r_df1_20 }},
+        {{ $designFactorRelativeImportance->r_df1_21 }},
+        {{ $designFactorRelativeImportance->r_df1_22 }},
+        {{ $designFactorRelativeImportance->r_df1_23 }},
+        {{ $designFactorRelativeImportance->r_df1_24 }},
+        {{ $designFactorRelativeImportance->r_df1_25 }},
+        {{ $designFactorRelativeImportance->r_df1_26 }},
+        {{ $designFactorRelativeImportance->r_df1_27 }},
+        {{ $designFactorRelativeImportance->r_df1_28 }},
+        {{ $designFactorRelativeImportance->r_df1_29 }},
+        {{ $designFactorRelativeImportance->r_df1_30 }},
+        {{ $designFactorRelativeImportance->r_df1_31 }},
+        {{ $designFactorRelativeImportance->r_df1_32 }},
+        {{ $designFactorRelativeImportance->r_df1_33 }},
+        {{ $designFactorRelativeImportance->r_df1_34 }},
+        {{ $designFactorRelativeImportance->r_df1_35 }},
+        {{ $designFactorRelativeImportance->r_df1_36 }},
+        {{ $designFactorRelativeImportance->r_df1_37 }},
+        {{ $designFactorRelativeImportance->r_df1_38 }},
+        {{ $designFactorRelativeImportance->r_df1_39 }},
+        {{ $designFactorRelativeImportance->r_df1_40 }}
+    ];
+
+    const relativeImportanceLabels = [
+        'EDM01', 'EDM02', 'EDM03', 'EDM04', 'EDM05',
+        'APO01', 'APO02', 'APO03', 'APO04', 'APO05',
+        'APO06', 'APO07', 'APO08', 'APO09', 'APO10',
+        'APO11', 'APO12', 'APO13', 'APO14', 'BAI01',
+        'BAI02', 'BAI03', 'BAI04', 'BAI05', 'BAI06',
+        'BAI07', 'BAI08', 'BAI09', 'BAI10', 'BAI11',
+        'DSS01', 'DSS02', 'DSS03', 'DSS04', 'DSS05',
+        'DSS06', 'MEA01', 'MEA02', 'MEA03', 'MEA04'
+    ];
+
+    // Inisialisasi Bar Chart Relative Importance
+    const relativeImportanceChart = new Chart(ctxRelativeImportance, {
+        type: 'bar',
+        data: {
+            labels: relativeImportanceLabels,
+            datasets: [{
+                label: 'Relative Importance Score',
+                data: relativeImportanceValues,
+                backgroundColor: relativeImportanceValues.map(value => {
+                    return value > 0 ? 'rgba(54, 162, 235, 0.6)' :
+                           value < 0 ? 'rgba(255, 99, 132, 0.6)' :
+                           'rgba(201, 201, 201, 0.6)';
+                }),
+                borderColor: relativeImportanceValues.map(value => {
+                    return value > 0 ? 'rgba(54, 162, 235, 1)' :
+                           value < 0 ? 'rgba(255, 99, 132, 1)' :
+                           'rgba(201, 201, 201, 1)';
+                }),
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    max: 100,
+                    min: -100,
+                    beginAtZero: true,
+                    ticks: { stepSize: 10 },
+                    grid: {
+                        color: ctx =>
+                            ctx.tick.value === 0 ? 'rgba(0, 0, 0, 0.3)' : 'rgba(200, 200, 200, 0.3)',
+                        lineWidth: ctx =>
+                            ctx.tick.value === 0 ? 2 : 1
+                    }
+                },
+                y: {
+                    ticks: { maxTicksLimit: 40, autoSkip: false }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => {
+                            let lbl = ctx.dataset.label || '';
+                            if (lbl) lbl += ': ';
+                            lbl += ctx.raw >= 0 ? '+' + ctx.raw : ctx.raw;
+                            return lbl;
+                        }
+                    }
+                }
+            }
+        }
+    });
+
+    // Inisialisasi Radar Chart
+    const ctxRadar = document.getElementById('radarChart').getContext('2d');
+    const radarChart = new Chart(ctxRadar, {
+        type: 'radar',
+        data: {
+            labels: relativeImportanceLabels,
+            datasets: [{
+                label: 'Relative Importance',
+                data: relativeImportanceValues,
+                backgroundColor: 'rgba(235, 54, 54, 0.2)',
+                borderColor: relativeImportanceValues.map(value =>
+                    value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)'
+                ),
+                borderWidth: 2,
+                pointBackgroundColor: relativeImportanceValues.map(value =>
+                    value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)'
+                ),
+                pointBorderColor: '#fff',
+                pointHoverBackgroundColor: '#fff',
+                pointHoverBorderColor: relativeImportanceValues.map(value =>
+                    value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)'
+                ),
+                borderJoinStyle: 'round',
+                tension: 0.4
+            }]
+        },
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                r: {
+                    suggestedMin: -100,
+                    suggestedMax: 100,
+                    ticks: { stepSize: 25 },
+                    pointLabels: { font: { size: 10 } },
+                    angleLines: { color: 'rgba(200, 200, 200, 0.3)' },
+                    grid: { color: 'rgba(200, 200, 200, 0.3)' }
+                }
+            },
+            plugins: {
+                legend: { display: false },
+                tooltip: {
+                    callbacks: {
+                        label: ctx => {
+                            let lbl = ctx.dataset.label || '';
+                            if (lbl) lbl += ': ';
+                            lbl += ctx.raw >= 0 ? '+' + ctx.raw : ctx.raw;
+                            return lbl;
+                        }
+                    }
+                }
+            },
+            elements: { line: { tension: 0.4 } }
+        }
+    });
+});
+</script>
 @endsection
