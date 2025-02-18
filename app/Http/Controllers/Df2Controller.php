@@ -75,7 +75,7 @@ class Df2Controller extends Controller
         ];
 
 
-        $DF2_BASELINE_1 = [
+        $DF2_MAP_1 = [
             [0, 0, 1, 0, 2, 2, 0, 2, 2, 0, 0, 0, 2],
             [1, 2, 0, 0, 0, 0, 2, 0, 0, 0, 1, 0, 0],
             [2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 1],
@@ -91,7 +91,7 @@ class Df2Controller extends Controller
             [0, 0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 2]
         ];
 
-        $DF2_BASELINE_2 = [
+        $DF2_MAP_2 = [
             [2, 0, 1, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 1, 1, 2, 1],
             [1, 0, 2, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 1, 1, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 2, 1, 0, 1, 0, 1],
             [2, 2, 0, 1, 0, 2, 1, 1, 1, 2, 1, 1, 1, 0, 0, 1, 0, 0, 0, 2, 1, 1, 0, 2, 0, 0, 1, 0, 0, 2, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0],
@@ -107,44 +107,44 @@ class Df2Controller extends Controller
             [0, 1, 0, 0, 0, 0, 1, 0, 2, 0, 0, 2, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
         ];
 
-        $C49 = [111, 117, 69, 138, 63, 183, 135, 138, 126, 141, 117, 114, 195, 63, 78, 132, 42, 45, 81, 129, 174, 165, 72, 183, 90, 69, 141, 51, 42, 138, 63, 57, 57, 69, 87, 108, 135, 138, 39, 114];
+        $DF2_BASELINE_SCORE = [111, 117, 69, 138, 63, 183, 135, 138, 126, 141, 117, 114, 195, 63, 78, 132, 42, 45, 81, 129, 174, 165, 72, 183, 90, 69, 141, 51, 42, 138, 63, 57, 57, 69, 87, 108, 135, 138, 39, 114];
 
-        $F6 = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
+        $DF2_INPUT_BASELINE = [3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3, 3];
 
         // Matrix multiplication: C3 * C9 to produce C26
-        $C26 = array_fill(0, count($DF2_BASELINE_1[0]), 0);
+        $C26 = array_fill(0, count($DF2_MAP_1[0]), 0);
         foreach ($DF2_INPUT as $i => $row) {
-            foreach ($DF2_BASELINE_1[$i] as $j => $value) {
+            foreach ($DF2_MAP_1[$i] as $j => $value) {
                 $C26[$j] += $row[0] * $value;
             }
         }
 
-        // Matrix multiplication: C26 * C31 to produce C48
-        $C48 = array_fill(0, count($DF2_BASELINE_2[0]), 0);
+        // Matrix multiplication: C26 * C31 to produce DF2_SCORE
+        $DF2_SCORE = array_fill(0, count($DF2_MAP_2[0]), 0);
         foreach ($C26 as $i => $value) {
-            foreach ($DF2_BASELINE_2[$i] as $j => $cell) {
-                $C48[$j] += $value * $cell;
+            foreach ($DF2_MAP_2[$i] as $j => $cell) {
+                $DF2_SCORE[$j] += $value * $cell;
             }
         }
 
-        // Calculate F20 (average of C3)
-        $F20 = array_sum(array_column($DF2_INPUT, 0)) / count($DF2_INPUT);
+        // Calculate DF2_INPUT_AVERAGE (average of C3)
+        $DF2_INPUT_AVERAGE = array_sum(array_column($DF2_INPUT, 0)) / count($DF2_INPUT);
 
-        // Calculate F22 (based on F6 and F20)
-        $average_F6 = array_sum($F6) / count($F6);
-        $F22 = $average_F6 / $F20;
+        // Calculate DF2_RELATIVE (based on DF2_INPUT_BASELINE and DF2_INPUT_AVERAGE)
+        $average_DF2_INPUT_BASELINE = array_sum($DF2_INPUT_BASELINE) / count($DF2_INPUT_BASELINE);
+        $DF2_RELATIVE = $average_DF2_INPUT_BASELINE / $DF2_INPUT_AVERAGE;
 
         // Calculate 'imp' values
         $imp = [];
-        foreach ($C48 as $i => $value) {
-            $imp[$i] = ($C49[$i] != 0) ? floor(100 * $value / $C49[$i]) - 100 : 0;
+        foreach ($DF2_SCORE as $i => $value) {
+            $imp[$i] = ($DF2_BASELINE_SCORE[$i] != 0) ? floor(100 * $value / $DF2_BASELINE_SCORE[$i]) - 100 : 0;
         }
 
-        // Calculate RelativeImp using F22, C48, and C49
+        // Calculate RelativeImp using DF2_RELATIVE, DF2_SCORE, and DF2_BASELINE_SCORE
         $RelativeImp = [];
-        foreach ($C48 as $i => $value) {
-            if ($C49[$i] != 0) {
-                $calculatedValue = ($F22 * 100 * $value) / $C49[$i];
+        foreach ($DF2_SCORE as $i => $value) {
+            if ($DF2_BASELINE_SCORE[$i] != 0) {
+                $calculatedValue = ($DF2_RELATIVE * 100 * $value) / $DF2_BASELINE_SCORE[$i];
                 $roundedValue = round($calculatedValue / 5) * 5;
                 $RelativeImp[$i] = $roundedValue - 100;
             } else {
@@ -155,7 +155,7 @@ class Df2Controller extends Controller
         //==========================================================================
         // Siapkan data untuk tabel design_factor_2_score
         $dataForScore = ['id' => Auth::id(), 'df2_id' => $designFactor2->df_id];
-        foreach ($C48 as $index => $value) {
+        foreach ($DF2_SCORE as $index => $value) {
             $dataForScore['s_df2_' . ($index + 1)] = $value;
         }
         DesignFactor2Score::create($dataForScore);

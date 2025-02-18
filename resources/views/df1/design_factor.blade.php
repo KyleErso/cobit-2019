@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container my-5">
+<div class="container">
     <!-- Card Utama -->
     <div class="row justify-content-center">
         <div class="col-lg-10">
@@ -504,5 +504,34 @@ DF1_SCORE.forEach((score, index) => {
         });
     });
 });
+
+document.addEventListener("DOMContentLoaded", function () {
+    const radios = document.querySelectorAll('input[type="radio"]');
+    
+    function updateDisabledOptions() {
+        let counts = { "4": 0, "5": 0 };
+
+        radios.forEach(radio => {
+            if (radio.checked) {
+                if (radio.value === "4" || radio.value === "5") {
+                    counts[radio.value]++;
+                }
+            }
+        });
+
+        radios.forEach(radio => {
+            if (radio.value === "4" || radio.value === "5") {
+                radio.disabled = counts[radio.value] >= 1 && !radio.checked;
+            } else {
+                const groupName = radio.name;
+                const selectedCount = document.querySelectorAll(`input[name="${groupName}"]:checked`).length;
+                radio.disabled = selectedCount >= 2 && !radio.checked;
+            }
+        });
+    }
+
+    radios.forEach(radio => radio.addEventListener("change", updateDisabledOptions));
+});
+
 </script>
 @endsection

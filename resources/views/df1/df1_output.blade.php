@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container my-5">
+<div class="container">
     <!-- Card Utama: Output Data Design Factor 1 -->
     <div class="row justify-content-center">
         <div class="col-lg-10">

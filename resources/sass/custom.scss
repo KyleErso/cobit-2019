@@ -43,10 +43,11 @@ main {
     padding: 20px;
 }
 
-// Styling untuk halaman login
 body.login {
     background: $login-bg;
-    background-size: $login-bg-size;
+    background-size: cover; /* Ukuran gambar mengikuti aslinya */
+    background-repeat: no-repeat;
+    background-position: center;
     position: relative;
 
     &::before {
@@ -56,13 +57,14 @@ body.login {
         left: 0;
         right: 0;
         bottom: 0;
-        background: $login-overlay-color; // Overlay gelap
+        background: $login-overlay-color;
         z-index: 1;
     }
 
     .container {
         position: relative;
-        z-index: 2; // Pastikan konten tetap di atas overlay
+        z-index: 2;
     }
 }
+
 

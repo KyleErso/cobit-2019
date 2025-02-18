@@ -30,8 +30,6 @@ $sidebar-active-text-color: $primary; // Warna teks item aktif
 $transition-duration: 0.3s; // Durasi transisi untuk efek hover
 $transition-timing: ease; // Timing function untuk transisi
 
-// Login Background
-$login-bg: url('images/login-background.png') no-repeat center center;
-$login-bg-size: cover;
-$login-overlay-color: rgba(208, 208, 208, 0.654); // Overlay gelap untuk meningkatkan kontras teks
-
+$login-bg: url('https://media-hosting.imagekit.io//65e9f66593da4119/Home.png?Expires=1834392075&Key-Pair-Id=K2ZIVPTIP2VGHC&Signature=ACOBNash6EMXAS6AG2BvMLqTNX16TKC3hrSK~VKVSkSytjcS1lPcfm51sbebOIoAiDkpd6~mBOkoUje9zJCV2N13Rt9Tj4TELpQ96fM5uwYYWBjWMgG0KG6LenxndkUVdiJwRWs7RzoSEK-eLjw6npxALjbikfalWOSIzxyqdmbMUYU58tBNsQzHpv2rXHZxYdYPp9jbO2rpyS6Zw9rYSzET1GAnNx05LO9G1uqtQag0q2XVXdAz6ExtBDfGyC0lC6bMn7~-xMCQy5PgI2aL-RKkADnBTUc9NTeSadlcnApSI8gkuKeEKTezva-6bLBIJ1qtCx3nehanoHR09VOlpg__');
+$login-bg-size: cover; // Atur sesuai kebutuhan, bisa juga contain atau auto
+$login-overlay-color: rgba(0, 0, 0, 0.4); // Contoh overlay gelap
