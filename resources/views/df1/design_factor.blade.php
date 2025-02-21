@@ -8,7 +8,7 @@
             <div class="card shadow border-0 rounded">
                 <!-- Card Header -->
                 <div class="card-header bg-primary text-white text-center py-3">
-                    <h4 class="mb-0">Design Factor 1</h4>
+                    <h4 class="mb-0">Design Factor 1 - Enterprise Strategy</h4>
                 </div>
                 <!-- Card Body -->
                 <div class="card-body p-4">
@@ -21,7 +21,7 @@
                             <table class="table table-bordered table-hover">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col">Kode</th>
+                                        <th scope="col">Refrence</th>
                                         <th scope="col">Strategy Archetype</th>
                                         <th scope="col">Explanation</th>
                                         <th scope="col">Rating</th>

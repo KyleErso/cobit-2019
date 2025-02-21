@@ -39,7 +39,7 @@
                             <table class="table table-bordered table-hover">
                                 <thead class="table-light">
                                     <tr>
-                                        <th scope="col">Kode</th>
+                                        <th scope="col">Refrence</th>
                                         <th scope="col">Balanced Scorecard Dimension</th>
                                         <th scope="col">Enterprise Goal</th>
                                         <th scope="col">Rating</th>

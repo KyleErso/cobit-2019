@@ -39,8 +39,8 @@
 
                 <!-- Card Body: Row untuk Chart -->
                 <div class="card-body">
+                    <!-- Relative Importance Scores Table -->
                     <div class="row">
-                        <!-- Relative Importance Scores Table -->
                         <div class="col-lg-6 mb-4">
                             <div class="card">
                                 <div class="card-header text-center text-primary">
@@ -72,7 +72,7 @@
                                             @foreach($labels as $index => $label)
                                                 @php
                                                     $score = $designFactorRelativeImportance->{'r_df1_' . ($index + 1)};
-                                                    // Jika score > 0 (positif): gunakan bg-primary (biru), jika score < 0: gunakan bg-danger (merah)
+                                                    // Jika score > 0 (positif): gunakan bg-primary-subtle, jika score < 0: gunakan bg-danger-subtle
                                                     $scoreClass = $score > 0 ? 'bg-primary-subtle' : ($score < 0 ? 'bg-danger-subtle' : '');
                                                 @endphp
                                                 <tr>
@@ -112,14 +112,14 @@
                                 </div>
                                 <div class="card-body">
                                     <div class="w-100" style="height: 500px;">
-                                        <canvas id="radarChart"></canvas>
+                                        <canvas id="relativeImportanceRadarChart"></canvas>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-
+                <!-- End Card Body -->
             </div> <!-- End Card Utama -->
         </div>
     </div>
@@ -129,8 +129,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
 document.addEventListener('DOMContentLoaded', function () {
-    // Data untuk Bar Chart Relative Importance
-    const ctxRelativeImportance = document.getElementById('relativeImportanceChart').getContext('2d');
+    // Data untuk Bar Chart Relative Importance DF1
     const relativeImportanceValues = [
         {{ $designFactorRelativeImportance->r_df1_1 }},
         {{ $designFactorRelativeImportance->r_df1_2 }},
@@ -185,7 +184,8 @@ document.addEventListener('DOMContentLoaded', function () {
         'DSS06', 'MEA01', 'MEA02', 'MEA03', 'MEA04'
     ];
 
-    // Inisialisasi Bar Chart Relative Importance
+    // Inisialisasi Bar Chart (menggunakan data urutan asli)
+    const ctxRelativeImportance = document.getElementById('relativeImportanceChart').getContext('2d');
     const relativeImportanceChart = new Chart(ctxRelativeImportance, {
         type: 'bar',
         data: {
@@ -193,16 +193,16 @@ document.addEventListener('DOMContentLoaded', function () {
             datasets: [{
                 label: 'Relative Importance Score',
                 data: relativeImportanceValues,
-                backgroundColor: relativeImportanceValues.map(value => {
-                    return value > 0 ? 'rgba(54, 162, 235, 0.6)' :
-                           value < 0 ? 'rgba(255, 99, 132, 0.6)' :
-                           'rgba(201, 201, 201, 0.6)';
-                }),
-                borderColor: relativeImportanceValues.map(value => {
-                    return value > 0 ? 'rgba(54, 162, 235, 1)' :
-                           value < 0 ? 'rgba(255, 99, 132, 1)' :
-                           'rgba(201, 201, 201, 1)';
-                }),
+                backgroundColor: relativeImportanceValues.map(value =>
+                    value > 0 ? 'rgba(54, 162, 235, 0.6)' :
+                    value < 0 ? 'rgba(255, 99, 132, 0.6)' :
+                    'rgba(201, 201, 201, 0.6)'
+                ),
+                borderColor: relativeImportanceValues.map(value =>
+                    value > 0 ? 'rgba(54, 162, 235, 1)' :
+                    value < 0 ? 'rgba(255, 99, 132, 1)' :
+                    'rgba(201, 201, 201, 1)'
+                ),
             }]
         },
         options: {
@@ -242,29 +242,33 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
+    // Membalik urutan label dan data khusus untuk Radar Chart,
+    // sehingga urutannya akan mulai dari MEA04 ke EDM01 searah jarum jam.
+    const reversedLabels = [...relativeImportanceLabels].reverse();
+    const reversedValues = [...relativeImportanceValues].reverse();
+
     // Inisialisasi Radar Chart
-    const ctxRadar = document.getElementById('radarChart').getContext('2d');
+    const ctxRadar = document.getElementById('relativeImportanceRadarChart').getContext('2d');
     const radarChart = new Chart(ctxRadar, {
         type: 'radar',
         data: {
-            labels: relativeImportanceLabels,
+            labels: reversedLabels,
             datasets: [{
                 label: 'Relative Importance',
-                data: relativeImportanceValues,
+                data: reversedValues,
                 backgroundColor: 'rgba(235, 54, 54, 0.2)',
-                borderColor: relativeImportanceValues.map(value =>
+                borderColor: reversedValues.map(value =>
                     value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)'
                 ),
                 borderWidth: 2,
-                pointBackgroundColor: relativeImportanceValues.map(value =>
+                pointBackgroundColor: reversedValues.map(value =>
                     value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)'
                 ),
                 pointBorderColor: '#fff',
                 pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: relativeImportanceValues.map(value =>
+                pointHoverBorderColor: reversedValues.map(value =>
                     value < 0 ? 'rgba(255, 99, 132, 1)' : 'rgba(54, 162, 235, 1)'
                 ),
-                borderJoinStyle: 'round',
                 tension: 0.4
             }]
         },

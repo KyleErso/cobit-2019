@@ -1,14 +1,21 @@
 @extends('layouts.app')
+
 @section('content')
 <div class="container">
+    <!-- Card Utama -->
     <div class="row justify-content-center">
-        <div class="col-md-8">
-            <div class="card">
-                <div class="card-header">Design Factor 3</div>
-                <div class="card-body">
+        <div class="col-lg-10">
+            <div class="card shadow border-0 rounded">
+                <!-- Card Header -->
+                <div class="card-header bg-primary text-white text-center py-3">
+                    <h4 class="mb-0">Design Factor 3 - Risk Profile</h4>
+                </div>
+                <!-- Card Body -->
+                <div class="card-body p-4">
                     <form action="{{ route('df3.store') }}" method="POST">
                         @csrf
                         <input type="hidden" name="df_id" value="{{ $id }}">
+                        
                         @php
                             $labels = [
                                 'IT investment decision making, portfolio definition & maintenance',
@@ -32,42 +39,120 @@
                                 'Data & information management'
                             ];
                         @endphp
-                        @foreach($labels as $index => $label)
-                            <div class="assessment-item card mb-3">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-6 text-primary">
-                                            <label for="impact{{ $index + 1 }}">{{ $label }}</label>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <div class="row">
-                                                <div class="col mb-2">
-                                                    <input type="number" class="form-control" id="impact{{ $index + 1 }}" name="impact{{ $index + 1 }}" placeholder="Impact" oninput="calculateResult({{ $index + 1 }})">
-                                                </div>
-                                                <div class="col mb-2">
-                                                    <input type="number" class="form-control" id="likelihood{{ $index + 1 }}" name="likelihood{{ $index + 1 }}" placeholder="Likelihood" oninput="calculateResult({{ $index + 1 }})">
-                                                </div>
-                                                <div class="col mb-2">
-                                                    <input type="hidden" id="result{{ $index + 1 }}" name="input{{ $index + 1 }}df3">
-                                                    <input type="text" class="form-control" id="resultText{{ $index + 1 }}" placeholder="Result" readonly>
-                                                </div>
-                                            </div>
+
+                        <!-- Tabel Risk Assessment -->
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-hover">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th scope="col" style="width: 5%;">Refrence</th>
+                                        <th scope="col">Risk Category</th>
+                                        <th scope="col" style="width: 15%;">Impact</th>
+                                        <th scope="col" style="width: 15%;">Likelihood</th>
+                                        <th scope="col" style="width: 15%;">Result</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($labels as $index => $label)
+                                        <tr>
+                                            <td class="text-center">{{ $index + 1 }}</td>
+                                            <td class="text-primary fw-bold">
+                                                {{ $label }}
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" id="impact{{ $index + 1 }}" 
+                                                    name="impact{{ $index + 1 }}" placeholder="Impact" 
+                                                    oninput="calculateResult({{ $index + 1 }})">
+                                            </td>
+                                            <td>
+                                                <input type="number" class="form-control" id="likelihood{{ $index + 1 }}" 
+                                                    name="likelihood{{ $index + 1 }}" placeholder="Likelihood" 
+                                                    oninput="calculateResult({{ $index + 1 }})">
+                                            </td>
+                                            <td>
+                                                <!-- Hidden input untuk menyimpan value numeric -->
+                                                <input type="hidden" id="result{{ $index + 1 }}" name="input{{ $index + 1 }}df3">
+                                                <!-- Textbox hanya untuk menampilkan nilai -->
+                                                <input type="text" class="form-control" id="resultText{{ $index + 1 }}" 
+                                                    placeholder="Result" readonly>
+                                            </td>
+                                        </tr>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                        <!-- Grafik Input Score -->
+                        <div class="row mt-4">
+                            <!-- Bar Chart Input Score -->
+                            <div class="mb-3">
+                                <div class="card h-100">
+                                    <div class="card-header text-center">Bar Chart Input Score</div>
+                                    <div class="card-body">
+                                        <div class="w-100" style="height: 400px;">
+                                            <canvas id="barChart"></canvas>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        @endforeach
+                        </div>
 
-                        <!-- Bar Chart Container -->
-                        <div class="row mb-4">
-                            <div class="col-md-12">
-                                <div class="chart-container" style="height: 500px;">
-                                    <canvas id="barChart"></canvas>
+                        <!-- Layout: Relative Importance -->
+                        <div class="row mt-4">
+                            <!-- Relative Importance Radar Chart -->
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-header text-center text-primary">
+                                        Relative Importance (Radar Chart)
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="w-100" style="height: 400px;">
+                                            <canvas id="relativeImportanceRadarChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- Relative Importance Table -->
+                            <div class="col-md-6 mb-3">
+                                <div class="card h-100">
+                                    <div class="card-header text-center text-primary">
+                                        Relative Importance Table
+                                    </div>
+                                    <div class="card-body" style="max-height: 400px; overflow-y: auto;">
+                                        <table class="table table-bordered table-sm" id="results-table">
+                                            <thead class="table-light">
+                                                <tr>
+                                                    <th class="text-center text-primary">Index</th>
+                                                    <th class="text-center text-primary">DF2 Score</th>
+                                                    <th class="text-center text-primary">Relative Importance</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <!-- Data akan diisi oleh JavaScript -->
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="form-group mt-4 text-center">
+                        <!-- Relative Importance Bar Chart -->
+                        <div class="row mt-4">
+                            <div class="col-12">
+                                <div class="card">
+                                    <div class="card-header text-center text-primary">
+                                        Relative Importance (Bar Chart)
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="w-100" style="height: 700px;">
+                                            <canvas id="relativeImportanceChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center mt-4">
                             <button type="submit" class="btn btn-primary btn-lg px-5">Submit Assessment</button>
                         </div>
                     </form>
@@ -110,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function () {
             ],
             datasets: [{
                 label: 'Risk Score',
-                data: new Array(19).fill(0), // Default data with 19 items
+                data: new Array(19).fill(0),
                 backgroundColor: 'rgba(54, 162, 235, 0.5)',
                 borderColor: 'rgba(54, 162, 235, 1)',
                 borderWidth: 1
@@ -122,13 +207,13 @@ document.addEventListener('DOMContentLoaded', function () {
             indexAxis: 'y',
             scales: {
                 x: {
-                    max: 25, // Adjust max value based on possible impact * likelihood
+                    max: 25,
                     beginAtZero: true,
                     display: false
                 },
                 y: {
                     ticks: {
-                        autoSkip: false, // Ensure all labels are displayed
+                        autoSkip: false,
                         font: {
                             size: 12
                         }
@@ -142,21 +227,18 @@ document.addEventListener('DOMContentLoaded', function () {
         }
     });
 
-    // Function to calculate result and update Bar Chart
+    // Fungsi untuk menghitung hasil dan memperbarui Bar Chart
     function calculateResult(index) {
         const impactValue = parseFloat(document.getElementById(`impact${index}`).value) || 0;
         const likelihoodValue = parseFloat(document.getElementById(`likelihood${index}`).value) || 0;
         const result = impactValue * likelihoodValue;
 
-        // Update hidden input and result text field
+        // Update hidden input dan tampilan hasil
         document.getElementById(`result${index}`).value = result;
         const resultText = document.getElementById(`resultText${index}`);
         resultText.value = Math.floor(result);
 
-        // Remove previous background classes
         resultText.classList.remove('bg-success-subtle', 'bg-warning-subtle', 'bg-danger-subtle');
-
-        // Add appropriate background class based on result
         if (result >= 0 && result <= 6) {
             resultText.classList.add('bg-success-subtle');
         } else if (result > 6 && result <= 12) {
@@ -165,11 +247,10 @@ document.addEventListener('DOMContentLoaded', function () {
             resultText.classList.add('bg-danger-subtle');
         }
 
-        // Update Bar Chart
         updateBarChart();
     }
 
-    // Function to update Bar Chart
+    // Fungsi untuk memperbarui data pada Bar Chart
     function updateBarChart() {
         const data = [];
         for (let i = 1; i <= 19; i++) {
@@ -180,7 +261,7 @@ document.addEventListener('DOMContentLoaded', function () {
         barChart.update();
     }
 
-    // Attach event listeners to all number inputs
+    // Pasang event listener pada setiap input angka
     document.querySelectorAll('input[type="number"]').forEach(input => {
         input.addEventListener('input', function () {
             const index = this.id.replace('impact', '').replace('likelihood', '');
@@ -189,32 +270,4 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 </script>
-<style>
-.chart-container {
-    position: relative;
-    margin: auto;
-}
-.bg-success-subtle {
-    background-color: #d1e7dd !important;
-}
-.bg-warning-subtle {
-    background-color: #fff3cd !important;
-}
-.bg-danger-subtle {
-    background-color: #f8d7da !important;
-}
-.assessment-item {
-    transition: transform 0.2s;
-}
-.assessment-item:hover {
-    transform: translateY(-2px);
-}
-.form-check-input {
-    cursor: pointer;
-}
-.form-check-label {
-    cursor: pointer;
-    user-select: none;
-}
-</style>
 @endsection

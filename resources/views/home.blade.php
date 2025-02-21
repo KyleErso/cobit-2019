@@ -39,7 +39,7 @@
                 <div class="card-footer text-center bg-light py-3 rounded-bottom">
                     <small class="text-muted">
                         Need help? 
-                        <a href="https://wa.me/6281234567890?text=Halo%20saya%20ingin%20bertanya%20tentang%20COBIT" 
+                        <a href="https://wa.me/6287779511667?text=Halo%20saya%20ingin%20bertanya%20tentang%20COBIT2019" 
                            target="_blank" 
                            class="text-decoration-none text-primary fw-bold">
                             Contact Support
