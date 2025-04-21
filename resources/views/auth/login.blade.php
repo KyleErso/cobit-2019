@@ -2,8 +2,8 @@
 
 @section('content')
 <div class="container">
-    <div class="row justify-content-center align-items-center min-vh-100 ">
-        <div class="col-md-6 ">
+    <div class="row justify-content-center align-items-center min-vh-100">
+        <div class="col-md-6">
             <div class="card shadow-lg border-0 rounded-lg">
                 <!-- Header Card -->
                 <div class="card-header bg-primary text-white text-center py-4">
@@ -48,8 +48,11 @@
 
                 <!-- Footer Card -->
                 <div class="card-footer text-center bg-light py-3">
-                    <small class="text-muted">Don't have an account? 
+                    <small class="text-muted">
+                        Don't have an account? 
                         <a href="{{ route('register') }}" class="text-decoration-none text-primary fw-bold">Register here</a>
+                        or 
+                        <a href="{{ route('guest.login') }}" class="text-decoration-none text-primary fw-bold">Login as Guest</a>
                     </small>
                 </div>
             </div>

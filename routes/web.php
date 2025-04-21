@@ -4,19 +4,23 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
-use App\Http\Controllers\DfController;
-use App\Http\Controllers\Df2Controller;
-use App\Http\Controllers\Df3Controller;
-use App\Http\Controllers\Df4Controller;
-use App\Http\Controllers\Df5Controller;
-use App\Http\Controllers\Df6Controller;
-use App\Http\Controllers\Df7Controller;
-use App\Http\Controllers\Df8Controller;
-use App\Http\Controllers\Df9Controller;
-use App\Http\Controllers\Df10Controller;
+use App\Http\Controllers\cobit2019\DfController;
+use App\Http\Controllers\cobit2019\Df2Controller;
+use App\Http\Controllers\cobit2019\Df3Controller;
+use App\Http\Controllers\cobit2019\Df4Controller;
+use App\Http\Controllers\cobit2019\Df5Controller;
+use App\Http\Controllers\cobit2019\Df6Controller;
+use App\Http\Controllers\cobit2019\Df7Controller;
+use App\Http\Controllers\cobit2019\Df8Controller;
+use App\Http\Controllers\cobit2019\Df9Controller;
+use App\Http\Controllers\cobit2019\Df10Controller;
+
 
 // Redirect ke halaman login
 Route::get('/', function () {return redirect()->route('login');});
+
+
+Route::get('/guest', [\App\Http\Controllers\GuestController::class, 'loginGuest'])->name('guest.login');
 
 // Route untuk login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
@@ -31,6 +35,12 @@ Route::post('/register', [RegisterController::class, 'register']);
 
 // Route home yang dilindungi
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
+
+// Tambahkan di file routes/web.php (di atas route df1-df10)
+Route::get('/cobit2019/cobit_home', function () {
+    return view('cobit2019.cobit_home');
+})->name('cobit.home')->middleware('auth');
+
 
 // Route untuk Design Factor 1
 Route::get('/df1/form/{id}', [DfController::class, 'showDesignFactorForm'])->name('df1.form')->middleware('auth'); // Menampilkan form
