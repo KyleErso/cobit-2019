@@ -18,6 +18,7 @@ class DesignFactor1 extends Model
         'input2df1',
         'input3df1',
         'input4df1',
+        'assessment_id',
         'created_at',
         'updated_at',
     ];

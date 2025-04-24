@@ -30,15 +30,27 @@ class DfController extends Controller
             'alignment_with_it' => 'required|integer',
         ]);
 
-        // Simpan data ke tabel design_factor_1
+
+
+        $assessment_id = session('assessment_id');
+        if (!$assessment_id) {
+            return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+        }
+
+
+
+
         $designFactor = DesignFactor1::create([
             'id' => Auth::id(), // Ambil ID user yang sedang login
             'df_id' => $validated['df_id'],
+            'assessment_id' => $assessment_id, // simpan assessment_id di sini
             'input1df1' => $validated['strategy_archetype'],
             'input2df1' => $validated['current_performance'],
             'input3df1' => $validated['future_goals'],
             'input4df1' => $validated['alignment_with_it'],
         ]);
+
+
         //==========================================================================
         // Matriks tetap (DF1map) dengan dimensi (40, 4)
         $DF1map = [
@@ -165,16 +177,27 @@ class DfController extends Controller
             }
             $DF1_RELATIVE_IMPORTANCE[] = $result;
         }
+
+
+
         //==========================================================================
         // Siapkan data untuk tabel design_factor_1_score
-        $dataForScore = ['id' => Auth::id(), 'df1_id' => $designFactor->df_id];
+        $dataForScore = [
+            'id' => Auth::id(),
+            'df1_id' => $designFactor->df_id,
+            'assessment_id' => $assessment_id
+        ];
         foreach ($DF1_SCORE as $index => $value) {
             $dataForScore['s_df1_' . ($index + 1)] = $value;
         }
         DesignFactor1Score::create($dataForScore);
 
         // Siapkan data untuk tabel design_factor_1_relative_importance
-        $dataForRelativeImportance = ['id' => Auth::id(), 'df1_id' => $designFactor->df_id];
+        $dataForRelativeImportance = [
+            'id' => Auth::id(),
+            'df1_id' => $designFactor->df_id,
+            'assessment_id' => $assessment_id
+        ];
         foreach ($DF1_RELATIVE_IMPORTANCE as $index => $value) {
             $dataForRelativeImportance['r_df1_' . ($index + 1)] = $value;
         }
@@ -209,7 +232,6 @@ class DfController extends Controller
         if (!$designFactor || !$designFactorScore || !$designFactorRelativeImportance) {
             return redirect()->route('home')->with('error', 'Data tidak ditemukan.');
         }
-
         // Kirim data ke view
         return view('cobit2019.df1.df1_output', [
             'designFactor' => $designFactor,

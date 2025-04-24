@@ -4,6 +4,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
+use App\Http\Controllers\GuestController;
+use App\Http\Controllers\Admin\AssessmentController as AdminAssessment;
 use App\Http\Controllers\cobit2019\DfController;
 use App\Http\Controllers\cobit2019\Df2Controller;
 use App\Http\Controllers\cobit2019\Df3Controller;
@@ -14,13 +16,26 @@ use App\Http\Controllers\cobit2019\Df7Controller;
 use App\Http\Controllers\cobit2019\Df8Controller;
 use App\Http\Controllers\cobit2019\Df9Controller;
 use App\Http\Controllers\cobit2019\Df10Controller;
+use App\Http\Controllers\AssessmentController;
+
+Route::get('/assessment/join', [AssessmentController::class, 'showJoinForm'])->name('assessment.join');
+Route::post('/assessment/join', [AssessmentController::class, 'join'])->name('assessment.join.store');
+
+
+
+// admin dashboard & store/delete
+Route::prefix('admin')->middleware('auth')->group(function(){
+    Route::get('dashboard', [AdminAssessment::class,'index'])->name('admin.dashboard');
+    Route::post('assessments', [AdminAssessment::class,'store'])->name('admin.assessments.store');
+    Route::delete('assessments/{assessment_id}', [AdminAssessment::class,'destroy'])->name('admin.assessments.destroy');
+});
 
 
 // Redirect ke halaman login
 Route::get('/', function () {return redirect()->route('login');});
 
 
-Route::get('/guest', [\App\Http\Controllers\GuestController::class, 'loginGuest'])->name('guest.login');
+Route::get('/guest', [GuestController::class, 'loginGuest'])->name('guest.login');
 
 // Route untuk login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');

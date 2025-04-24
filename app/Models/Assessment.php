@@ -29,6 +29,10 @@ class Assessment extends Model
         'kode_assessment', // Kolom baru untuk kode_assessment
     ];
 
+    public function users()
+{
+    return $this->belongsToMany(User::class);
+}
     // Relasi ke User
     public function creator()
     {

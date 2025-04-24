@@ -1,68 +1,87 @@
 @extends('layouts.app')
 @section('content')
 <div class="container">
-    <div class="row justify-content-center">
-        <!-- Main Card -->
-        <div class="col-md-8">
-            <div class="card shadow-lg border-0 rounded-lg">
-                <!-- Header Card -->
-                <div class="card-header bg-primary text-white text-center py-4 rounded-top">
-                    <h3 class="mb-0">{{ __('Cobit 2019 Tools') }}</h3>
-                </div>
-
-                <!-- Body Card -->
-                <div class="card-body p-5">
-                    <!-- User Information -->
-                    <div class="text-center mb-4">
-                        <h4 class="fw-bold text-primary">{{ Auth::user()->name }}</h4>
-                        <p class="text-muted">Jabatan: {{ Auth::user()->jabatan ?? 'Jabatan tidak tersedia' }}</p>
-                    </div>
-
-                    <!-- Tombol Mulai Assessment -->
-                    <div class="mt-4">
-                        <div class="d-flex justify-content-center">
-                            <a href="{{ route('df1.form', ['id' => 1]) }}"
-                               class="btn btn-warning btn-lg px-5 py-3 fw-bold shadow-sm">
-                                Mulai Assessment
-                            </a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Footer Card -->
-                <div class="card-footer text-center bg-light py-3 rounded-bottom">
-                    <small class="text-muted">
-                        Need help? 
-                        <a href="https://wa.me/6287779511667?text=Halo%20saya%20ingin%20bertanya%20tentang%20COBIT2019" 
-                           target="_blank" 
-                           class="text-decoration-none text-primary fw-bold">
-                            Contact Support
-                        </a>
-                    </small>
-                </div>
-            </div>
+  <div class="row justify-content-center">
+    <!-- Main Card -->
+    <div class="col-md-8">
+      <div class="card shadow-lg border-0 rounded-lg">
+        <!-- Header Card -->
+        <div class="card-header bg-primary text-white text-center py-4 rounded-top">
+          <h3 class="mb-0">{{ __('Cobit 2019 Tools') }}</h3>
         </div>
 
-        <!-- Calendar Card -->
-        <div class="col-md-4">
-            <div class="card shadow-lg border-0 rounded-lg h-100">
-                <!-- Header Card -->
-                <div class="card-header bg-primary text-white text-center py-3 rounded-top">
-                    <h5 class="mb-0">{{ __('Kalender') }}</h5>
-                </div>
+        <!-- Body Card -->
+        <div class="card-body p-5">
+          <!-- User Information -->
+          <div class="text-center mb-4">
+            <h4 class="fw-bold text-primary">{{ Auth::user()->name }}</h4>
+            <p class="text-muted">Jabatan: {{ Auth::user()->jabatan ?? 'Jabatan tidak tersedia' }}</p>
+          </div>
 
-                <!-- Body Card -->
-                <div class="card-body p-4">
-                    <div class="text-center mb-3">
-                        <h5 class="mb-0" id="current-time">--:--:--</h5>
-                        <p class="mb-0" id="current-date">-- / -- / ----</p>
-                        <p class="mb-0" id="current-day">---</p>
-                    </div>
-                    <div id="calendar" class="bg-white p-2 rounded shadow"></div>
-                </div>
+          <!-- Join Form -->
+          @if(session('error'))
+            <div class="alert alert-danger">{{ session('error') }}</div>
+          @endif
+
+          <form action="{{ route('assessment.join.store') }}" method="POST">
+            @csrf
+            <!-- Input Kode Rancangan -->
+            <div class="mb-3">
+              <label for="kode_assessment" class="form-label">Kode Rancangan</label>
+              <input type="text"
+                     name="kode_assessment"
+                     id="kode_assessment"
+                     class="form-control @error('kode_assessment') is-invalid @enderror"
+                     value="{{ old('kode_assessment') }}"
+                     placeholder="Masukkan kode rancangan"
+                     required>
+              @error('kode_assessment')
+                <div class="invalid-feedback">{{ $message }}</div>
+              @enderror
             </div>
+
+            <div class="d-grid">
+              <button type="submit" class="btn btn-warning btn-lg fw-bold shadow-sm">
+                Rancangan Baru
+              </button>
+            </div>
+          </form>
         </div>
+
+        <!-- Footer Card -->
+        <div class="card-footer text-center bg-light py-3 rounded-bottom">
+          <small class="text-muted">
+            Need help? 
+            <a href="https://wa.me/6287779511667?text=Halo%20saya%20ingin%20bertanya%20tentang%20COBIT2019" 
+               target="_blank" 
+               class="text-decoration-none text-primary fw-bold">
+              Contact Support
+            </a>
+          </small>
+        </div>
+      </div>
     </div>
+
+    <!-- Calendar Card -->
+    <div class="col-md-4">
+      <div class="card shadow-lg border-0 rounded-lg h-100">
+        <!-- Header Card -->
+        <div class="card-header bg-primary text-white text-center py-3 rounded-top">
+          <h5 class="mb-0">{{ __('Kalender') }}</h5>
+        </div>
+
+        <!-- Body Card -->
+        <div class="card-body p-4">
+          <div class="text-center mb-3">
+            <h5 class="mb-0" id="current-time">--:--:--</h5>
+            <p class="mb-0" id="current-date">-- / -- / ----</p>
+            <p class="mb-0" id="current-day">---</p>
+          </div>
+          <div id="calendar" class="bg-white p-2 rounded shadow"></div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
 
 <!-- Include FullCalendar CSS and JS -->
@@ -72,30 +91,22 @@
 
 <!-- Initialize FullCalendar and Current Time -->
 <script>
-    document.addEventListener('DOMContentLoaded', function() {
-        function updateTime() {
-            const now = new Date();
-            const timeString = now.toLocaleTimeString('id-ID');
-            const dateString = now.toLocaleDateString('id-ID');
-            const dayString = now.toLocaleDateString('id-ID', { weekday: 'long' });
-            document.getElementById('current-time').textContent = timeString;
-            document.getElementById('current-date').textContent = dateString;
-            document.getElementById('current-day').textContent = dayString;
-        }
-        setInterval(updateTime, 1000);
-        updateTime();
+  document.addEventListener('DOMContentLoaded', function() {
+    function updateTime() {
+      const now = new Date();
+      document.getElementById('current-time').textContent = now.toLocaleTimeString('id-ID');
+      document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID');
+      document.getElementById('current-day').textContent = now.toLocaleDateString('id-ID', { weekday: 'long' });
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
 
-        const calendarEl = document.getElementById('calendar');
-        const calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            locale: 'id',
-            headerToolbar: {
-                left: 'prev,next today',
-                center: 'title',
-                right: ''
-            },
-        });
-        calendar.render();
+    const calendar = new FullCalendar.Calendar(document.getElementById('calendar'), {
+      initialView: 'dayGridMonth',
+      locale: 'id',
+      headerToolbar: { left: 'prev,next today', center: 'title', right: '' },
     });
+    calendar.render();
+  });
 </script>
 @endsection

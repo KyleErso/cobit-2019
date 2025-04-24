@@ -11,6 +11,7 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
+    // you can leave this or change to your default fallback
     protected $redirectTo = '/home';
 
     public function __construct()
@@ -18,16 +19,23 @@ class LoginController extends Controller
         $this->middleware('guest')->except('logout');
     }
 
+    /**
+     * After login: check role and redirect accordingly
+     */
     protected function authenticated(Request $request, $user)
     {
-        // Arahkan semua pengguna ke halaman home
+        if ($user->role === 'admin') {
+            // jika admin, ke admin dashboard
+            return redirect()->route('admin.dashboard');
+        }
+
+        // selain admin (user biasa / guest), ke home atau join page
         return redirect()->route('home');
     }
 
     public function logout(Request $request)
     {
-        Auth::logout(); // Logout pengguna
-        return redirect('/'); // Redirect ke halaman utama (atau halaman login)
+        Auth::logout();
+        return redirect('/'); 
     }
 }
-

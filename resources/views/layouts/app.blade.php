@@ -80,8 +80,7 @@
                 </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="{{ route('logout') }}"
-                   onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                <a class="nav-link logout-btn" href="{{ route('logout') }}">
                   <i class="fas fa-sign-out-alt me-2"></i> Logout
                 </a>
                 <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
@@ -113,3 +112,27 @@
     </footer>
   </body>
 </html>
+<!-- SweetAlert dan Script Coming Soon -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Logout confirmation
+        document.querySelectorAll('.logout-btn').forEach(function(btn) {
+            btn.addEventListener('click', function(e) {
+                e.preventDefault();
+                Swal.fire({
+                    title: 'Konfirmasi Logout',
+                    text: 'Apakah Anda yakin ingin logout?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Ya, logout',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        document.getElementById('logout-form').submit();
+                    }
+                });
+            });
+        });
+    });
+</script>

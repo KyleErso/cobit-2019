@@ -16,6 +16,7 @@
                         <form action="{{ route('df1.store') }}" method="POST" id="df1Form">
                             @csrf
                             <input type="hidden" name="df_id" value="{{ $id }}">
+
                             <div class="table-responsive">
                                 <table class="table table-bordered table-hover">
                                     <!-- Hint Untuk Suggestion -->

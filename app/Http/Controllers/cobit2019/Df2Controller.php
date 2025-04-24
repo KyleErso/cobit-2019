@@ -39,6 +39,8 @@ class Df2Controller extends Controller
             'input13df2' => 'required|integer',
         ]);
 
+
+        
         // Simpan data ke tabel design_factor_2
         $designFactor2 = DesignFactor2::create([
             'id' => Auth::id(), // Ambil ID user yang sedang login
