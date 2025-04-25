@@ -16,6 +16,7 @@ class DesignFactor3b extends Model
     protected $fillable = [
         'id', // ID pengguna (foreign key)
         'df_id', // ID dari view atau button terkait
+        'assessment_id',
         'impact1',
         'impact2',
         'impact3',

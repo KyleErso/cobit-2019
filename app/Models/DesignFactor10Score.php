@@ -16,6 +16,7 @@ class DesignFactor10Score extends Model
     protected $fillable = [
         'id',         // ID user yang menyimpan skor
         'df10_id',    // ID terkait Design Factor 10
+        'assessment_id',
         's_df10_1',   // Skor 1
         's_df10_2',   // Skor 2
         's_df10_3',   // Skor 3

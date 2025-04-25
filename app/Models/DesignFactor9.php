@@ -16,6 +16,7 @@ class DesignFactor9 extends Model
     protected $fillable = [
         'id',          // ID record
         'df_id',       // ID terkait Design Factor
+        'assessment_id', // ID assessment
         'input1df9',   // Input field 1 untuk Design Factor 9
         'input2df9',   // Input field 2 untuk Design Factor 9
         'input3df9',   // Input field 3 untuk Design Factor 9

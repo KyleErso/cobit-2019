@@ -16,6 +16,7 @@ class DesignFactor9Score extends Model
     protected $fillable = [
         'id',         // ID user yang menyimpan skor
         'df9_id',     // ID terkait Design Factor 9
+        'assessment_id',
         's_df9_1',    // Skor 1
         's_df9_2',    // Skor 2
         's_df9_3',    // Skor 3

@@ -1,6 +1,6 @@
 @extends('cobit2019.cobitTools')
 @section('cobit-tools-content')
-@include('cobit2019.cobitPagination')
+  @include('cobit2019.cobitPagination')
   <div class="container">
     <!-- Card Utama -->
     <div class="row justify-content-center">

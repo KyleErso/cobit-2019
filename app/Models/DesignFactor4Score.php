@@ -16,6 +16,7 @@ class DesignFactor4Score extends Model
     protected $fillable = [
         'id',         // ID user who saves the score
         'df4_id',     // ID of the related design factor
+        'assessment_id',
         's_df4_1',    // Score value 1
         's_df4_2',    // Score value 2
         's_df4_3',    // Score value 3

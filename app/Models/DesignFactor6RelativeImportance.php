@@ -19,6 +19,7 @@ class DesignFactor6RelativeImportance extends Model
     protected $fillable = [
         'id',
         'df6_id',
+        'assessment_id',
         'r_df6_1',
         'r_df6_2',
         'r_df6_3',

@@ -19,6 +19,7 @@ class DesignFactor5RelativeImportance extends Model
     protected $fillable = [
         'id',
         'df5_id',
+        'assessment_id',
         'r_df5_1',
         'r_df5_2',
         'r_df5_3',

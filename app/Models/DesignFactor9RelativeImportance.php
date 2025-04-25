@@ -19,6 +19,7 @@ class DesignFactor9RelativeImportance extends Model
     protected $fillable = [
         'id',
         'df9_id',  // ID terkait Design Factor 9
+        'assessment_id',
         'r_df9_1', 'r_df9_2', 'r_df9_3', 'r_df9_4', 'r_df9_5',
         'r_df9_6', 'r_df9_7', 'r_df9_8', 'r_df9_9', 'r_df9_10',
         'r_df9_11', 'r_df9_12', 'r_df9_13', 'r_df9_14', 'r_df9_15',

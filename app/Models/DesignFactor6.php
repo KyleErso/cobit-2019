@@ -14,6 +14,7 @@ class DesignFactor6 extends Model
     protected $fillable = [
         'id',     
         'df_id',
+        'assessment_id',
         'input1df6',
         'input2df6',
         'input3df6',

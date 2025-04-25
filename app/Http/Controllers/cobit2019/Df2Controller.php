@@ -10,7 +10,6 @@ use App\Models\DesignFactor2Score;
 use App\Models\DesignFactor2RelativeImportance;
 
 
-
 class Df2Controller extends Controller
 {
     // Method untuk menampilkan form Design Factor 2
@@ -39,25 +38,30 @@ class Df2Controller extends Controller
             'input13df2' => 'required|integer',
         ]);
 
+        // Ambil assessment id dari session
+        $assessment_id = session('assessment_id');
+        if (!$assessment_id) {
+            return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+        }
 
-        
-        // Simpan data ke tabel design_factor_2
+        // Simpan data ke tabel design_factor_2, termasuk assessment_id
         $designFactor2 = DesignFactor2::create([
-            'id' => Auth::id(), // Ambil ID user yang sedang login
-            'df_id' => $validated['df_id'],
-            'input1df2' => $validated['input1df2'],
-            'input2df2' => $validated['input2df2'],
-            'input3df2' => $validated['input3df2'],
-            'input4df2' => $validated['input4df2'],
-            'input5df2' => $validated['input5df2'],
-            'input6df2' => $validated['input6df2'],
-            'input7df2' => $validated['input7df2'],
-            'input8df2' => $validated['input8df2'],
-            'input9df2' => $validated['input9df2'],
-            'input10df2' => $validated['input10df2'],
-            'input11df2' => $validated['input11df2'],
-            'input12df2' => $validated['input12df2'],
-            'input13df2' => $validated['input13df2'],
+            'id'            => Auth::id(), // Ambil ID user yang sedang login
+            'df_id'         => $validated['df_id'],
+            'assessment_id' => $assessment_id,  // simpan assessment_id di sini
+            'input1df2'     => $validated['input1df2'],
+            'input2df2'     => $validated['input2df2'],
+            'input3df2'     => $validated['input3df2'],
+            'input4df2'     => $validated['input4df2'],
+            'input5df2'     => $validated['input5df2'],
+            'input6df2'     => $validated['input6df2'],
+            'input7df2'     => $validated['input7df2'],
+            'input8df2'     => $validated['input8df2'],
+            'input9df2'     => $validated['input9df2'],
+            'input10df2'    => $validated['input10df2'],
+            'input11df2'    => $validated['input11df2'],
+            'input12df2'    => $validated['input12df2'],
+            'input13df2'    => $validated['input13df2'],
         ]);
 
         //==========================================================================
@@ -76,7 +80,6 @@ class Df2Controller extends Controller
             [$designFactor2->input12df2],
             [$designFactor2->input13df2],
         ];
-
 
         $DF2_MAP_1 = [
             [0, 0, 1, 0, 2, 2, 0, 2, 2, 0, 0, 0, 2],
@@ -156,29 +159,33 @@ class Df2Controller extends Controller
         }
 
         //==========================================================================
-        // Siapkan data untuk tabel design_factor_2_score
-        $dataForScore = ['id' => Auth::id(), 'df2_id' => $designFactor2->df_id];
+        // Siapkan data untuk tabel design_factor_2_score, termasuk assessment_id
+        $dataForScore = [
+            'id'            => Auth::id(), 
+            'df2_id'        => $designFactor2->df_id,
+            'assessment_id' => $assessment_id  // tambah assessment_id di sini
+        ];
         foreach ($DF2_SCORE as $index => $value) {
             $dataForScore['s_df2_' . ($index + 1)] = $value;
         }
         DesignFactor2Score::create($dataForScore);
 
-        // Siapkan data untuk tabel design_factor_2_relative_importance
-        $dataForRelativeImportance = ['id' => Auth::id(), 'df2_id' => $designFactor2->df_id];
-
-        // Assuming $RelativeImp is an array containing the relative importance values for DF2
+        // Siapkan data untuk tabel design_factor_2_relative_importance, termasuk assessment_id
+        $dataForRelativeImportance = [
+            'id'            => Auth::id(), 
+            'df2_id'        => $designFactor2->df_id,
+            'assessment_id' => $assessment_id  // tambah assessment_id juga di sini
+        ];
         foreach ($RelativeImp as $index => $value) {
             $dataForRelativeImportance['r_df2_' . ($index + 1)] = $value;
         }
-
-        // Simpan data ke tabel design_factor_2_relative_importance
         DesignFactor2RelativeImportance::create($dataForRelativeImportance);
-
 
         // Setelah berhasil disimpan, arahkan ke halaman output DF2
         return redirect()->route('df2.output', ['id' => $validated['df_id']])
             ->with('success', 'Data berhasil disimpan!');
     }
+
     //==========================================================================
     // Method untuk menampilkan output Design Factor 2
     public function showOutput($id)

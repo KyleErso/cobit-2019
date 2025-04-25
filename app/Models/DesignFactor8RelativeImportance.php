@@ -19,6 +19,7 @@ class DesignFactor8RelativeImportance extends Model
     protected $fillable = [
         'id',
         'df8_id',  // ID terkait Design Factor 8
+        'assessment_id',
         'r_df8_1', 'r_df8_2', 'r_df8_3', 'r_df8_4', 'r_df8_5',
         'r_df8_6', 'r_df8_7', 'r_df8_8', 'r_df8_9', 'r_df8_10',
         'r_df8_11', 'r_df8_12', 'r_df8_13', 'r_df8_14', 'r_df8_15',

@@ -14,6 +14,7 @@ class DesignFactor5 extends Model
     protected $fillable = [
         'id',     
         'df_id',
+        'assessment_id',
         'input1df5',
         'input2df5',
         'created_at',

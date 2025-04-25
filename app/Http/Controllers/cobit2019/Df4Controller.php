@@ -55,12 +55,18 @@ class Df4Controller extends Controller
             'input20df4' => 'required|integer',
         ]);
 
+        // Ambil assessment_id dari session
+        $assessment_id = session('assessment_id');
+        if (!$assessment_id) {
+            return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+        } 
         // ===================================================================
         // Simpan data ke tabel design_factor_4
         // ===================================================================
         $designFactor4 = DesignFactor4::create([
             'id' => Auth::id(), // Ambil ID user yang sedang login
             'df_id' => $validated['df_id'],
+            'assessment_id' => $assessment_id, // simpan assessment_id di sini
             'input1df4' => $validated['input1df4'],
             'input2df4' => $validated['input2df4'],
             'input3df4' => $validated['input3df4'],
@@ -278,7 +284,11 @@ class Df4Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_4_score
         // ===================================================================
-        $dataForScore = ['id' => Auth::id(), 'df4_id' => $designFactor4->df_id];
+        $dataForScore = [
+            'id' => Auth::id(), 
+            'df4_id' => $designFactor4->df_id, 
+            'assessment_id' => $assessment_id // added assessment_id
+        ];
         foreach ($DF4_SCORE as $index => $value) {
             $dataForScore['s_df4_' . ($index + 1)] = $value;
         }
@@ -287,7 +297,11 @@ class Df4Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_4_relative_importance
         // ===================================================================
-        $dataForRelativeImportance = ['id' => Auth::id(), 'df4_id' => $designFactor4->df_id];
+        $dataForRelativeImportance = [
+            'id' => Auth::id(), 
+            'df4_id' => $designFactor4->df_id, 
+            'assessment_id' => $assessment_id // added assessment_id
+        ];
         foreach ($DF4_RELATIVE_IMP as $index => $value) {
             $dataForRelativeImportance['r_df4_' . ($index + 1)] = $value;
         }
@@ -296,7 +310,6 @@ class Df4Controller extends Controller
         // Simpan data ke tabel design_factor_4_relative_importance
         // ===================================================================
         DesignFactor4RelativeImportance::create($dataForRelativeImportance);
-
 
         // ===================================================================
         // Redirect ke halaman output setelah data berhasil disimpan

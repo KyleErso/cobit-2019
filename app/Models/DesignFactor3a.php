@@ -14,6 +14,7 @@ class DesignFactor3a extends Model
     protected $fillable = [
         'id',
         'df_id',
+        'assessment_id',
         'input1df3',
         'input2df3',
         'input3df3',

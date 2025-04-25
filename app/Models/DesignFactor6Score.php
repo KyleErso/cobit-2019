@@ -16,6 +16,7 @@ class DesignFactor6Score extends Model
     protected $fillable = [
         'id',         // ID user who saves the score
         'df6_id',     // ID of the related design factor
+        'assessment_id',
         's_df6_1',    // Score value 1
         's_df6_2',    // Score value 2
         's_df6_3',    // Score value 3

@@ -91,11 +91,19 @@ class Df3Controller extends Controller
             'likelihood19' => 'required|numeric',
         ]);
 
+         // Ambil assessment id dari session
+         $assessment_id = session('assessment_id');
+         if (!$assessment_id) {
+             return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+         }
+ 
+
         try {
             // Create DesignFactor3a
             $designFactor3a = DesignFactor3a::create([
                 'id' => Auth::id(),
                 'df_id' => $validated['df_id'],
+                'assessment_id' => $assessment_id,  // simpan assessment_id di sini
                 'input1df3' => $validated['input1df3'],
                 'input2df3' => $validated['input2df3'],
                 'input3df3' => $validated['input3df3'],
@@ -121,6 +129,7 @@ class Df3Controller extends Controller
             $designFactor3b = DesignFactor3b::create([
                 'id' => Auth::id(),
                 'df_id' => $validated['df_id'],
+                'assessment_id' => $assessment_id,  // simpan assessment_id di sini
                 'impact1' => $validated['impact1'],
                 'impact2' => $validated['impact2'],
                 'impact3' => $validated['impact3'],
@@ -146,6 +155,7 @@ class Df3Controller extends Controller
             $designFactor3c = DesignFactor3c::create([
                 'id' => Auth::id(),
                 'df_id' => $validated['df_id'],
+                'assessment_id' => $assessment_id,  // simpan assessment_id di sini
                 'likelihood1' => $validated['likelihood1'],
                 'likelihood2' => $validated['likelihood2'],
                 'likelihood3' => $validated['likelihood3'],
@@ -340,22 +350,26 @@ class Df3Controller extends Controller
             // Commit the transaction
             DB::commit();
 
-            // Siapkan data untuk tabel design_factor_2_score
-            $dataForScore = ['id' => Auth::id(), 'df3_id' => $designFactor3a->df_id];
+            // Siapkan data untuk tabel design_factor_3_score
+            $dataForScore = [
+                'id' => Auth::id(), 
+                'df3_id' => $designFactor3a->df_id,
+                'assessment_id' => $assessment_id
+            ];
             foreach ($DF3_SCORE as $index => $value) {
                 $dataForScore['s_df3_' . ($index + 1)] = $value;
             }
             DesignFactor3Score::create($dataForScore);
 
             // Siapkan data untuk tabel design_factor_3_relative_importance
-            $dataForRelativeImportance = ['id' => Auth::id(), 'df3_id' => $designFactor3a->df_id];
-
-            // Assuming $DF3_RELATIVE_IMPORTAN is an array containing the relative importance values for DF3
+            $dataForRelativeImportance = [
+                'id' => Auth::id(), 
+                'df3_id' => $designFactor3a->df_id,
+                'assessment_id' => $assessment_id
+            ];
             foreach ($DF3_RELATIVE_IMPORTANT as $index => $value) {
                 $dataForRelativeImportance['r_df3_' . ($index + 1)] = $value;
             }
-
-            // Simpan data ke tabel design_factor_3_relative_importance
             DesignFactor3RelativeImportance::create($dataForRelativeImportance);
 
             // Redirect or return a response
