@@ -33,12 +33,19 @@ class Df5Controller extends Controller
             'input2df5' => 'required|integer',
         ]);
 
+         // Ambil assessment_id dari session
+    $assessment_id = session('assessment_id');
+    if (!$assessment_id) {
+        return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+    }
+
         // ===================================================================
         // Simpan data ke tabel design_factor_5
         // ===================================================================
         $designFactor5 = DesignFactor5::create([
             'id' => Auth::id(),  // Get the logged-in user's ID
             'df_id' => $validated['df_id'],
+            'assessment_id' => $assessment_id, // Simpan assessment_id
             'input1df5' => $validated['input1df5'],
             'input2df5' => $validated['input2df5'],
         ]);
@@ -206,7 +213,11 @@ class Df5Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_5_score
         // ===================================================================
-        $dataForScore = ['id' => Auth::id(), 'df5_id' => $designFactor5->df_id];
+        $dataForScore = [
+            'id' => Auth::id(),
+            'df5_id' => $designFactor5->df_id,
+            'assessment_id' => $assessment_id
+        ];
         foreach ($DF5_SCORE as $index => $value) {
             $dataForScore['s_df5_' . ($index + 1)] = $value;
         }
@@ -215,7 +226,11 @@ class Df5Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_5_relative_importance
         // ===================================================================
-        $dataForRelativeImportance = ['id' => Auth::id(), 'df5_id' => $designFactor5->df_id];
+        $dataForRelativeImportance = [
+            'id' => Auth::id(),
+            'df5_id' => $designFactor5->df_id,
+            'assessment_id' => $assessment_id
+        ];
         foreach ($DF5_RELATIVE_IMP as $index => $value) {
             $dataForRelativeImportance['r_df5_' . ($index + 1)] = $value;
         }

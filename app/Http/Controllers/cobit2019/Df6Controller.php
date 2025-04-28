@@ -33,22 +33,27 @@ class Df6Controller extends Controller
             'input3df6' => 'required|integer', // Tambahkan validasi untuk input ketiga
         ]);
 
+          // Ambil assessment_id dari session
+        $assessment_id = session('assessment_id');
+        if (!$assessment_id) {
+            return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+        }
+
         // ===================================================================
-        // Simpan data ke tabel design_factor_6
+        // Simpan data ke tabel design_factor_6 menggunakan assessment_id dari session
         // ===================================================================
         $designFactor6 = DesignFactor6::create([
             'id' => Auth::id(),
+            'assessment_id' => $assessment_id,  // Menggunakan assessment_id dari session
             'df_id' => $validated['df_id'],
             'input1df6' => $validated['input1df6'],
             'input2df6' => $validated['input2df6'],
             'input3df6' => $validated['input3df6'], // Simpan nilai input ketiga
         ]);
 
-
         // ===================================================================
         // NILAI INPUT DF6
         // ===================================================================
-
         $DF6_INPUT = [
             [$designFactor6->input1df6],
             [$designFactor6->input2df6],
@@ -205,7 +210,11 @@ class Df6Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_6_score
         // ===================================================================
-        $dataForScore = ['id' => Auth::id(), 'df6_id' => $designFactor6->df_id];
+        $dataForScore = [
+            'id' => Auth::id(),
+            'df6_id' => $designFactor6->df_id,
+            'assessment_id' => $assessment_id,
+        ];
         foreach ($DF6_SCORE as $index => $value) {
             $dataForScore['s_df6_' . ($index + 1)] = $value;
         }
@@ -214,7 +223,11 @@ class Df6Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_6_relative_importance
         // ===================================================================
-        $dataForRelativeImportance = ['id' => Auth::id(), 'df6_id' => $designFactor6->df_id];
+        $dataForRelativeImportance = [
+            'id' => Auth::id(),
+            'df6_id' => $designFactor6->df_id,
+            'assessment_id' => $assessment_id,
+        ];
         foreach ($DF6_RELATIVE_IMP as $index => $value) {
             $dataForRelativeImportance['r_df6_' . ($index + 1)] = $value;
         }
