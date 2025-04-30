@@ -22,13 +22,17 @@ Route::get('/assessment/join', [AssessmentController::class, 'showJoinForm'])->n
 Route::post('/assessment/join', [AssessmentController::class, 'join'])->name('assessment.join.store');
 
 
-
-// admin dashboard & store/delete
 Route::prefix('admin')->middleware('auth')->group(function(){
-    Route::get('dashboard', [AdminAssessment::class,'index'])->name('admin.dashboard');
-    Route::post('assessments', [AdminAssessment::class,'store'])->name('admin.assessments.store');
+    // Dashboard & list
+    Route::get('dashboard',             [AdminAssessment::class,'index'])  ->name('admin.dashboard');
+    // Tampilkan detail satu assessment
+    Route::get('assessments/{assessment_id}', [AdminAssessment::class,'show'])->name('admin.assessments.show');
+    // Simpan kode baru
+    Route::post('assessments',          [AdminAssessment::class,'store'])  ->name('admin.assessments.store');
+    // Hapus kode
     Route::delete('assessments/{assessment_id}', [AdminAssessment::class,'destroy'])->name('admin.assessments.destroy');
 });
+
 
 
 // Redirect ke halaman login

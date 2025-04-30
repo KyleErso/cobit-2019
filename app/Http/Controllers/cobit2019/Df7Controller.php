@@ -34,12 +34,17 @@ class Df7Controller extends Controller
             'input4df7' => 'required|integer', // Validasi untuk input keempat
         ]);
 
+        $assessment_id = session('assessment_id');
+        if (!$assessment_id) {
+            return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+        }
         // ===================================================================
         // Simpan data ke tabel design_factor_7
         // ===================================================================
         $designFactor7 = DesignFactor7::create([
             'id' => Auth::id(), // ID user yang sedang login
             'df_id' => $validated['df_id'], // ID terkait Design Factor
+            'assessment_id' => $assessment_id, // Menggunakan assessment_id dari session
             'input1df7' => $validated['input1df7'], // Input 1
             'input2df7' => $validated['input2df7'], // Input 2
             'input3df7' => $validated['input3df7'], // Input 3
@@ -218,7 +223,11 @@ class Df7Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_7_score
         // ===================================================================
-        $dataForScore = ['id' => Auth::id(), 'df7_id' => $designFactor7->df_id];
+        $dataForScore = [
+            'id' => Auth::id(), 
+            'df7_id' => $designFactor7->df_id,
+            'assessment_id' => $assessment_id, // Menggunakan assessment_id dari session
+        ];
         foreach ($DF7_SCORE as $index => $value) {
             $dataForScore['s_df7_' . ($index + 1)] = $value;
         }
@@ -227,7 +236,10 @@ class Df7Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_7_relative_importance
         // ===================================================================
-        $dataForRelativeImportance = ['id' => Auth::id(), 'df7_id' => $designFactor7->df_id];
+        $dataForRelativeImportance = [
+            'id' => Auth::id(), 
+            'df7_id' => $designFactor7->df_id,
+            'assessment_id' => $assessment_id, ];
         foreach ($DF7_RELATIVE_IMP as $index => $value) {
             $dataForRelativeImportance['r_df7_' . ($index + 1)] = $value;
         }

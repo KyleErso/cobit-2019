@@ -34,10 +34,16 @@ class Df9Controller extends Controller
             'input3df9' => 'required|integer', // Hanya 3 input fields
         ]);
 
+        $assessment_id = session('assessment_id');
+        if (!$assessment_id) {
+            return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+        }
+
         // Simpan data ke tabel design_factor_9
         $designFactor9 = DesignFactor9::create([
             'id' => Auth::id(), // ID user yang sedang login
             'df_id' => $validated['df_id'], // ID terkait Design Factor
+            'assessment_id' => $assessment_id,  // Menggunakan assessment_id dari session
             'input1df9' => $validated['input1df9'], // Input 1
             'input2df9' => $validated['input2df9'], // Input 2
             'input3df9' => $validated['input3df9'], // Input 3
@@ -52,7 +58,8 @@ class Df9Controller extends Controller
             [$designFactor9->input2df9],
             [$designFactor9->input3df9],  // Including the third input
         ];
-
+        
+   
         // Mengubah INPUT JADI %
         foreach ($DF9_INPUT as $i => $value) {
             $DF9_INPUT[$i][0] /= 100;  // Convert input value to percentage
@@ -205,7 +212,11 @@ class Df9Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_9_score
         // ===================================================================
-        $dataForScore = ['id' => Auth::id(), 'df9_id' => $designFactor9->df_id];
+        $dataForScore = [
+            'id' => Auth::id(), 
+            'df9_id' => $designFactor9->df_id,
+            'assessment_id' => $assessment_id,
+        ];
         foreach ($DF9_SCORE as $index => $value) {
             $dataForScore['s_df9_' . ($index + 1)] = $value;
         }
@@ -214,7 +225,11 @@ class Df9Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_9_relative_importance
         // ===================================================================
-        $dataForRelativeImportance = ['id' => Auth::id(), 'df9_id' => $designFactor9->df_id];
+        $dataForRelativeImportance = [
+            'id' => Auth::id(), 
+            'df9_id' => $designFactor9->df_id,
+            'assessment_id' => $assessment_id,
+        ];
         foreach ($DF9_RELATIVE_IMP as $index => $value) {
             $dataForRelativeImportance['r_df9_' . ($index + 1)] = $value;
         }

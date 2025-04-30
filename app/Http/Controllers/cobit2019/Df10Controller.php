@@ -34,10 +34,16 @@ class Df10Controller extends Controller
             'input3df10' => 'required|integer', // Hanya 3 input fields
         ]);
 
+        $assessment_id = session('assessment_id');
+        if (!$assessment_id) {
+            return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+        }
+
         // Simpan data ke tabel design_factor_10
         $designFactor10 = DesignFactor10::create([
             'id' => Auth::id(), // ID user yang sedang login
             'df_id' => $validated['df_id'], // ID terkait Design Factor
+            'assessment_id' => $assessment_id,  // Menggunakan assessment_id dari session
             'input1df10' => $validated['input1df10'], // Input 1
             'input2df10' => $validated['input2df10'], // Input 2
             'input3df10' => $validated['input3df10'], // Input 3
@@ -204,7 +210,11 @@ class Df10Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_10_score
         // ===================================================================
-        $dataForScore = ['id' => Auth::id(), 'df10_id' => $designFactor10->df_id];
+        $dataForScore = [
+            'id' => Auth::id(), 
+            'df10_id' => $designFactor10->df_id,
+            'assessment_id' => $assessment_id,
+        ];
         foreach ($DF10_SCORE as $index => $value) {
             $dataForScore['s_df10_' . ($index + 1)] = $value;
         }
@@ -213,7 +223,11 @@ class Df10Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_10_relative_importance
         // ===================================================================
-        $dataForRelativeImportance = ['id' => Auth::id(), 'df10_id' => $designFactor10->df_id];
+        $dataForRelativeImportance = [
+            'id' => Auth::id(), 
+            'df10_id' => $designFactor10->df_id,
+            'assessment_id' => $assessment_id,
+        ];  // Menggunakan assessment_id dari session];
         foreach ($DF10_RELATIVE_IMP as $index => $value) {
             $dataForRelativeImportance['r_df10_' . ($index + 1)] = $value;
         }

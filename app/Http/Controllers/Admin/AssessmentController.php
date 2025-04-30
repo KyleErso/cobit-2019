@@ -54,17 +54,28 @@ class AssessmentController extends Controller
                          ->with('success', 'Kode assessment berhasil dibuat');
     }
 
-    /**
-     * (Opsional) Hapus sebuah kode assessment
-     */
-    public function destroy($assessment_id)
+ 
+
+    public function show($assessment_id)
     {
+        // only admin
         if (Auth::user()->role !== 'admin') {
             abort(403);
         }
-
-        Assessment::findOrFail($assessment_id)->delete();
-        return redirect()->route('admin.dashboard')
-                         ->with('success', 'Kode assessment dihapus');
+    
+        // eager-load every DF‐relation, every Score‐relation, every RelativeImportance‐relation
+        $assessment = Assessment::with([
+            'df1','df2','df3','df4','df5',
+            'df6','df7','df8','df9','df10',
+            'df1Scores','df2Scores','df3Scores','df4Scores','df5Scores',
+            'df6Scores','df7Scores','df8Scores','df9Scores','df10Scores',
+            'df1RelativeImportances','df2RelativeImportances','df3RelativeImportances',
+            'df4RelativeImportances','df5RelativeImportances','df6RelativeImportances',
+            'df7RelativeImportances','df8RelativeImportances','df9RelativeImportances',
+            'df10RelativeImportances',
+        ])->findOrFail($assessment_id);
+    
+        return view('admin.assessments.show', compact('assessment'));
     }
+    
 }

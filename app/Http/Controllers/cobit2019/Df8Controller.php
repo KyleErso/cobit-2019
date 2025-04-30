@@ -34,10 +34,16 @@ class Df8Controller extends Controller
             'input3df8' => 'required|integer', // Hanya 3 input fields
         ]);
 
+        $assessment_id = session('assessment_id');
+        if (!$assessment_id) {
+            return redirect()->back()->with('error', 'Assessment ID tidak ditemukan, silahkan join assessment terlebih dahulu.');
+        }
+
         // Simpan data ke tabel design_factor_8
         $designFactor8 = DesignFactor8::create([
             'id' => Auth::id(), // ID user yang sedang login
             'df_id' => $validated['df_id'], // ID terkait Design Factor
+            'assessment_id' => $assessment_id,  // Menggunakan assessment_id dari session
             'input1df8' => $validated['input1df8'], // Input 1
             'input2df8' => $validated['input2df8'], // Input 2
             'input3df8' => $validated['input3df8'], // Input 3
@@ -206,7 +212,11 @@ class Df8Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_8_score
         // ===================================================================
-        $dataForScore = ['id' => Auth::id(), 'df8_id' => $designFactor8->df_id];
+        $dataForScore = [
+            'id' => Auth::id(), 
+            'df8_id' => $designFactor8->df_id,
+            'assessment_id' => $assessment_id,
+        ];
         foreach ($DF8_SCORE as $index => $value) {
             $dataForScore['s_df8_' . ($index + 1)] = $value;
         }
@@ -215,7 +225,11 @@ class Df8Controller extends Controller
         // ===================================================================
         // Siapkan data untuk tabel design_factor_8_relative_importance
         // ===================================================================
-        $dataForRelativeImportance = ['id' => Auth::id(), 'df8_id' => $designFactor8->df_id];
+        $dataForRelativeImportance = [
+            'id' => Auth::id(),
+            'df8_id' => $designFactor8->df_id,
+            'assessment_id' => $assessment_id,  
+        ];
         foreach ($DF8_RELATIVE_IMP as $index => $value) {
             $dataForRelativeImportance['r_df8_' . ($index + 1)] = $value;
         }
