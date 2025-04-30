@@ -1,6 +1,6 @@
-@extends('layouts.app')
-
-@section('content')
+@extends('cobit2019.cobitTools')
+@section('cobit-tools-content')
+@include('cobit2019.cobitPagination')
 <div class="container">
     <!-- Card Utama: Output Data Design Factor 6 -->
     <div class="row justify-content-center">

@@ -57,7 +57,7 @@ class Assessment extends Model
     }
     public function df3(): HasMany
     {
-        return $this->hasMany(DesignFactor3c::class, 'assessment_id', 'assessment_id');
+        return $this->hasMany(DesignFactor3a::class, 'assessment_id', 'assessment_id');
     }
     public function df4(): HasMany
     {

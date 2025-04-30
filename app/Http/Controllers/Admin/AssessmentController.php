@@ -77,5 +77,20 @@ class AssessmentController extends Controller
     
         return view('admin.assessments.show', compact('assessment'));
     }
+
+    public function filter(Request $request)
+    {
+        $userId = $request->get('user_id');
+
+        if (!empty($userId)) {
+            // Contoh: filter assessment berdasarkan user_id (sesuaikan query dengan struktur model Anda)
+            $assessments = Assessment::where('id', $userId)->get();
+        } else {
+            $assessments = Assessment::all();
+        }
+
+        // Kembalikan view daftar assessment (sesuaikan dengan view yang Anda gunakan)
+        return view('admin.assessments.index', compact('assessments'));
+    }
     
 }
