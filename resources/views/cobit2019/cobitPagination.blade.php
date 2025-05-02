@@ -37,17 +37,17 @@
                     </li>
                 @endif
 
-                {{-- Setelah DF4 tambahkan tombol Summary Step2 --}}
+                {{-- Setelah DF4 tambahkan tombol Summary Step2 (aktif/berfungsi) --}}
                 @if ($i == 4)
                     <li class="page-item">
-                        <a class="page-link coming-soon-btn" href="#">Summary Step2</a>
+                        <a class="page-link" href="{{ route('step2.index') }}">Summary Step2</a>
                     </li>
                 @endif
 
                 {{-- Setelah DF10 tambahkan tombol Summary Step3 --}}
                 @if ($i == 10)
                     <li class="page-item">
-                        <a class="page-link coming-soon-btn" href="#">Summary Step3</a>
+                        <a class="page-link" href="{{ route('step3.index') }}">Summary Step3</a>
                     </li>
                 @endif
             @endfor

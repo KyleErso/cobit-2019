@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\Admin\AssessmentController as AdminAssessment;
+use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\cobit2019\DfController;
 use App\Http\Controllers\cobit2019\Df2Controller;
 use App\Http\Controllers\cobit2019\Df3Controller;
@@ -16,100 +17,106 @@ use App\Http\Controllers\cobit2019\Df7Controller;
 use App\Http\Controllers\cobit2019\Df8Controller;
 use App\Http\Controllers\cobit2019\Df9Controller;
 use App\Http\Controllers\cobit2019\Df10Controller;
-use App\Http\Controllers\AssessmentController;
+use App\Http\Controllers\cobit2019\Step2Controller;
+use App\Http\Controllers\cobit2019\Step3Controller;
 
+// Public routes
 Route::get('/assessment/join', [AssessmentController::class, 'showJoinForm'])->name('assessment.join');
 Route::post('/assessment/join', [AssessmentController::class, 'join'])->name('assessment.join.store');
 
-
+// Admin routes
 Route::prefix('admin')->middleware('auth')->group(function(){
     // Dashboard & list
     Route::get('dashboard', [AdminAssessment::class,'index'])->name('admin.dashboard');
-    // Tampilkan detail satu assessment
+    // Detail satu assessment
     Route::get('assessments/{assessment_id}', [AdminAssessment::class,'show'])->name('admin.assessments.show');
-    // Simpan kode baru
+    // Simpan assessment baru
     Route::post('assessments', [AdminAssessment::class,'store'])->name('admin.assessments.store');
-    // Hapus kode
+    // Hapus assessment
     Route::delete('assessments/{assessment_id}', [AdminAssessment::class,'destroy'])->name('admin.assessments.destroy');
-    
-    // Tambahkan route filter berdasarkan user_id
+    // Filter assessment berdasarkan user_id
     Route::get('assessments/filter', [AdminAssessment::class, 'filter'])->name('assessments.filter');
 });
 
-
-
 // Redirect ke halaman login
-Route::get('/', function () {return redirect()->route('login');});
+Route::get('/', function () {
+    return redirect()->route('login');
+});
 
-
+// Guest, login, dan register routes
 Route::get('/guest', [GuestController::class, 'loginGuest'])->name('guest.login');
 
-// Route untuk login
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
-
-// Route untuk logout
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
-// Route untuk pendaftaran
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
-// Route home yang dilindungi
+// Home route
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
-// Tambahkan di file routes/web.php (di atas route df1-df10)
+// Cobit Home view
 Route::get('/cobit2019/cobit_home', function () {
     return view('cobit2019.cobit_home');
 })->name('cobit.home')->middleware('auth');
 
+// Route untuk Step 2 (Summary) - pastikan view Step2 sudah didefinisikan
+Route::get('/step2', [Step2Controller::class, 'index'])->name('step2.index')->middleware('auth');
 
-// Route untuk Design Factor 1
-Route::get('/df1/form/{id}', [DfController::class, 'showDesignFactorForm'])->name('df1.form')->middleware('auth'); // Menampilkan form
-Route::post('/df1/store', [DfController::class, 'store'])->name('df1.store')->middleware('auth'); // Menyimpan data
-Route::get('/df1/output/{id}', [DfController::class, 'showOutput'])->name('df1.output')->middleware('auth'); // Menampilkan output
+// Route untuk Step 3 (Summary) - menampilkan data DF5 sampai DF10 (menggunakan record pertama)
+Route::get('/step3', [Step3Controller::class, 'index'])
+    ->name('step3.index')
+    ->middleware('auth');
 
-// Route untuk Design Factor 2
-Route::get('/df2/form/{id}', [Df2Controller::class, 'showDesignFactor2Form'])->name('df2.form')->middleware('auth'); // Menampilkan form
-Route::post('/df2/store', [Df2Controller::class, 'store'])->name('df2.store')->middleware('auth'); // Menyimpan data
-Route::get('/df2/output/{id}', [Df2Controller::class, 'showOutput'])->name('df2.output')->middleware('auth'); // Menampilkan output
+// Routes untuk Design Factors
 
-// Route untuk Design Factor 3
-Route::get('/df3/form/{id}', [Df3Controller::class, 'showDesignFactor3Form'])->name('df3.form')->middleware('auth'); // Menampilkan form
-Route::post('/df3/store', [Df3Controller::class, 'store'])->name('df3.store')->middleware('auth'); // Menyimpan data
-Route::get('/df3/output/{id}', [Df3Controller::class, 'showOutput'])->name('df3.output')->middleware('auth'); // Menampilkan output
+// DF1
+Route::get('/df1/form/{id}', [DfController::class, 'showDesignFactorForm'])->name('df1.form')->middleware('auth');
+Route::post('/df1/store', [DfController::class, 'store'])->name('df1.store')->middleware('auth');
+Route::get('/df1/output/{id}', [DfController::class, 'showOutput'])->name('df1.output')->middleware('auth');
 
-// Route untuk Design Factor 4
-Route::get('/df4/form/{id}', [Df4Controller::class, 'showDesignFactor4Form'])->name('df4.form')->middleware('auth'); // Menampilkan form
-Route::post('/df4/store', [Df4Controller::class, 'store'])->name('df4.store')->middleware('auth'); // Menyimpan data
-Route::get('/df4/output/{id}', [Df4Controller::class, 'showOutput'])->name('df4.output')->middleware('auth'); // Menampilkan output
+// DF2
+Route::get('/df2/form/{id}', [Df2Controller::class, 'showDesignFactor2Form'])->name('df2.form')->middleware('auth');
+Route::post('/df2/store', [Df2Controller::class, 'store'])->name('df2.store')->middleware('auth');
+Route::get('/df2/output/{id}', [Df2Controller::class, 'showOutput'])->name('df2.output')->middleware('auth');
 
-// Route untuk Design Factor 5
-Route::get('/df5/form/{id}', [Df5Controller::class, 'showDesignFactor5Form'])->name('df5.form')->middleware('auth'); // Menampilkan form
-Route::post('/df5/store', [Df5Controller::class, 'store'])->name('df5.store')->middleware('auth'); // Menyimpan data
-Route::get('/df5/output/{id}', [Df5Controller::class, 'showOutput'])->name('df5.output')->middleware('auth'); // Menampilkan output
+// DF3
+Route::get('/df3/form/{id}', [Df3Controller::class, 'showDesignFactor3Form'])->name('df3.form')->middleware('auth');
+Route::post('/df3/store', [Df3Controller::class, 'store'])->name('df3.store')->middleware('auth');
+Route::get('/df3/output/{id}', [Df3Controller::class, 'showOutput'])->name('df3.output')->middleware('auth');
 
-// Route untuk Design Factor 6
-Route::get('/df6/form/{id}', [Df6Controller::class, 'showDesignFactor6Form'])->name('df6.form')->middleware('auth'); // Menampilkan form
-Route::post('/df6/store', [Df6Controller::class, 'store'])->name('df6.store')->middleware('auth'); // Menyimpan data
-Route::get('/df6/output/{id}', [Df6Controller::class, 'showOutput'])->name('df6.output')->middleware('auth'); // Menampilkan output
+// DF4
+Route::get('/df4/form/{id}', [Df4Controller::class, 'showDesignFactor4Form'])->name('df4.form')->middleware('auth');
+Route::post('/df4/store', [Df4Controller::class, 'store'])->name('df4.store')->middleware('auth');
+Route::get('/df4/output/{id}', [Df4Controller::class, 'showOutput'])->name('df4.output')->middleware('auth');
 
-// Route untuk Design Factor 7
-Route::get('/df7/form/{id}', [Df7Controller::class, 'showDesignFactor7Form'])->name('df7.form')->middleware('auth'); // Menampilkan form
-Route::post('/df7/store', [Df7Controller::class, 'store'])->name('df7.store')->middleware('auth'); // Menyimpan data
-Route::get('/df7/output/{id}', [Df7Controller::class, 'showOutput'])->name('df7.output')->middleware('auth'); // Menampilkan output
+// DF5
+Route::get('/df5/form/{id}', [Df5Controller::class, 'showDesignFactor5Form'])->name('df5.form')->middleware('auth');
+Route::post('/df5/store', [Df5Controller::class, 'store'])->name('df5.store')->middleware('auth');
+Route::get('/df5/output/{id}', [Df5Controller::class, 'showOutput'])->name('df5.output')->middleware('auth');
 
-// Route untuk Design Factor 8
-Route::get('/df8/form/{id}', [Df8Controller::class, 'showDesignFactor8Form'])->name('df8.form')->middleware('auth'); // Menampilkan form
-Route::post('/df8/store', [Df8Controller::class, 'store'])->name('df8.store')->middleware('auth'); // Menyimpan data
-Route::get('/df8/output/{id}', [Df8Controller::class, 'showOutput'])->name('df8.output')->middleware('auth'); // Menampilkan output
+// DF6
+Route::get('/df6/form/{id}', [Df6Controller::class, 'showDesignFactor6Form'])->name('df6.form')->middleware('auth');
+Route::post('/df6/store', [Df6Controller::class, 'store'])->name('df6.store')->middleware('auth');
+Route::get('/df6/output/{id}', [Df6Controller::class, 'showOutput'])->name('df6.output')->middleware('auth');
 
-// Route untuk Design Factor 9
-Route::get('/df9/form/{id}', [Df9Controller::class, 'showDesignFactor9Form'])->name('df9.form')->middleware('auth'); // Menampilkan form
-Route::post('/df9/store', [Df9Controller::class, 'store'])->name('df9.store')->middleware('auth'); // Menyimpan data
-Route::get('/df9/output/{id}', [Df9Controller::class, 'showOutput'])->name('df9.output')->middleware('auth'); // Menampilkan output
+// DF7
+Route::get('/df7/form/{id}', [Df7Controller::class, 'showDesignFactor7Form'])->name('df7.form')->middleware('auth');
+Route::post('/df7/store', [Df7Controller::class, 'store'])->name('df7.store')->middleware('auth');
+Route::get('/df7/output/{id}', [Df7Controller::class, 'showOutput'])->name('df7.output')->middleware('auth');
 
-// Route untuk Design Factor 10
-Route::get('/df10/form/{id}', [Df10Controller::class, 'showDesignFactor10Form'])->name('df10.form')->middleware('auth'); // Menampilkan form
-Route::post('/df10/store', [Df10Controller::class, 'store'])->name('df10.store')->middleware('auth'); // Menyimpan data
-Route::get('/df10/output/{id}', [Df10Controller::class, 'showOutput'])->name('df10.output')->middleware('auth'); // Menampilkan output
+// DF8
+Route::get('/df8/form/{id}', [Df8Controller::class, 'showDesignFactor8Form'])->name('df8.form')->middleware('auth');
+Route::post('/df8/store', [Df8Controller::class, 'store'])->name('df8.store')->middleware('auth');
+Route::get('/df8/output/{id}', [Df8Controller::class, 'showOutput'])->name('df8.output')->middleware('auth');
+
+// DF9
+Route::get('/df9/form/{id}', [Df9Controller::class, 'showDesignFactor9Form'])->name('df9.form')->middleware('auth');
+Route::post('/df9/store', [Df9Controller::class, 'store'])->name('df9.store')->middleware('auth');
+Route::get('/df9/output/{id}', [Df9Controller::class, 'showOutput'])->name('df9.output')->middleware('auth');
+
+// DF10
+Route::get('/df10/form/{id}', [Df10Controller::class, 'showDesignFactor10Form'])->name('df10.form')->middleware('auth');
+Route::post('/df10/store', [Df10Controller::class, 'store'])->name('df10.store')->middleware('auth');
+Route::get('/df10/output/{id}', [Df10Controller::class, 'showOutput'])->name('df10.output')->middleware('auth');
