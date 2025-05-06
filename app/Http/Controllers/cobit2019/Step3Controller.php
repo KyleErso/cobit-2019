@@ -1,38 +1,90 @@
 <?php
 namespace App\Http\Controllers\cobit2019;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\Assessment;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
 
 class Step3Controller extends Controller
 {
-    public function index(Request $request)
+    /**
+     * Menampilkan halaman summary untuk Design Factor 5-10
+     *
+     * @param Request $request
+     * @return View
+     */
+    public function index(Request $request): View
     {
-        // Ambil assessment_id dari session
-        $assessmentId = session('assessment_id');
-        if (!$assessmentId) {
-            return redirect()->back()->with('error', 'Assessment ID tidak ditemukan.');
-        }
-        
-        // Ambil data Assessment beserta relative importance untuk DF5 sampai DF10
-        $assessment = Assessment::with([
-            'df5RelativeImportances',
-            'df6RelativeImportances',
-            'df7RelativeImportances',
-            'df8RelativeImportances',
-            'df9RelativeImportances',
-            'df10RelativeImportances'
-        ])->where('assessment_id', $assessmentId)->first();
+        $assessment = $this->getAssessmentWithRelativeImportances();
         
         if (!$assessment) {
-            return redirect()->back()->with('error', 'Data Assessment tidak ditemukan.');
+            return $this->handleAssessmentNotFound();
         }
+
+        return $this->renderStep3View($assessment);
+    }
+
+    /**
+     * Mengambil data assessment beserta relative importances
+     *
+     * @return Assessment|null
+     */
+    private function getAssessmentWithRelativeImportances(): ?Assessment
+    {
+        $assessmentId = session('assessment_id');
         
-        // Gunakan hanya ID user yang sedang login.
-        $userIds = collect([auth()->id()]);
-        
-        // Oper data ke view Step3 (misal: resources/views/cobit2019/step3/step3sumaryblade.blade.php)
-        return view('cobit2019.step3.step3sumaryblade', compact('assessment', 'userIds'));
+        if (!$assessmentId) {
+            return null;
+        }
+
+        return Assessment::with([
+            'df5RelativeImportances' => function($query) {
+                $query->latest();
+            },
+            'df6RelativeImportances' => function($query) {
+                $query->latest();
+            },
+            'df7RelativeImportances' => function($query) {
+                $query->latest();
+            },
+            'df8RelativeImportances' => function($query) {
+                $query->latest();
+            },
+            'df9RelativeImportances' => function($query) {
+                $query->latest();
+            },
+            'df10RelativeImportances' => function($query) {
+                $query->latest();
+            }
+        ])->where('assessment_id', $assessmentId)->first();
+    }
+
+    /**
+     * Menangani kasus ketika assessment tidak ditemukan
+     *
+     * @return View
+     */
+    private function handleAssessmentNotFound(): View
+    {
+        return view('cobit2019.step3.step3sumaryblade')
+            ->with('error', 'Data Assessment tidak ditemukan.');
+    }
+
+    /**
+     * Merender view Step 3 dengan data yang diperlukan
+     *
+     * @param Assessment $assessment
+     * @return View
+     */
+    private function renderStep3View(Assessment $assessment): View
+    {
+        $userIds = collect([Auth::id()]);
+
+        return view('cobit2019.step3.step3sumaryblade', [
+            'assessment' => $assessment,
+            'userIds' => $userIds
+        ]);
     }
 }

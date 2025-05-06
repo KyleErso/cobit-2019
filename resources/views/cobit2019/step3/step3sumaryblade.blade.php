@@ -23,8 +23,18 @@
       }
       $allCodes = $allCodes->unique()->sort()->values();
 
-      // 2) Berat masing-masing dimensi (sesuai jumlah DF, misalnya 6 nilai untuk DF5-DF10)
-      $weights = old('weight', [3, 0, 0, 1, 0, 0]);
+
+      // Daftar lengkap kode COBIT 2019 untuk label
+      $cobitCodes = [
+        '','EDM01', 'EDM02', 'EDM03', 'EDM04', 'EDM05',
+        'APO01', 'APO02', 'APO03', 'APO04', 'APO05', 'APO06', 'APO07', 'APO08', 'APO09', 'APO10', 'APO11', 'APO12', 'APO13', 'APO14',
+        'BAI01', 'BAI02', 'BAI03', 'BAI04', 'BAI05', 'BAI06', 'BAI07', 'BAI08', 'BAI09', 'BAI10', 'BAI11',
+        'DSS01', 'DSS02', 'DSS03', 'DSS04', 'DSS05', 'DSS06',
+        'MEA01', 'MEA02', 'MEA03', 'MEA04'
+      ];
+
+        // 2) Berat masing-masing dimensi (bisa diisi user)
+        $weights = old('weight', [3,0,0,1,3,0,]);
     @endphp
 
     <div class="card shadow-sm mb-4">
@@ -64,7 +74,7 @@
               @foreach ($allCodes as $code)
                 <tr>
                   <td class="fw-bold bg-primary-subtle text-dark">
-                    <strong>{{ $code }}</strong> — {{ __("") /* Tambahkan deskripsi jika tersedia */ }}
+                    {{ $cobitCodes[$code] ?? '' }}
                   </td>
                   @for ($n = 5; $n <= 10; $n++)
                     @php

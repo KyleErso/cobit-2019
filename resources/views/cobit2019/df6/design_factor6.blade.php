@@ -216,6 +216,14 @@
     // Jika total melebihi 100, tampilkan pesan error dan batalkan submit
     if (total > 100) {
       document.getElementById('error-message').style.display = 'block';
+      document.getElementById('error-message').textContent = 'Total nilai tidak boleh melebihi 100%.';
+      return false;
+    }
+
+    // Jika total kurang dari 100, tampilkan pesan error dan batalkan submit
+    if (total < 100) {
+      document.getElementById('error-message').style.display = 'block';
+      document.getElementById('error-message').textContent = 'Total nilai harus tepat 100%.';
       return false;
     }
 
@@ -564,7 +572,26 @@
 
     document.querySelectorAll('.input-percentage').forEach(input => {
       input.addEventListener('change', updateChartsAndTable);
+      input.addEventListener('input', validateTotal);
     });
+
+    // Fungsi untuk validasi real-time total input
+    function validateTotal() {
+      const input1 = parseFloat(document.getElementById('input1df6').value) || 0;
+      const input2 = parseFloat(document.getElementById('input2df6').value) || 0;
+      const input3 = parseFloat(document.getElementById('input3df6').value) || 0;
+      const total = input1 + input2 + input3;
+
+      if (total > 100) {
+        document.getElementById('error-message').style.display = 'block';
+        document.getElementById('error-message').textContent = 'Total nilai tidak boleh melebihi 100%.';
+      } else if (total < 100) {
+        document.getElementById('error-message').style.display = 'block';
+        document.getElementById('error-message').textContent = 'Total nilai harus tepat 100%.';
+      } else {
+        document.getElementById('error-message').style.display = 'none';
+      }
+    }
     });
   </script>
 

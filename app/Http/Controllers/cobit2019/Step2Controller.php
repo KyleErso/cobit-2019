@@ -17,10 +17,18 @@ class Step2Controller extends Controller
         
         // Ambil data Assessment beserta relative importance untuk DF1 sampai DF4
         $assessment = Assessment::with([
-            'df1RelativeImportances',
-            'df2RelativeImportances',
-            'df3RelativeImportances',
-            'df4RelativeImportances',
+            'df1RelativeImportances' => function($query) {
+                $query->latest();
+            },
+            'df2RelativeImportances' => function($query) {
+                $query->latest();
+            },
+            'df3RelativeImportances' => function($query) {
+                $query->latest();
+            },
+            'df4RelativeImportances' => function($query) {
+                $query->latest();
+            },
         ])->where('assessment_id', $assessmentId)->first();
         
         if (!$assessment) {
