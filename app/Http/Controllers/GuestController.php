@@ -24,15 +24,6 @@ class GuestController extends Controller
             // Jika user adalah guest atau user biasa → langsung ke assessment dengan kode_assessment 'guest'
             $assessment = Assessment::where('kode_assessment', 'guest')->first();
 
-            // Jika assessment dengan kode_assessment 'guest' tidak ada, buatkan baru
-            if (!$assessment) {
-                $assessment = Assessment::create([
-                    'user_id' => $user->id,
-                    'instansi' => 'Guest Assessment',
-                    'kode_assessment' => 'guest',
-                ]);
-            }
-
             return redirect()->route('df1.form', [
                 'id' => $assessment->assessment_id, // Redirect ke assessment id yang baru atau yang sudah ada
             ]);
@@ -48,16 +39,9 @@ class GuestController extends Controller
         ]);
 
         Auth::login($guestUser);
-
-        // Buat Assessment baru untuk guest dengan kode_assessment 'guest'
-        $assessment = Assessment::create([
-            'user_id' => $guestUser->id,
-            'instansi' => 'Guest Assessment',
-            'kode_assessment' => 'guest',
-        ]);
-
+        $assessment_id = 1;
         return redirect()->route('df1.form', [
-            'id' => $assessment->assessment_id, // Redirect ke assessment id yang baru
+            'id' => $assessment_id, // Redirect ke assessment id yang baru
         ]);
     }
 }

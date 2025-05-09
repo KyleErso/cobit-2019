@@ -36,6 +36,7 @@ Route::prefix('admin')->middleware('auth')->group(function(){
     Route::delete('assessments/{assessment_id}', [AdminAssessment::class,'destroy'])->name('admin.assessments.destroy');
     // Filter assessment berdasarkan user_id
     Route::get('assessments/filter', [AdminAssessment::class, 'filter'])->name('assessments.filter');
+    Route::get('/admin/assessments/filter', [AssessmentController::class, 'filter'])->name('admin.assessments.filter');
 });
 
 // Redirect ke halaman login
