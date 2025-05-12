@@ -9,10 +9,16 @@ class Step2Controller extends Controller
 {
     public function index(Request $request)
     {
+
         // Ambil assessment_id dari session
         $assessmentId = session('assessment_id');
         if (!$assessmentId) {
             return redirect()->back()->with('error', 'Assessment ID tidak ditemukan.');
+        }
+        
+        // Jika user adalah guest, langsung gunakan assessment ID 1
+        if ($request->user()->role === 'guest') {
+            $assessmentId = 1;
         }
         
         // Ambil data Assessment beserta relative importance untuk DF1 sampai DF4
