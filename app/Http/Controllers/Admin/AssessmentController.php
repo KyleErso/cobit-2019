@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Models\Assessment;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
+use App\Models\User;
 
 class AssessmentController extends Controller
 {
@@ -15,18 +17,38 @@ class AssessmentController extends Controller
     }
 
     /**
-     * Tampilkan Admin Dashboard:
-     * – Daftar semua kode assessment
+     * Tampilkan Admin Dashboard + Filter
+     * – Daftar semua kode assessment (bisa difilter lewat query string)
      * – Form untuk membuat kode baru (instansi + kode)
      */
-    public function index()
+    public function index(Request $request)
     {
-        // pastikan hanya admin yang bisa akses
+        // Pastikan hanya admin yang bisa akses
         if (Auth::user()->role !== 'admin') {
             abort(403);
         }
 
-        $assessments = Assessment::orderBy('created_at', 'desc')->get();
+        // Bangun query dasar
+        $query = Assessment::query();
+
+        // Filter exact by ID
+        if ($request->filled('id')) {
+            $query->where('assessment_id', $request->id);
+        }
+
+        // Filter partial by kode_assessment
+        if ($request->filled('kode_assessment')) {
+            $query->where('kode_assessment', 'like', '%'.$request->kode_assessment.'%');
+        }
+
+        // Filter partial by instansi
+        if ($request->filled('instansi')) {
+            $query->where('instansi', 'like', '%'.$request->instansi.'%');
+        }
+
+        // Ambil dan urutkan
+        $assessments = $query->orderBy('created_at', 'desc')->get();
+
         return view('admin.dashboard', compact('assessments'));
     }
 
@@ -50,85 +72,42 @@ class AssessmentController extends Controller
             'user_id'         => Auth::id(),
         ]);
 
-        return redirect()->route('admin.dashboard')
-                         ->with('success', 'Kode assessment berhasil dibuat');
+        return redirect()
+            ->route('admin.assessments.index')
+            ->with('success', 'Kode assessment berhasil dibuat');
     }
 
- 
-
+    /**
+     * Tampilkan detail satu assessment beserta relasinya
+     */
     public function show($assessment_id)
     {
-        // only admin
-        if (Auth::user()->role !== 'admin') {
-            abort(403);
-        }
-    
-        // eager-load every DF‐relation, every Score‐relation, every RelativeImportance‐relation
-        $assessment = Assessment::with([
-            'df1' => function($query) { $query->latest(); },
-            'df2' => function($query) { $query->latest(); },
-            'df3' => function($query) { $query->latest(); },
-            'df4' => function($query) { $query->latest(); },
-            'df5' => function($query) { $query->latest(); },
-            'df6' => function($query) { $query->latest(); },
-            'df7' => function($query) { $query->latest(); },
-            'df8' => function($query) { $query->latest(); },
-            'df9' => function($query) { $query->latest(); },
-            'df10' => function($query) { $query->latest(); },
-            'df1Scores' => function($query) { $query->latest(); },
-            'df2Scores' => function($query) { $query->latest(); },
-            'df3Scores' => function($query) { $query->latest(); },
-            'df4Scores' => function($query) { $query->latest(); },
-            'df5Scores' => function($query) { $query->latest(); },
-            'df6Scores' => function($query) { $query->latest(); },
-            'df7Scores' => function($query) { $query->latest(); },
-            'df8Scores' => function($query) { $query->latest(); },
-            'df9Scores' => function($query) { $query->latest(); },
-            'df10Scores' => function($query) { $query->latest(); },
-            'df1RelativeImportances' => function($query) { $query->latest(); },
-            'df2RelativeImportances' => function($query) { $query->latest(); },
-            'df3RelativeImportances' => function($query) { $query->latest(); },
-            'df4RelativeImportances' => function($query) { $query->latest(); },
-            'df5RelativeImportances' => function($query) { $query->latest(); },
-            'df6RelativeImportances' => function($query) { $query->latest(); },
-            'df7RelativeImportances' => function($query) { $query->latest(); },
-            'df8RelativeImportances' => function($query) { $query->latest(); },
-            'df9RelativeImportances' => function($query) { $query->latest(); },
-            'df10RelativeImportances' => function($query) { $query->latest(); },
-        ])
-        ->findOrFail($assessment_id);
-    
-        return view('admin.assessments.show', compact('assessment'));
-    }
-
-    public function filter(Request $request)
-    {
-        // Pastikan hanya admin yang bisa akses
         if (Auth::user()->role !== 'admin') {
             abort(403);
         }
 
-        $query = Assessment::query();
+        try {
+            // Eager load semua relasi df/score/relativeImportance terbaru
+            $relations = [];
+            for ($i = 1; $i <= 10; $i++) {
+                $relations[] = "df{$i}";
+                $relations[] = "df{$i}Scores";
+                $relations[] = "df{$i}RelativeImportances";
+            }
 
-        // Filter berdasarkan instansi
-        if ($request->has('instansi') && !empty($request->instansi)) {
-            $query->where('instansi', 'like', '%' . $request->instansi . '%');
+            $assessment = Assessment::with(array_combine(
+                $relations,
+                array_fill(0, count($relations), function ($q) {
+                    $q->latest();
+                })
+            ))->findOrFail($assessment_id);
+
+            $users = User::pluck('name', 'id')->toArray();
+            return view('admin.assessments.show', compact('assessment', 'users'));
+        } catch (ModelNotFoundException $e) {
+            return redirect()
+                ->route('admin.assessments.index')
+                ->with('error', 'Assessment dengan ID tersebut tidak ditemukan.');
         }
-
-        // Filter berdasarkan kode assessment
-        if ($request->has('kode_assessment') && !empty($request->kode_assessment)) {
-            $query->where('kode_assessment', 'like', '%' . $request->kode_assessment . '%');
-        }
-
-        // Filter berdasarkan user_id (jika masih diperlukan)
-        if ($request->has('user_id') && !empty($request->user_id)) {
-            $query->where('user_id', $request->user_id);
-        }
-
-        // Ambil data dengan urutan terbaru
-        $assessments = $query->orderBy('created_at', 'desc')->get();
-
-        return view('admin.assessments.index', compact('assessments'));
     }
-    
 }

@@ -24,19 +24,28 @@ use App\Http\Controllers\cobit2019\Step3Controller;
 Route::get('/assessment/join', [AssessmentController::class, 'showJoinForm'])->name('assessment.join');
 Route::post('/assessment/join', [AssessmentController::class, 'join'])->name('assessment.join.store');
 
-// Admin routes
-Route::prefix('admin')->middleware('auth')->group(function(){
-    // Dashboard & list
-    Route::get('dashboard', [AdminAssessment::class,'index'])->name('admin.dashboard');
-    // Detail satu assessment
-    Route::get('assessments/{assessment_id}', [AdminAssessment::class,'show'])->name('admin.assessments.show');
-    // Simpan assessment baru
-    Route::post('assessments', [AdminAssessment::class,'store'])->name('admin.assessments.store');
-    // Hapus assessment
-    Route::delete('assessments/{assessment_id}', [AdminAssessment::class,'destroy'])->name('admin.assessments.destroy');
-    // Filter assessment berdasarkan user_id
-    Route::get('assessments/filter', [AdminAssessment::class, 'filter'])->name('assessments.filter');
-    Route::get('/admin/assessments/filter', [AssessmentController::class, 'filter'])->name('admin.assessments.filter');
+
+// Admin routes (protected by auth + role check inside controller)
+Route::prefix('admin')
+     ->middleware('auth')
+     ->name('admin.')   // base name: admin.*
+     ->group(function() {
+    
+    // Dashboard & Assessment Management
+    Route::get('dashboard', [AdminAssessment::class, 'index'])
+         ->name('dashboard');
+         
+    Route::get('assessments', [AdminAssessment::class, 'index'])
+         ->name('assessments.index');
+         
+    Route::post('assessments', [AdminAssessment::class, 'store'])
+         ->name('assessments.store');
+         
+    Route::get('assessments/{assessment_id}', [AdminAssessment::class, 'show'])
+         ->name('assessments.show');
+         
+    Route::delete('assessments/{assessment_id}', [AdminAssessment::class, 'destroy'])
+         ->name('assessments.destroy');
 });
 
 // Redirect ke halaman login
