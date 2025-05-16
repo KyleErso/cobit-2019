@@ -74,12 +74,12 @@
                         <table class="table table-bordered table-striped table-hover table-sm">
                             <thead>
                                 <tr class="bg-primary text-white">
-                                    <th>Field \ User</th>
+                                    <th class="bg-primary text-white" style="width: 150px;">User</th>
                                     @foreach($userIds as $uid)
-                                    <th class="user-col col-u-{{ $uid }} text-center">
-                                        {{ $uid }}<br>
+                                    <th class="user-col col-u-{{ $uid }} text-center bg-primary text-white" style="width: 120px;">
+                                        <div class="fw-bold">{{ $uid }}</div>
                                         <small class="fw-normal">
-                                            {{ $users[$uid] ?? 'Unknown' }}
+                                            {{ explode(' ', $users[$uid] ?? 'Unknown')[0] }}
                                         </small>
                                     </th>
                                     @endforeach
@@ -126,12 +126,12 @@
                         <table class="table table-bordered table-striped table-hover table-sm">
                             <thead>
                                 <tr class="bg-info text-white">
-                                    <th>Score \ User</th>
+                                    <th class="bg-info text-white" style="width: 150px;">User</th>
                                     @foreach($userIds as $uid)
-                                    <th class="user-col col-u-{{ $uid }} text-center">
-                                        {{ $uid }}<br>
+                                    <th class="user-col col-u-{{ $uid }} text-center bg-info text-white" style="width: 120px;">
+                                        <div class="fw-bold">{{ $uid }}</div>
                                         <small class="fw-normal">
-                                            {{ $users[$uid] ?? 'Unknown' }}
+                                            {{ explode(' ', $users[$uid] ?? 'Unknown')[0] }}
                                         </small>
                                     </th>
                                     @endforeach
@@ -173,12 +173,12 @@
                         <table class="table table-bordered table-striped table-hover table-sm">
                             <thead>
                                 <tr class="bg-success text-white">
-                                    <th>RelImp \ User</th>
+                                    <th class="bg-success text-white" style="width: 150px;">User</th>
                                     @foreach($userIds as $uid)
-                                    <th class="user-col col-u-{{ $uid }} text-center">
-                                        {{ $uid }}<br>
+                                    <th class="user-col col-u-{{ $uid }} text-center bg-success text-white" style="width: 120px;">
+                                        <div class="fw-bold">{{ $uid }}</div>
                                         <small class="fw-normal">
-                                            {{ $users[$uid] ?? 'Unknown' }}
+                                            {{ explode(' ', $users[$uid] ?? 'Unknown')[0] }}
                                         </small>
                                     </th>
                                     @endforeach

@@ -4,24 +4,16 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
-use App\Models\User;
+use Illuminate\Support\Facades\DB;
 
-class DatabaseSeeder extends Seeder
+class AjiSeeder extends Seeder
 {
     /**
-     * Seed the application's database.
+     * Run the database seeds.
      */
     public function run(): void
     {
-        User::create([
-            'name' => 'Admin',
-            'email' => 'admin@example.com',
-            'password' => Hash::make('password'), // Bisa diganti
-            'jabatan' => 'Administrator',
-            'role' => 'admin',
-        ]);
-
-        User::create([
+        DB::table('users')->insert([
             'name' => 'Rakhmat Aji Jauhari',
             'email' => 'aji@divusi.com',
             'password' => Hash::make('CobitDivusi147!'),

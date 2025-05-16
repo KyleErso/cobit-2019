@@ -54,6 +54,17 @@
                             <input id="password-confirm" type="password" class="form-control form-control-lg" name="password_confirmation" required autocomplete="new-password" placeholder="Confirm your password">
                         </div>
 
+                        <!-- Organisasi Field -->
+                        <div id="organisasi-section" class="mb-4">
+                            <label for="organisasi" class="form-label fw-bold text-primary">{{ __('Organisasi') }}</label>
+                            <input id="organisasi" type="text" class="form-control form-control-lg @error('organisasi') is-invalid @enderror" name="organisasi" required placeholder="Enter your organization">
+                            @error('organisasi')
+                                <span class="invalid-feedback" role="alert">
+                                    <strong>{{ $message }}</strong>
+                                </span>
+                            @enderror
+                        </div>
+
                         <!-- Jabatan Field -->
                         <div id="jabatan-section" class="mb-4">
                             <label for="jabatan" class="form-label fw-bold text-primary">{{ __('Jabatan') }}</label>

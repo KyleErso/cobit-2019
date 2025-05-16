@@ -582,7 +582,10 @@
         document.addEventListener('DOMContentLoaded', function () {
             document.querySelectorAll('.input-score').forEach(input => {
                 input.addEventListener('change', function () {
-                    // Cek nilai dan ubah warna background sesuai nilai yang dipilih
+                    // Hapus kelas warna yang sudah ada
+                    this.classList.remove('bg-success-subtle', 'bg-warning-subtle', 'bg-danger-subtle');
+                    
+                    // Tambahkan kelas sesuai nilai input
                     if (this.value === "1") {
                         this.classList.add('bg-success-subtle');
                     } else if (this.value === "2") {

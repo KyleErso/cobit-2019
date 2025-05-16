@@ -16,16 +16,12 @@ class AssessmentController extends Controller
     public function join(Request $request)
     {
         $request->validate([
-            'kode_assessment' => 'required|string|min:6|max:10',
-        ], [
-            'kode_assessment.required' => 'Kode assessment harus diisi',
-            'kode_assessment.min' => 'Kode assessment minimal 6 karakter',
-            'kode_assessment.max' => 'Kode assessment maksimal 10 karakter'
+            'kode_assessment' => 'required|string',
         ]);
 
         // Cek jabatan user
         if (Auth::user()->jabatan === 'guest') {
-            return back()->with('error', 'Maaf, akun guest tidak dapat mengakses kode assessment.');
+            $request->kode_assessment = 'guest';
         }
 
         // Cari assessment berdasarkan kode_assessment
