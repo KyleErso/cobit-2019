@@ -16,63 +16,87 @@
     </div>
 
     <!-- Body Content -->
-    <div class="card-body p-4">
-        @php
-            $user = Auth::user();
-            if ($user && $user->jabatan === 'guest') {
-                $assessmentId = 'Guest';
-                $instansi = 'Guest';
-            } else {
-                $assessmentId = session('assessment_id');
-                $instansi = session('instansi');
-            }
-            $userJabatan = $user->jabatan ?? 'Jabatan tidak tersedia';
-        @endphp
+   <div class="card-body p-4">
+    @php
+        use App\Models\Assessment;
 
-        @if ($user && $user->jabatan === 'guest')
-            <div class="alert alert-danger" role="alert">
-                Anda menggunakan akun guest. Semua data rancangan tidak akan disimpan.
-            </div>
-        @endif
+        $user = Auth::user();
+        if ($user && $user->jabatan === 'guest') {
+            $assessmentId = 'Guest';
+            $instansi = 'Guest';
+            $kodeAssessment = '-';
+            $createdAt = '-';
+        } else {
+            $assessmentId = session('assessment_id');
+            $instansi = session('instansi');
+            $assessment = \App\Models\Assessment::find($assessmentId);
 
-        <!-- User Info Panel -->
-        <div class="user-info-panel bg-light rounded-3 p-4 mb-4 shadow-sm">
-            <div class="row g-3">
-                <div class="col-md-6">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-id-badge text-primary me-2 fs-5"></i>
-                        <div>
-                            <div class="text-muted small">Assessment ID</div>
-                            <div class="fw-bold text-dark">{{ $assessmentId }}</div>
-                        </div>
-                    </div>
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-building text-primary me-2 fs-5"></i>
-                        <div>
-                            <div class="text-muted small">Instansi</div>
-                            <div class="fw-bold text-dark">{{ $instansi }}</div>
-                        </div>
+            $kodeAssessment = $assessment?->kode_assessment ?? '-';
+            $createdAt = $assessment?->created_at->format('d M Y H:i') ?? '-';
+        }
+        $userJabatan = $user->jabatan ?? 'Jabatan tidak tersedia';
+    @endphp
+
+    @if ($user && $user->jabatan === 'guest')
+        <div class="alert alert-danger" role="alert">
+            Anda menggunakan akun guest. Semua data rancangan tidak akan disimpan.
+        </div>
+    @endif
+
+    <!-- User Info Panel -->
+    <div class="user-info-panel bg-light rounded-3 p-4 mb-4 shadow-sm">
+        <div class="row g-3">
+            <div class="col-md-6">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-id-badge text-primary me-2 fs-5"></i>
+                    <div>
+                        <div class="text-muted small">Assessment ID</div>
+                        <div class="fw-bold text-dark">{{ $assessmentId }}</div>
                     </div>
                 </div>
-                
-                <div class="col-md-6">
-                    <div class="d-flex align-items-center mb-3">
-                        <i class="fas fa-user-tie text-primary me-2 fs-5"></i>
-                        <div>
-                            <div class="text-muted small">Pengguna</div>
-                            <div class="fw-bold text-dark">{{ $user->name }}</div>
-                        </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-building text-primary me-2 fs-5"></i>
+                    <div>
+                        <div class="text-muted small">Instansi</div>
+                        <div class="fw-bold text-dark">{{ $instansi }}</div>
                     </div>
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-briefcase text-primary me-2 fs-5"></i>
-                        <div>
-                            <div class="text-muted small">Jabatan</div>
-                            <div class="fw-bold text-dark">{{ $userJabatan }}</div>
-                        </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-calendar-alt text-primary me-2 fs-5"></i>
+                    <div>
+                        <div class="text-muted small">Timestamp Assessment</div>
+                        <div class="fw-bold text-dark">{{ $createdAt }}</div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-md-6">
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-user-tie text-primary me-2 fs-5"></i>
+                    <div>
+                        <div class="text-muted small">Pengguna</div>
+                        <div class="fw-bold text-dark">{{ $user->name }}</div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center mb-3">
+                    <i class="fas fa-briefcase text-primary me-2 fs-5"></i>
+                    <div>
+                        <div class="text-muted small">Jabatan</div>
+                        <div class="fw-bold text-dark">{{ $userJabatan }}</div>
+                    </div>
+                </div>
+                <div class="d-flex align-items-center">
+                    <i class="fas fa-key text-primary me-2 fs-5"></i>
+                    <div>
+                        <div class="text-muted small">Kode Assessment</div>
+                        <div class="fw-bold text-dark">{{ $kodeAssessment }}</div>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
+
 
         <!-- Content Section -->
         <div class="tools-content-section border-top pt-4">

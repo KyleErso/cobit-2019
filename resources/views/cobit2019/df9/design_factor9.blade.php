@@ -7,7 +7,7 @@
       <div class="card shadow border-0 rounded">
         <!-- Card Header -->
         <div class="card-header bg-primary text-white text-center py-3">
-          <h4 class="mb-0">Design Factor 9</h4>
+          <h4 class="mb-0">Design Factor 9 - IT Implementation Methods</h4>
         </div>
         <!-- Card Body -->
         <div class="card-body p-4">

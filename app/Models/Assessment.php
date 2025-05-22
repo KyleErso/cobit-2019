@@ -11,7 +11,7 @@ class Assessment extends Model
 {
     // Nama tabel
     protected $table = 'assessment';
-
+    
     // Primary key
     protected $primaryKey = 'assessment_id';
 

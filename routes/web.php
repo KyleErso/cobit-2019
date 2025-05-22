@@ -19,33 +19,57 @@ use App\Http\Controllers\cobit2019\Df9Controller;
 use App\Http\Controllers\cobit2019\Df10Controller;
 use App\Http\Controllers\cobit2019\Step2Controller;
 use App\Http\Controllers\cobit2019\Step3Controller;
+use App\Http\Controllers\cobit2019\Step4Controller;
 
 // Public routes
-Route::get('/assessment/join', [AssessmentController::class, 'showJoinForm'])->name('assessment.join');
-Route::post('/assessment/join', [AssessmentController::class, 'join'])->name('assessment.join.store');
+
+Route::get('/assessment/join', [AssessmentController::class, 'showJoinForm'])
+     ->name('assessment.join')
+     ->middleware('auth');
+
+Route::post('/assessment/join', [AssessmentController::class, 'join'])
+     ->name('assessment.join.store')
+     ->middleware('auth');
+
+Route::post('/assessment/request', [AssessmentController::class, 'requestAssessment'])
+     ->middleware('auth')
+     ->name('assessment.request');
 
 
-// Admin routes (protected by auth + role check inside controller)
+
+// Admin routes (auth + role check di controller)
 Route::prefix('admin')
      ->middleware('auth')
-     ->name('admin.')   // base name: admin.*
+     ->name('admin.')
      ->group(function() {
-    
-    // Dashboard & Assessment Management
+
+    // Dashboard (alias assessments.index)
     Route::get('dashboard', [AdminAssessment::class, 'index'])
          ->name('dashboard');
-         
     Route::get('assessments', [AdminAssessment::class, 'index'])
          ->name('assessments.index');
-         
+
+    // CRUD Assessment
     Route::post('assessments', [AdminAssessment::class, 'store'])
          ->name('assessments.store');
-         
     Route::get('assessments/{assessment_id}', [AdminAssessment::class, 'show'])
          ->name('assessments.show');
-         
     Route::delete('assessments/{assessment_id}', [AdminAssessment::class, 'destroy'])
          ->name('assessments.destroy');
+
+
+         // Tampilkan semua pending requests
+Route::get('requests', [AdminAssessment::class, 'pendingRequests'])
+     ->name('requests');
+
+    // **Request–Approve** routes
+    // Tampilkan semua pending requests
+    Route::get('requests', [AdminAssessment::class, 'pendingRequests'])
+         ->name('requests');
+
+    // Approve satu request berdasar index di JSON
+    Route::post('requests/{idx}/approve', [AdminAssessment::class, 'approveRequest'])
+         ->name('requests.approve');
 });
 
 // Redirect ke halaman login
@@ -73,11 +97,31 @@ Route::get('/cobit2019/cobit_home', function () {
 
 // Route untuk Step 2 (Summary) - pastikan view Step2 sudah didefinisikan
 Route::get('/step2', [Step2Controller::class, 'index'])->name('step2.index')->middleware('auth');
-
-// Route untuk Step 3 (Summary) - menampilkan data DF5 sampai DF10 (menggunakan record pertama)
-Route::get('/step3', [Step3Controller::class, 'index'])
-    ->name('step3.index')
+Route::post('/step2/store', [Step2Controller::class, 'storeStep2'])
+    ->name('step2.store')
     ->middleware('auth');
+
+// Route GET untuk tampilkan Step 3
+Route::get('/step3', [Step3Controller::class, 'index'])
+     ->name('step3.index')
+     ->middleware('auth');
+
+// Route POST untuk simpan Step 3 ke session
+Route::post('/step3/store', [Step3Controller::class, 'store'])
+     ->name('step3.store')
+     ->middleware('auth');
+
+
+// Route GET untuk tampilkan Step 4
+Route::get('/step4', [Step4Controller::class, 'index'])
+     ->name('step4.index')
+     ->middleware('auth');
+
+// Route POST untuk simpan Step 4 ke session
+Route::post('/step4/store', [Step4Controller::class, 'store'])
+     ->name('step4.store')
+     ->middleware('auth');
+
 
 // Routes untuk Design Factors
 

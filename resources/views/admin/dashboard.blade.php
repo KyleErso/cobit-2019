@@ -21,6 +21,11 @@
 
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h2 class="h3 mb-0 text-gray-800">Kelola Kode Assessment</h2>
+
+        {{-- Tombol untuk Cek Daftar Request --}}
+        <a href="{{ url('admin/requests') }}" class="btn btn-info">
+            <i class="fas fa-list me-1"></i> Cek Daftar Request
+        </a>
     </div>
 
     {{-- Forms Grid --}}
@@ -32,7 +37,7 @@
                     <h6 class="m-0 font-weight-bold">Buat Kode Baru</h6>
                 </div>
                 <div class="card-body">
-                    <form action="{{ route('admin.assessments.store') }}" method="POST">
+                    <form action="{{ route('admin.assessments.index') }}" method="POST">
                         @csrf
                         <div class="row g-3">
                             <div class="col-md-5">

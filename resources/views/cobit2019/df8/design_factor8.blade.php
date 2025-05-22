@@ -7,7 +7,7 @@
       <div class="card shadow border-0 rounded">
         <!-- Header Card -->
         <div class="card-header bg-primary text-white text-center py-3">
-          <h4 class="mb-0">Design Factor 8</h4>
+          <h4 class="mb-0">Design Factor 8 - Sourcing Model for IT</h4>
         </div>
         <div class="card-body p-4">
           <form action="{{ route('df8.store') }}" method="POST" onsubmit="return validateForm()">

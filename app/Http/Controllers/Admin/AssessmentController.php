@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\Assessment;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Models\User;
+use Illuminate\Support\Facades\Storage;
 
 class AssessmentController extends Controller
 {
@@ -76,6 +77,60 @@ class AssessmentController extends Controller
             ->route('admin.assessments.index')
             ->with('success', 'Kode assessment berhasil dibuat');
     }
+
+
+    /**
+     * Tampilkan daftar pending requests (status = 'pending') dari JSON
+     */
+    public function pendingRequests()
+    {
+        if (Auth::user()->role !== 'admin') {
+            abort(403);
+        }
+
+        $path = 'requests.json';
+        $all = Storage::exists($path)
+             ? json_decode(Storage::get($path), true)
+             : [];
+
+        $pending = array_filter($all, fn($r) => ($r['status'] ?? '') === 'pending');
+        // preserve index
+        $requests = [];
+        foreach ($pending as $idx => $entry) {
+            $requests[$idx] = $entry;
+        }
+
+        return view('admin.assessments.requests', compact('requests'));
+    }
+
+    /**
+     * Approve request ke-{idx} dalam JSON
+     */
+    public function approveRequest($idx)
+    {
+        if (Auth::user()->role !== 'admin') {
+            abort(403);
+        }
+
+        $path = 'requests.json';
+        if (! Storage::exists($path)) {
+            return back()->with('error','File request tidak ditemukan.');
+        }
+
+        $all = json_decode(Storage::get($path), true);
+
+        if (! array_key_exists($idx, $all)) {
+            return back()->with('error','Request tidak ditemukan.');
+        }
+
+        $all[$idx]['status'] = 'approved';
+        $all[$idx]['approved_at'] = now()->toDateTimeString();
+
+        Storage::put($path, json_encode($all, JSON_PRETTY_PRINT));
+
+        return back()->with('success','Request berhasil di-approve.');
+    }
+
 
     /**
      * Tampilkan detail satu assessment beserta relasinya

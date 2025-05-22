@@ -47,4 +47,30 @@ class Step2Controller extends Controller
         // Oper data ke view summary
         return view('cobit2019.step2.step2sumaryblade', compact('assessment', 'userIds'));
     }
+
+  public function storeStep2(Request $request)
+{
+    // Validasi bahwa ketiga field hadir dan berbentuk JSON
+    $request->validate([
+        'weights'              => 'required|json',
+        'relative_importances' => 'required|json',
+        'totals'               => 'required|json',
+    ]);
+
+    // Decode data dari hidden inputs
+    $weights             = json_decode($request->input('weights'), true);
+    $relativeImportances = json_decode($request->input('relative_importances'), true);
+    $totals              = json_decode($request->input('totals'), true);
+
+    // Simpan semua data ke session
+    session()->put('step2.weights', $weights);
+    session()->put('step2.relative_importances', $relativeImportances);
+    session()->put('step2.totals', $totals);
+
+    // Redirect kembali ke form Step 2 dengan pesan sukses
+    return redirect()
+        ->route('step2.index')
+        ->with('success', 'Data Step 2 berhasil disimpan di session.');
+    }
+
 }

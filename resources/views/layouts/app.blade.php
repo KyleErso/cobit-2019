@@ -52,10 +52,14 @@
                   </li>
                 @endif
               @else
-                <li class="nav-item dropdown">
-                  <a id="navbarDropdown" class="nav-link dropdown-toggle text-white" href="#" role="button"
+                <li class="nav-item">
+                  <a class="nav-link text-white" href="#" role="button"
                      data-bs-toggle="offcanvas" data-bs-target="#sidebarOffcanvas" aria-controls="sidebarOffcanvas">
-                    <strong>Selamat Datang 🤗, {{ Auth::user()->name }}</strong>
+                    <div class="d-flex align-items-center">
+                      <strong class="text-white me-3">Selamat Datang, {{ Auth::user()->name }}</strong>
+                      <span class="badge bg-warning me-3" style="font-size: larger;">{{ Auth::user()->organisasi ?? 'Organisasi tidak tersedia' }}</span>
+                      <span class="badge bg-warning" style="font-size: larger;">{{ Auth::user()->jabatan ?? 'Jabatan tidak tersedia' }}</span>
+                    </div>
                   </a>
                 </li>
               @endguest

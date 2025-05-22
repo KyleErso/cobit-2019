@@ -9,51 +9,33 @@
         <!-- Header Card -->
         <div class="card-header bg-primary text-white text-center position-relative py-4">
           <h3 class="mb-0 fw-semibold">{{ __('Selamat Datang!') }}</h3>
+          @if(Auth::user()->role === 'admin')
+            <a href="{{ route('admin.assessments.index') }}"
+               class="btn btn-sm btn-secondary position-absolute"
+               style="top: 1rem; right: 1rem;">
+              <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+            </a>
+          @endif
         </div>
 
         <!-- Body Card -->
         <div class="card-body p-4 p-xl-5">
-          <!-- User Information -->
-          <div class="text-center mb-4">
-            <div class="avatar-frame mb-3">
-              <div class="bg-primary bg-opacity-10 text-primary rounded-circle d-flex justify-content-center align-items-center mx-auto" 
-                   style="width: 80px; height: 80px;">
-                <i class="fas fa-user fa-2x"></i>
-              </div>
-            </div>
-            <h4 class="h3 fw-bold text-primary mb-2">{{ $user->name }}</h4>
-            <div class="d-flex flex-column align-items-center">
-              <div class="badge bg-secondary bg-opacity-10 text-secondary mt-2 px-3 py-2 fs-4 w-50 text-center">
-                <i class="fas fa-building me-2"></i>
-                {{ $user->organisasi ?? 'Organisasi tidak tersedia' }}
-              </div>
-              <div class="badge bg-primary bg-opacity-10 text-primary mt-2 px-3 py-2 fs-5 w-50 text-center">
-                <i class="fas fa-id-card-clip me-2"></i>
-                {{ $user->jabatan ?? 'Jabatan tidak tersedia' }}
-              </div>
-            </div>
-          </div>
-
           <!-- Toolbar untuk memilih Tools -->
           <div class="mt-4">
             <h5 class="fw-bold text-primary text-center mb-4">Pilih Tools</h5>
-            <div class="scrollspy-example-horizontal" data-bs-spy="scroll" data-bs-target="#navbar-tools" data-bs-offset="0" tabindex="0" style="overflow-x: auto; white-space: nowrap;">
+            <div class="scrollspy-example-horizontal d-flex justify-content-center"
+                 data-bs-spy="scroll"
+                 data-bs-target="#navbar-tools"
+                 data-bs-offset="0"
+                 tabindex="0"
+                 style="overflow-x: auto; white-space: nowrap;">
               <!-- Tombol COBIT -->
               <div class="d-inline-block mx-3" style="width: 200px;">
-                <a href="{{ route('cobit.home') }}" class="btn btn-outline-primary btn-lg px-4 py-2 fw-bold shadow-sm w-100">
-                  <img src="https://api.wakool.id/images/thumb900/2021041503045520200515230523COBIT2019_1623730934.jpg" alt="COBIT2019 Logo" class="img-fluid border">
-                </a>
-              </div>
-              <!-- Tombol ISO Tools -->
-              <div class="d-inline-block mx-3" style="width: 200px;">
-                <a href="#" onclick="alert('Coming Soon'); return false;" class="btn btn-outline-primary btn-lg px-4 py-2 fw-bold shadow-sm w-100">
-                  <img src="https://www.china-gauges.com/Uploads/image/20230402/20230402085507_16632.png" alt="ISO Tools Logo" class="img-fluid">
-                </a>
-              </div>
-              <!-- Tombol ISO Tools -->
-              <div class="d-inline-block mx-3" style="width: 200px;">
-                <a href="#" onclick="alert('Coming Soon'); return false;" class="btn btn-outline-primary btn-lg px-4 py-2 fw-bold shadow-sm w-100">
-                  <img src="https://wqa.co.id/wp-content/uploads/2018/11/sertifikasi-iso-27001.gif" alt="ISO Tools Logo" class="img-fluid">
+                <a href="{{ route('cobit.home') }}"
+                   class="btn btn-outline-primary btn-lg px-4 py-2 fw-bold shadow-sm w-100">
+                  <img src="https://api.wakool.id/images/thumb900/2021041503045520200515230523COBIT2019_1623730934.jpg"
+                       alt="COBIT2019 Logo"
+                       class="img-fluid border">
                 </a>
               </div>
             </div>
@@ -63,8 +45,8 @@
         <!-- Footer Card -->
         <div class="card-footer text-center bg-opacity-5 py-3">
           <small class="text-muted d-block mb-1">Butuh bantuan? Hubungi kami melalui:</small>
-          <a href="https://wa.me/6287779511667?text=Halo%20saya%20ingin%20bertanya%20tentang%20COBIT2019" 
-             target="_blank" 
+          <a href="https://wa.me/6287779511667?text=Halo%20saya%20ingin%20bertanya%20tentang%20COBIT2019"
+             target="_blank"
              class="btn btn-sm btn-success px-4 shadow-sm">
             <i class="fab fa-whatsapp me-2"></i>WhatsApp
           </a>
@@ -98,7 +80,6 @@
 
 <!-- Styles -->
 <style>
-
    /* Style tombol agar tetap putih saat hover */
    a.btn-outline-primary:hover {
         background-color: #fff !important;

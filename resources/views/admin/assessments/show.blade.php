@@ -53,6 +53,7 @@
     </div>
 
     @php
+        use Illuminate\Support\Str;
         $userIds = collect();
         for($n=1; $n<=10; $n++){
             $userIds = $userIds->merge($assessment->{'df'.$n}()->pluck('id'));
@@ -71,38 +72,46 @@
                 <div class="mb-5">
                     <h6 class="fw-bold mb-3">DF{{ $n }}</h6>
                     <div class="table-responsive">
-                        <table class="table table-bordered table-striped table-hover table-sm">
+                        <table class="table table-bordered table-striped table-hover table-sm" data-df="{{ $n }}">
                             <thead>
                                 <tr class="bg-primary text-white">
-                                    <th class="bg-primary text-white" style="width: 150px;">User</th>
+                                    <th style="width: 150px;">User</th>
                                     @foreach($userIds as $uid)
-                                    <th class="user-col col-u-{{ $uid }} text-center bg-primary text-white" style="width: 120px;">
+                                    <th class="user-col col-u-{{ $uid }} text-center" style="width: 120px;">
                                         <div class="fw-bold">{{ $uid }}</div>
                                         <small class="fw-normal">
                                             {{ explode(' ', $users[$uid] ?? 'Unknown')[0] }}
                                         </small>
                                     </th>
                                     @endforeach
+                                    <th class="text-center bg-warning text-dark" style="width: 140px;">Suggestion</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @php
-                                    $dfRecord = $assessment->{'df'.$n}->first();
-                                    $inputs = $dfRecord 
-                                        ? collect($dfRecord->toArray())->filter(function($value, $key) use ($n) {
-                                            return str_starts_with($key, 'input') && str_ends_with($key, "df{$n}");
-                                        })->keys()
-                                        : collect();
+                                    $dfRecords = $assessment->{'df'.$n};
+                                    $inputCols = [];
+                                    if ($first = $dfRecords->first()) {
+                                        foreach ($first->getAttributes() as $key => $value) {
+                                            if (Str::startsWith($key, 'input') && Str::endsWith($key, "df{$n}")) {
+                                                $inputCols[] = $key;
+                                            }
+                                        }
+                                    }
                                 @endphp
-                                @foreach($inputs as $col)
+
+                                @foreach($inputCols as $col)
                                 <tr>
                                     <td class="fw-bold">{{ str_replace("df{$n}", '', $col) }}</td>
                                     @foreach($userIds as $uid)
-                                        @php $rec = $assessment->{'df'.$n}->firstWhere('id', $uid); @endphp
-                                        <td class="user-col col-u-{{ $uid }} text-center">{{ $rec ? $rec->$col : '-' }}</td>
+                                        @php $rec = $dfRecords->firstWhere('id', $uid); @endphp
+                                        <td class="user-col col-u-{{ $uid }} text-center">{{ $rec->{$col} ?? '-' }}</td>
                                     @endforeach
+                                    {{-- placeholder for JS --}}
+                                    <td class="suggestion text-center fw-bold">–</td>
                                 </tr>
                                 @endforeach
+
                             </tbody>
                         </table>
                     </div>
@@ -207,36 +216,77 @@
     </div>
 </div>
 
+
 <script>
-    // Toggle sections
-    const sections = {
-        'btn-df': ['section-df'], 
-        'btn-scores': ['section-scores'],
-        'btn-relimp': ['section-relimp'],
-        'btn-all': ['section-df', 'section-scores', 'section-relimp']
-    };
-
-    Object.entries(sections).forEach(([btnId, sectionIds]) => {
-        document.getElementById(btnId).addEventListener('click', () => {
-            document.querySelectorAll('[id^="section-"]').forEach(el => el.style.display = 'none');
-            sectionIds.forEach(id => document.getElementById(id).style.display = 'block');
-        });
+  // Toggle sections
+  const sections = {
+    'btn-df': ['section-df'],
+    'btn-scores': ['section-scores'],
+    'btn-relimp': ['section-relimp'],
+    'btn-all': ['section-df','section-scores','section-relimp']
+  };
+  Object.entries(sections).forEach(([btn, secs]) => {
+    document.getElementById(btn).addEventListener('click', () => {
+      document.querySelectorAll('[id^="section-"]').forEach(el => el.style.display = 'none');
+      secs.forEach(id => document.getElementById(id).style.display = 'block');
     });
+  });
 
-    // Filter columns
-    const filterColumns = (userId) => {
-        document.querySelectorAll('.user-col').forEach(el => {
-            el.style.display = !userId || el.classList.contains(`col-u-${userId}`) ? '' : 'none';
-        });
-    };
-
-    document.getElementById('applyFilter').addEventListener('click', () => {
-        filterColumns(document.getElementById('filterUserId').value.trim());
+  // Filter columns
+  function filterColumns(userId) {
+    document.querySelectorAll('.user-col').forEach(el => {
+      el.style.display = (!userId || el.classList.contains(`col-u-${userId}`)) ? '' : 'none';
     });
+  }
+  document.getElementById('applyFilter').addEventListener('click', () => {
+    filterColumns(document.getElementById('filterUserId').value.trim());
+  });
+  document.getElementById('clearFilter').addEventListener('click', () => {
+    document.getElementById('filterUserId').value = '';
+    filterColumns('');
+  });
 
-    document.getElementById('clearFilter').addEventListener('click', () => {
-        document.getElementById('filterUserId').value = '';
-        filterColumns('');
+  // Hitung suggestion via JS
+  document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('#section-df table[data-df]').forEach(tbl => {
+      const df = parseInt(tbl.dataset.df, 10);
+      const isMode = [1,2,3,4,7].includes(df);
+
+      tbl.querySelectorAll('tbody tr').forEach(row => {
+        // Ambil text tiap user-col, skip '-' dan non-numeric
+        const cells = Array.from(row.querySelectorAll('td'))
+          .slice(1, -1)
+          .map(td => td.textContent.trim())
+          .filter(txt => txt !== '-');
+
+        if (isMode) {
+          const freq = {};
+          cells.forEach(v => {
+            // hanya numeric atau string angka
+            if (!isNaN(v)) {
+              v = String(v);
+              freq[v] = (freq[v]||0) + 1;
+            }
+          });
+          const max = Math.max(0, ...Object.values(freq));
+          const modes = Object.entries(freq)
+            .filter(([,c]) => c === max)
+            .map(([v]) => v)
+            .join(', ');
+          row.querySelector('.suggestion').textContent = modes || '–';
+
+        } else {
+          // Rata2 persen: hanya hitung yang numeric
+          const nums = cells
+            .map(v=>parseFloat(v))
+            .filter(v=>!isNaN(v));
+          const avg = nums.length
+            ? nums.reduce((a,b)=>a+b,0)/nums.length
+            : 0;
+          row.querySelector('.suggestion').textContent = avg.toFixed(2) + '%';
+        }
+      });
     });
+  });
 </script>
 @endsection
