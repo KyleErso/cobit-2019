@@ -11,12 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mst_entergoals', function (Blueprint $table) {
-            $table->string('entergoals_id');
-            $table->primary('entergoals_id');
-
-            $table->text('description');
-            // $table->timestamps();
+        Schema::create('mst_keyculture', function (Blueprint $table) {
+            $table->id("keyculture_id");
+            $table->text("element")->nullable();
         });
     }
 
@@ -25,6 +22,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('mst_entergoals');
+        Schema::dropIfExists('mst_keyculture');
     }
 };

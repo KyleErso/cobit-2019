@@ -15,7 +15,7 @@ return new class extends Migration
             $table->increments('aligngoalsmetr_id');
             // $table->primary('aligngoalsmetr_id');
 
-            $table->string('description');
+            $table->text('description');
             $table->string('aligngoals_id');
 
             $table->foreign('aligngoals_id')

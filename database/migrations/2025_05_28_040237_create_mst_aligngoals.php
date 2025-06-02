@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('aligngoals_id');
             $table->primary('aligngoals_id');
 
-            $table->string('description');
+            $table->text('description');
         });
     }
 
