@@ -83,7 +83,7 @@
       'MEA04'
       ];
       // Berat tiap dimensi (dapat diubah oleh user)
-      $sessionWeights = session('step2.weights') ?? [0, 0, 0, 0];
+      $sessionWeights = session('step2.weights') ?? [1, 1, 1, 1];
       // Gunakan nilai dari session atau nilai lama (old) pada input
       $weights = old('weight', $sessionWeights);
       @endphp

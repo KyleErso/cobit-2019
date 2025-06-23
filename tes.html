@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Particle Interaction Simulation</title>
+  <style>
+    body { display: flex; flex-direction: column; align-items: center; font-family: sans-serif; }
+    #controls { margin: 10px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    #canvas { border: 1px solid #333; background: #f8f8f8; }
+    #history { margin-top: 10px; max-height: 150px; overflow-y: auto; width: 80%; }
+    #history li { display: flex; justify-content: space-between; padding: 4px; background: #eee; margin-bottom: 4px; }
+    .slider-label { margin-right: 4px; }
+    input[type=number], input[type=range] { width: 60px; }
+  </style>
+</head>
+<body>
+  <h2>🔄 Particle Interaction Simulation</h2>
+  <div id="controls">
+    <label for="particleCount">Jumlah:</label>
+    <input type="number" id="particleCount" value="1" min="1">
+    <label for="sizeInput">Ukuran:</label>
+    <input type="number" id="sizeInput" value="8" min="1">
+    <label for="colorInput">Warna:</label>
+    <input type="color" id="colorInput" value="#0077cc">
+    <label for="densityInput">Densitas:</label>
+    <input type="number" id="densityInput" value="1" min="0.1" step="0.1">
+    <button id="addParticleBtn">Tambah Partikel</button>
+    <button id="resetBtn">Reset</button>
+    <label for="gravRange" class="slider-label">G Const:</label>
+    <input type="range" id="gravRange" min="0" max="1" step="0.01" value="0.05">
+    <span id="gravValue">0.05</span>
+    <label for="widthInput">Lebar:</label>
+    <input type="number" id="widthInput" value="800" min="200">
+    <label for="heightInput">Tinggi:</label>
+    <input type="number" id="heightInput" value="600" min="200">
+    <button id="resizeBtn">Atur Ukuran</button>
+  </div>
+  <canvas id="canvas" width="800" height="600"></canvas>
+  <ul id="history"></ul>
+
+  <script>
+    const canvas = document.getElementById('canvas');
+    const ctx = canvas.getContext('2d');
+    const addBtn = document.getElementById('addParticleBtn');
+    const resetBtn = document.getElementById('resetBtn');
+    const countInput = document.getElementById('particleCount');
+    const sizeInput = document.getElementById('sizeInput');
+    const colorInput = document.getElementById('colorInput');
+    const densityInput = document.getElementById('densityInput');
+    const gravRange = document.getElementById('gravRange');
+    const gravValue = document.getElementById('gravValue');
+    const widthInput = document.getElementById('widthInput');
+    const heightInput = document.getElementById('heightInput');
+    const resizeBtn = document.getElementById('resizeBtn');
+    const historyList = document.getElementById('history');
+
+    let particles = [];
+    let G = parseFloat(gravRange.value);
+    let nextId = 1;
+
+    class Particle {
+      constructor(x, y, radius, color, density, id) {
+        this.x = x; this.y = y;
+        this.vx = (Math.random() - 0.5) * 2;
+        this.vy = (Math.random() - 0.5) * 2;
+        this.radius = radius;
+        this.mass = density * radius * radius;
+        this.color = color;
+        this.id = id;
+      }
+      update() {
+        // Gravitasi antar partikel
+        particles.forEach(other => {
+          if (other === this) return;
+          let dx = other.x - this.x;
+          let dy = other.y - this.y;
+          let dist = Math.hypot(dx, dy);
+          let minDist = this.radius + other.radius;
+          if (dist > minDist) {
+            let force = G * this.mass * other.mass / (dist * dist);
+            let ax = force * dx / dist / this.mass;
+            let ay = force * dy / dist / this.mass;
+            this.vx += ax;
+            this.vy += ay;
+          } else {
+            // prevent overlap: project to surface
+            let angle = Math.atan2(dy, dx);
+            this.x = other.x - Math.cos(angle) * minDist;
+            this.y = other.y - Math.sin(angle) * minDist;
+            // stick: zero normal relative velocity
+            let relVx = this.vx - other.vx;
+            let relVy = this.vy - other.vy;
+            let norm = { x: Math.cos(angle), y: Math.sin(angle) };
+            let proj = relVx * norm.x + relVy * norm.y;
+            this.vx -= proj * norm.x;
+            this.vy -= proj * norm.y;
+          }
+        });
+        // Interaksi dengan dinding: gravitasi ke dinding
+        let edges = [
+          { overlap: this.radius - this.x, nx: -1, ny: 0 },
+          { overlap: this.x + this.radius - canvas.width, nx: 1, ny: 0 },
+          { overlap: this.radius - this.y, nx: 0, ny: -1 },
+          { overlap: this.y + this.radius - canvas.height, nx: 0, ny: 1 }
+        ];
+        edges.forEach(e => {
+          if (e.overlap > 0) {
+            // prevent going out
+            if (e.nx) this.x = e.nx > 0 ? canvas.width - this.radius : this.radius;
+            if (e.ny) this.y = e.ny > 0 ? canvas.height - this.radius : this.radius;
+          }
+          // gravitational attraction to wall
+          let dist = Math.abs(e.overlap) || 1;
+          let force = G * this.mass * 1 / (dist * dist);
+          this.vx += force * e.nx;
+          this.vy += force * e.ny;
+        });
+        this.x += this.vx;
+        this.y += this.vy;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.radius, 0, Math.PI * 2);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+      }
+    }
+
+    function addParticles(count) {
+      const r = Number(sizeInput.value);
+      const c = colorInput.value;
+      const d = Number(densityInput.value);
+      for (let i = 0; i < count; i++) {
+        const x = Math.random() * (canvas.width - 2*r) + r;
+        const y = Math.random() * (canvas.height - 2*r) + r;
+        const p = new Particle(x, y, r, c, d, nextId++);
+        particles.push(p);
+        addHistoryItem(p);
+      }
+    }
+
+    function addHistoryItem(p) {
+      const li = document.createElement('li');
+      li.id = 'item-' + p.id;
+      li.innerHTML = `ID ${p.id} | size: ${p.radius} | mass: ${p.mass.toFixed(1)}`;
+      const btn = document.createElement('button'); btn.textContent = 'Hapus';
+      btn.onclick = () => removeParticle(p.id);
+      li.appendChild(btn); historyList.appendChild(li);
+    }
+
+    function removeParticle(id) {
+      particles = particles.filter(p => p.id !== id);
+      const li = document.getElementById('item-' + id);
+      if (li) historyList.removeChild(li);
+    }
+
+    addBtn.addEventListener('click', () => addParticles(Math.max(1, Number(countInput.value))));
+    resetBtn.addEventListener('click', () => { particles = []; historyList.innerHTML = ''; });
+    gravRange.addEventListener('input', () => { G = parseFloat(gravRange.value); gravValue.textContent = G; });
+    resizeBtn.addEventListener('click', () => { canvas.width = Number(widthInput.value); canvas.height = Number(heightInput.value); });
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      // draw boundary
+      ctx.strokeStyle = 'red';
+      ctx.lineWidth = 2;
+      ctx.strokeRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => { p.update(); p.draw(); });
+      requestAnimationFrame(animate);
+    }
+    animate();
+  </script>
+</body>
+</html>
