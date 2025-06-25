@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MstObjective extends Model
+class MstPractice extends Model
 {
     use HasFactory;
-    
-    protected $table = 'mst_objective';
 
-    protected $primaryKey = 'objective_id';
+    protected $table = 'mst_practice';
+
+    protected $primaryKey = 'practice_id';
 
     public $incrementing = false;
 
@@ -20,9 +20,14 @@ class MstObjective extends Model
     public $timestamps = false;
 
     protected $fillable = [
+        'practice_id',
         'objective_id',
-        'objective',
-        'objective_description',
-        'objective_purpose',
+        'practice_name',
+        'practice_description',
     ];
+
+    public function objective()
+    {
+        return $this->belongsTo(MstObjective::class, 'objective_id');
+    }
 }

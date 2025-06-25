@@ -13,6 +13,7 @@ class MstArea extends Model
     protected $primaryKey = 'area';
     protected $keyType = 'string';
 
+    public $timestamps = false;
     protected $fillable = [
         'area',
     ];
