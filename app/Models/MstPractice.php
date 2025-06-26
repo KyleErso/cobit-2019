@@ -30,4 +30,14 @@ class MstPractice extends Model
     {
         return $this->belongsTo(MstObjective::class, 'objective_id');
     }
+
+    public function guidances()
+    {
+        return $this->belongsToMany(
+            MstGuidance::class,
+            'trs_practiceguidance',  // pivot table
+            'practice_id',           // this model’s FK on pivot
+            'guidance_id'            // other model’s FK on pivot
+        );
+    }
 }

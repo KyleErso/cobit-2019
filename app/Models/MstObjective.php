@@ -25,4 +25,29 @@ class MstObjective extends Model
         'objective_description',
         'objective_purpose',
     ];
+
+    public function domains()
+    {
+        return $this->belongsToMany(
+            MstArea::class,
+            'trs_domain',
+            'objective_id',
+            'area'
+        )->withPivot('domain');
+    }
+
+    public function practices()
+    {
+        return $this->hasMany(MstPractice::class, 'objective_id', 'objective_id');
+    }
+
+    public function policies()
+    {
+        return $this->hasMany(MstPolicy::class, 'objective_id', 'objective_id');
+    }
+
+    public function SIA()
+    {
+        return $this->hasMany(MstSIA::class, 'objective_id', 'objective_id');
+    }
 }

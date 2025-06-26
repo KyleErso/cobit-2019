@@ -16,7 +16,12 @@ class MstObjectiveController extends Controller
         // Fetch all objectives
         // dd("aaa");
         // print_r("index");
-        $objectives = MstObjective::all();
+        // $objectives = MstObjective::all();
+        $objectives = MstObjective::with(['domains',
+        'practices',
+        'practices.guidances', 
+        'policies',
+        'SIA'])->get();
 
         // Return as JSON (you could also pass to a view)
         return response()->json($objectives);
