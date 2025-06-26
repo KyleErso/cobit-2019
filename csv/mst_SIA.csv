@@ -1,89 +1,89 @@
 sia_id,objective_id,description
-1,EDM01,COBIT and related products/tools
-2,EDM01,Equivalent frameworks and standards
-3,EDM02,Cost accounting system
-4,EDM02,Program management tool
-5,EDM03,Risk management system
-6,EDM04,"Performance measurement system (e.g., balanced scorecard, skills management tools)"
-7,EDM05,Communication tools and channels
-8,EDM05,IT dashboarding
-9,EDM05,Stakeholder survey tools
-10,APO01,COBIT and related products/tools
-11,APO01,Equivalent frameworks and standards
-12,APO02,Customer analytics
-13,APO02,Industry benchmarks
-14,APO02,"Performance measurement system (e.g., balanced scorecard, skills management tools)"
-15,APO02,Technology watch services and tools
-16,APO03,Architecture repository
-17,APO04,Collaboration platforms
-18,APO04,Industry benchmarks
-19,APO04,Technology watch services and tools
-20,APO05,Portfolio/investment management tools
-21,APO06,Cost accounting system
-22,APO07,HR management system
-23,APO07,"Performance measurement system (e.g., balanced scorecard, skills management tools)"
-24,APO07,Resource planning tools
-25,APO08,Collaboration platforms
-26,APO08,Internal training and awareness building services
-27,APO09,Contract management system
-28,APO09,Service level monitoring tools
-29,APO10,Contract management system
-30,APO10,Third-party assurance services
-31,APO11,QMS
-32,APO11,Third-party quality assurance services
-33,APO12,Crisis management services
-34,APO12,"Governance, risk and compliance (GRC) tools"
-35,APO12,Risk analysis tools
-36,APO12,Risk intelligence services
-37,APO13,Configuration management tools
-38,APO13,Security and privacy awareness services
-39,APO13,Third-party security assessment services
-40,APO14,Data modeling tools
-41,APO14,Data repositories
-42,BAI01,Program management tool
-43,BAI02,Requirements definition and documentation tools
-44,BAI03,"Digital factory services, separating “fast IT” (the digital factory responsible for developing digital applications) from legacy core IT"
-45,BAI03,Solution evaluation and selection services
-46,BAI03,Testing tools and services
-47,BAI04,Capacity planning tools
-48,BAI04,Provisioning services and tools
-49,BAI04,Service level monitoring tools
-50,BAI05,Communication tools and channels
-51,BAI05,Surveying tools
-52,BAI06,Configuration management tools
-53,BAI06,IT change management tools
-54,BAI07,IT change management tools
-55,BAI07,Release management tools
-56,BAI07,Testing tools and services
-57,BAI08,Collaboration platforms
-58,BAI08,Knowledge repository
-59,BAI09,Asset management tools
-60,BAI10,Configuration management tools and repositories
-61,BAI11,Project management tools
-62,DSS01,Cloud hosting services
-63,DSS01,Infrastructure monitoring tools
-64,DSS01,Service level monitoring tools
-65,DSS02,Incident tracking tools and system
-66,DSS03,Problem tracking/resolution system
-67,DSS04,External hosting services
-68,DSS04,Incident monitoring tools
-69,DSS04,Remote storage facility services
-70,DSS05,Directory services
-71,DSS05,Email filtering systems
-72,DSS05,Identity and access management system
-73,DSS05,Security awareness services
-74,DSS05,Security information and event management (SIEM) tools
-75,DSS05,Security operations center (SOC) services
-76,DSS05,Third-party security assessment services
-77,DSS05,URL filtering systems
-78,DSS06,Automated application controls
-79,DSS06,Event log auditing tools
-80,MEA01,"Performance measurement system (e.g., balanced scorecard, skills management tools)"
-81,MEA01,Self-assessment tools
-82,MEA02,COBIT and related products/tools
-83,MEA02,Third-party internal control assessment services
-84,MEA03,Regulatory Watch services
-85,MEA03,Third-party compliance assessment services
-86,MEA04,Assurance engagement tools
-87,MEA04,Event log auditing tools
-88,MEA04,Third-party assurance provisioning services
+1,EDM01,"""COBIT and related products/tools"""
+2,EDM01,"""Equivalent frameworks and standards"""
+3,EDM02,"""Cost accounting system"""
+4,EDM02,"""Program management tool"""
+5,EDM03,"""Risk management system"""
+6,EDM04,"""Performance measurement system (e.g., balanced scorecard, skills management tools)"""
+7,EDM05,"""Communication tools and channels"""
+8,EDM05,"""IT dashboarding"""
+9,EDM05,"""Stakeholder survey tools"""
+10,APO01,"""COBIT and related products/tools"""
+11,APO01,"""Equivalent frameworks and standards"""
+12,APO02,"""Customer analytics"""
+13,APO02,"""Industry benchmarks"""
+14,APO02,"""Performance measurement system (e.g., balanced scorecard, skills management tools)"""
+15,APO02,"""Technology watch services and tools"""
+16,APO03,"""Architecture repository"""
+17,APO04,"""Collaboration platforms"""
+18,APO04,"""Industry benchmarks"""
+19,APO04,"""Technology watch services and tools"""
+20,APO05,"""Portfolio/investment management tools"""
+21,APO06,"""Cost accounting system"""
+22,APO07,"""HR management system"""
+23,APO07,"""Performance measurement system (e.g., balanced scorecard, skills management tools)"""
+24,APO07,"""Resource planning tools"""
+25,APO08,"""Collaboration platforms"""
+26,APO08,"""Internal training and awareness building services"""
+27,APO09,"""Contract management system"""
+28,APO09,"""Service level monitoring tools"""
+29,APO10,"""Contract management system"""
+30,APO10,"""Third-party assurance services"""
+31,APO11,"""QMS"""
+32,APO11,"""Third-party quality assurance services"""
+33,APO12,"""Crisis management services"""
+34,APO12,"""Governance, risk and compliance (GRC) tools"""
+35,APO12,"""Risk analysis tools"""
+36,APO12,"""Risk intelligence services"""
+37,APO13,"""Configuration management tools"""
+38,APO13,"""Security and privacy awareness services"""
+39,APO13,"""Third-party security assessment services"""
+40,APO14,"""Data modeling tools"""
+41,APO14,"""Data repositories"""
+42,BAI01,"""Program management tool"""
+43,BAI02,"""Requirements definition and documentation tools"""
+44,BAI03,"""Digital factory services, separating “fast IT” (the digital factory responsible for developing digital applications) from legacy core IT"""
+45,BAI03,"""Solution evaluation and selection services"""
+46,BAI03,"""Testing tools and services"""
+47,BAI04,"""Capacity planning tools"""
+48,BAI04,"""Provisioning services and tools"""
+49,BAI04,"""Service level monitoring tools"""
+50,BAI05,"""Communication tools and channels"""
+51,BAI05,"""Surveying tools"""
+52,BAI06,"""Configuration management tools"""
+53,BAI06,"""IT change management tools"""
+54,BAI07,"""IT change management tools"""
+55,BAI07,"""Release management tools"""
+56,BAI07,"""Testing tools and services"""
+57,BAI08,"""Collaboration platforms"""
+58,BAI08,"""Knowledge repository"""
+59,BAI09,"""Asset management tools"""
+60,BAI10,"""Configuration management tools and repositories"""
+61,BAI11,"""Project management tools"""
+62,DSS01,"""Cloud hosting services"""
+63,DSS01,"""Infrastructure monitoring tools"""
+64,DSS01,"""Service level monitoring tools"""
+65,DSS02,"""Incident tracking tools and system"""
+66,DSS03,"""Problem tracking/resolution system"""
+67,DSS04,"""External hosting services"""
+68,DSS04,"""Incident monitoring tools"""
+69,DSS04,"""Remote storage facility services"""
+70,DSS05,"""Directory services"""
+71,DSS05,"""Email filtering systems"""
+72,DSS05,"""Identity and access management system"""
+73,DSS05,"""Security awareness services"""
+74,DSS05,"""Security information and event management (SIEM) tools"""
+75,DSS05,"""Security operations center (SOC) services"""
+76,DSS05,"""Third-party security assessment services"""
+77,DSS05,"""URL filtering systems"""
+78,DSS06,"""Automated application controls"""
+79,DSS06,"""Event log auditing tools"""
+80,MEA01,"""Performance measurement system (e.g., balanced scorecard, skills management tools)"""
+81,MEA01,"""Self-assessment tools"""
+82,MEA02,"""COBIT and related products/tools"""
+83,MEA02,"""Third-party internal control assessment services"""
+84,MEA03,"""Regulatory Watch services"""
+85,MEA03,"""Third-party compliance assessment services"""
+86,MEA04,"""Assurance engagement tools"""
+87,MEA04,"""Event log auditing tools"""
+88,MEA04,"""Third-party assurance provisioning services"""

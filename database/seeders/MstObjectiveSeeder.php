@@ -6,7 +6,7 @@ use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use App\Models\MstObjective;
 
-class mst_objectiveSeeder extends Seeder
+class MstObjectiveSeeder extends Seeder
 {
     /**
      * Run the database seeds.

@@ -23,6 +23,7 @@ return new class extends Migration
      */
     public function down(): void
     {
+        Schema::dropIfExists('trs_practroles');
         Schema::dropIfExists('mst_roles');
     }
 };

@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
+use Illuminate\Support\Facades\Schema;
 
 class DatabaseSeeder extends Seeder
 {
@@ -28,5 +29,22 @@ class DatabaseSeeder extends Seeder
             'jabatan' => 'Administrator',
             'role' => 'admin',
         ]);
+
+        Schema::disableForeignKeyConstraints();
+
+        $this->call([
+            MstObjectiveSeeder::class,
+            MstGuidanceSeeder::class,
+            MstPolicySeeder::class,
+            MstAreaSeeder::class,
+            MstPolicySeeder::class,
+            MstPracticeSeeder::class,
+            MstRolesSeeder::class,
+            MstSIASeeder::class,
+            TrsDomainSeeder::class,
+            TrsPracticeGuidanceSeeder::class,
+        ]);
+
+        Schema::enableForeignKeyConstraints();
     }
 }
