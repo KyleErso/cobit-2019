@@ -33,16 +33,33 @@ class DatabaseSeeder extends Seeder
         Schema::disableForeignKeyConstraints();
 
         $this->call([
-            MstObjectiveSeeder::class,
-            MstGuidanceSeeder::class,
-            MstPolicySeeder::class,
+            MstActivitiesSeeder::class,
+            MstAligngoalsSeeder::class,
+            MstAligngoalsmetrSeeder::class,
             MstAreaSeeder::class,
+            MstEntergoalsSeeder::class,
+            MstEntergoalsmetrSeeder::class,
+            MstGuidanceSeeder::class,
+            MstInfoflowInputSeeder::class,
+            MstInfoflowOutputSeeder::class,
+            MstKeyCultureSeeder::class,
+            MstObjectiveSeeder::class,
             MstPolicySeeder::class,
+            MstPracticeMetrSeeder::class,
             MstPracticeSeeder::class,
             MstRolesSeeder::class,
             MstSIASeeder::class,
+            MstSkillSeeder::class,
+            TrsAligngoalsSeeder::class,
             TrsDomainSeeder::class,
+            TrsEntergoalsSeeder::class,
+            TrsInfoflowIOSeeder::class,
+            TrsKeyCultureGuidanceSeeder::class,
+            TrsObjectiveGuidanceSeeder::class,
+            TrsPolicyGuidanceSeeder::class,
             TrsPracticeGuidanceSeeder::class,
+            TrsPractRolesSeeder::class,
+            TrsSkillGuidanceSeeder::class,
         ]);
 
         Schema::enableForeignKeyConstraints();

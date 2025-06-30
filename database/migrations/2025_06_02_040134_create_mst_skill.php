@@ -14,11 +14,11 @@ return new class extends Migration
         Schema::create('mst_skill', function (Blueprint $table) {
             $table->id("skill_id");
             
-            $table->string("objective_id")->nullable();
+            $table->string("objective_id");
             $table->string("skill")->nullable();
             // No timestamps
 
-            $table->foreign("objective_id")->references("objective_id")->on("mst_objective")->onDelete("set null");
+            $table->foreign("objective_id")->references("objective_id")->on("mst_objective")->onDelete("cascade");
         });
     }
 

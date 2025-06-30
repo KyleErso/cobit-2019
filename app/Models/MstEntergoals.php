@@ -12,7 +12,7 @@ class MstEntergoals extends Model
 
     protected $primaryKey = 'entergoals_id';
     protected $keyType = 'string';
-
+    public $timestamps = false;
     protected $fillable = [
         'entergoals_id',
         'description'

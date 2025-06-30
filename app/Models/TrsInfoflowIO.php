@@ -5,24 +5,24 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MstActivities extends Model
+class TrsInfoflowIO extends Model
 {
     use HasFactory;
 
-    protected $table = 'mst_activities';
+    protected $table = 'trs_infoflowio';
 
-    protected $primaryKey = 'activity_id';
+    protected $primaryKey = ['input_id', 'output_id'];
 
-    // public $incrementing = false;
+    public $incrementing = false;
 
     protected $keyType = 'int';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'activity_id',
-        'practice_id',
-        'description',
+        'input_id',
+        'output_id',
+        // 'skill',
         // 'objective_purpose',
     ];
 }

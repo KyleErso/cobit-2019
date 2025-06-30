@@ -1,8 +1,8 @@
 entergoalsmetr_id,entergoals_id,description
-1,EG01,"""Cost of regulatory noncompliance, including settlements and fines"""
-2,EG01,"""Number of regulatory noncompliance issues causing public comment or negative publicity"""
-3,EG01,"""Number of noncompliance matters noted by regulators"""
-4,EG01,"""Number of regulatory noncompliance issues relating to contractual agreements with business partners"""
+1,EG03,"""Cost of regulatory noncompliance, including settlements and fines"""
+2,EG03,"""Number of regulatory noncompliance issues causing public comment or negative publicity"""
+3,EG03,"""Number of noncompliance matters noted by regulators"""
+4,EG03,"""Number of regulatory noncompliance issues relating to contractual agreements with business partners"""
 5,EG08,"""Satisfaction levels of board and executive management with business process capabilities"""
 6,EG08,"""Satisfaction levels of customers with service delivery capabilities"""
 7,EG08,"""Satisfaction levels of suppliers with supply chain capabilities"""

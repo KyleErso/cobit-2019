@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\MstEntergoals;
+use App\Models\TrsPractRoles;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class MstEntergoalsSeeder extends Seeder
+class TrsPractRolesSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,20 +15,21 @@ class MstEntergoalsSeeder extends Seeder
     public function run(): void
     {
         DB::statement('PRAGMA foreign_keys = OFF;');
-        MstEntergoals::truncate();
+        TrsPractRoles::truncate();
         // DB::statement('PRAGMA foreign_keys = ON;');
         $heading = true;
-        $input_file = fopen(base_path("csv/mst_entergoals.csv"), "r");
+        $input_file = fopen(base_path("csv/trs_practroles.csv"), "r");
         while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)
         {
             if (!$heading)
             {
-                $MstEntergoals = array(
-                    // "aligngoalsmetr_id"=>$record['0'],
-                    "entergoals_id"=>$record['0'],
-                    "description"=>$record['1'],
+                $TrsPractRoles = array(
+                    "practice_id"=>$record['0'],
+                    "role_id"=>$record['1'],
+                    "r_a"=>$record['2'],
+                    // "practice_description"=>$record['3'],
                 );
-                MstEntergoals::create($MstEntergoals);
+                TrsPractRoles::create($TrsPractRoles);
             }
             $heading = false;
         }

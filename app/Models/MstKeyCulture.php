@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MstActivities extends Model
+class MstKeyCulture extends Model
 {
     use HasFactory;
 
-    protected $table = 'mst_activities';
+    protected $table = 'mst_keyculture';
 
-    protected $primaryKey = 'activity_id';
+    protected $primaryKey = 'keyculture_id';
 
     // public $incrementing = false;
 
@@ -20,9 +20,9 @@ class MstActivities extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        'activity_id',
-        'practice_id',
-        'description',
+        'keyculture_id',
+        'objective_id',
+        'element',
         // 'objective_purpose',
     ];
 }

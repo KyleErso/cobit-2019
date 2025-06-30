@@ -12,7 +12,7 @@ class MstAligngoalsmetr extends Model
 
     protected $primaryKey = 'aligngoalsmetr_id';
     protected $keyType = 'int';
-
+    public $timestamps = false;
     protected $fillable = [
         'aligngoalsmetr_id',
         'aligngoals_id',

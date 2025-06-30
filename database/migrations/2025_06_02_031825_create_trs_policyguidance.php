@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('trs_policyguidance', function (Blueprint $table) {
             $table->integer("policy_id");
             $table->integer("guidance_id");
-            $table->string("component")->nullable();
+            // $table->string("component")->nullable();
             // No timestamps
 
             // Composite primary key

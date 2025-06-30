@@ -16,7 +16,7 @@ return new class extends Migration
             $table->integer("role_id");
             // Ignoring r_a as placeholder
             // No timestamps
-            $table->boolean("r_a");
+            $table->string("r_a")->nullable();
 
             // Composite primary key
             $table->primary(["practice_id", "role_id"]);

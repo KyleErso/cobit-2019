@@ -13,6 +13,8 @@ class MstEntergoalsmetr extends Model
     protected $primaryKey = 'entergoalsmetr_id';
     protected $keyType = 'int';
 
+    public $timestamps = false;
+
     protected $fillable = [
         'entergoalsmetr_id',
         'entergoals_id',

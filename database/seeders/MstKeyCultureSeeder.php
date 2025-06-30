@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\MstEntergoals;
+use App\Models\MstKeyCulture;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class MstEntergoalsSeeder extends Seeder
+class MstKeyCultureSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,20 +15,21 @@ class MstEntergoalsSeeder extends Seeder
     public function run(): void
     {
         DB::statement('PRAGMA foreign_keys = OFF;');
-        MstEntergoals::truncate();
+        MstKeyCulture::truncate();
         // DB::statement('PRAGMA foreign_keys = ON;');
         $heading = true;
-        $input_file = fopen(base_path("csv/mst_entergoals.csv"), "r");
+        $input_file = fopen(base_path("csv/mst_keyculture.csv"), "r");
         while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)
         {
             if (!$heading)
             {
-                $MstEntergoals = array(
-                    // "aligngoalsmetr_id"=>$record['0'],
-                    "entergoals_id"=>$record['0'],
-                    "description"=>$record['1'],
+                $MstKeyCulture = array(
+                    "keyculture_id"=>$record['0'],
+                    "objective_id"=>$record['1'],
+                    "element"=>$record['2'],
+                    // "practice_description"=>$record['3'],
                 );
-                MstEntergoals::create($MstEntergoals);
+                MstKeyCulture::create($MstKeyCulture);
             }
             $heading = false;
         }

@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use Illuminate\Support\Facades\DB;
+use App\Models\MstAligngoalsmetr;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
@@ -12,6 +14,24 @@ class MstAligngoalsmetrSeeder extends Seeder
      */
     public function run(): void
     {
-        //
+        DB::statement('PRAGMA foreign_keys = OFF;');
+        MstAligngoalsmetr::truncate();
+        DB::statement('PRAGMA foreign_keys = ON;');
+        $heading = true;
+        $input_file = fopen(base_path("csv/mst_aligngoalsmetr.csv"), "r");
+        while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)
+        {
+            if (!$heading)
+            {
+                $MstAligngoalsmetr = array(
+                    "aligngoalsmetr_id"=>$record['0'],
+                    "aligngoals_id"=>$record['1'],
+                    "description"=>$record['2'],
+                );
+                MstAligngoalsmetr::create($MstAligngoalsmetr);
+            }
+            $heading = false;
+        }
+        fclose($input_file);
     }
 }
