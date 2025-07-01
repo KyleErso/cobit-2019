@@ -15,8 +15,8 @@ return new class extends Migration
             $table->increments('entergoalsmetr_id');
             // $table->primary('entergoalsmetr_id');
 
-            $table->string('description');
             $table->string('entergoals_id');
+            $table->string('description');
 
             $table->foreign('entergoals_id')
             ->references('entergoals_id')
