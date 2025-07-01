@@ -50,4 +50,44 @@ class MstObjective extends Model
     {
         return $this->hasMany(MstSIA::class, 'objective_id', 'objective_id');
     }
+
+    public function entergoals()
+    {
+        return $this->belongsToMany(
+            MstEntergoals::class,
+            'trs_entergoals',
+            'objective_id',
+            'entergoals_id'
+        );
+    }
+
+    public function aligngoals()
+    {
+        return $this->belongsToMany(
+            MstAligngoals::class,
+            'trs_aligngoals',
+            'objective_id',
+            'aligngoals_id'
+        );
+    }
+
+    public function guidance()
+    {
+        return $this->belongsToMany(
+            MstGuidance::class,
+            'trs_objectiveguidance',
+            'objective_id',
+            'guidance_id'
+        )->withPivot('component');
+    }
+
+    public function keyculture()
+    {
+        return $this->hasMany(MstKeyCulture::class, 'objective_id', 'objective_id');
+    }
+
+    public function skill()
+    {
+        return $this->hasMany(MstSkill::class, 'objective_id', 'objective_id');
+    }
 }

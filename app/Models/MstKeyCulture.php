@@ -25,4 +25,14 @@ class MstKeyCulture extends Model
         'element',
         // 'objective_purpose',
     ];
+
+    public function guidances()
+    {
+        return $this->belongsToMany(
+            MstGuidance::class,
+            'trs_keycultureguidance',  // pivot table
+            'keyculture_id',           // this model’s FK on pivot
+            'guidance_id'            // other model’s FK on pivot
+        );
+    }
 }

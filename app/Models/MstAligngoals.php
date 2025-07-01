@@ -17,4 +17,9 @@ class MstAligngoals extends Model
         'aligngoals_id',
         'description'
     ];
+
+    public function aligngoalsmetr()
+    {
+        return $this->hasMany(MstAligngoalsmetr::class, 'aligngoals_id', 'aligngoals_id');
+    }
 }

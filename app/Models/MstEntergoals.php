@@ -17,4 +17,9 @@ class MstEntergoals extends Model
         'entergoals_id',
         'description'
     ];
+
+    public function entergoalsmetr()
+    {
+        return $this->hasMany(MstEntergoalsmetr::class, 'entergoals_id', 'entergoals_id');
+    }
 }

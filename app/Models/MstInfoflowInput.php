@@ -27,4 +27,14 @@ class MstInfoflowInput extends Model
         // 'skill',
         // 'objective_purpose',
     ];
+
+    public function connectedoutputs()
+    {
+        return $this->belongsToMany(
+            MstInfoflowOutput::class,
+            'trs_infoflowio',
+            'input_id',
+            'output_id'
+        );
+    }
 }

@@ -34,8 +34,30 @@ class MstObjectiveController extends Controller
     {
         // Find objective by primary key
         $all = MstObjective::all();
-        dd($all->pluck('objective_id')); 
-        $objective = MstObjective::findOrFail($id);
+        // dd($all->pluck('objective_id')); 
+        $objective = MstObjective::with([
+        'domains',
+        'aligngoals',
+        'aligngoals.aligngoalsmetr',
+        'entergoals',
+        'entergoals.entergoalsmetr',
+        'practices',
+        'practices.guidances',
+        'practices.activities',
+        'practices.practicemetr',
+        'practices.roles',
+        'practices.infoflowinput',
+        'practices.infoflowinput.connectedoutputs',
+        'practices.infoflowoutput',
+        'policies',
+        'policies.guidances',
+        'skill',
+        'skill.guidances',
+        'keyculture',
+        'keyculture.guidances',
+        'SIA',
+        'guidance',
+        ])->findOrFail($id);
         return response()->json($objective);
     }
 

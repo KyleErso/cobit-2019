@@ -25,4 +25,14 @@ class MstSkill extends Model
         'skill',
         // 'objective_purpose',
     ];
+
+    public function guidances()
+    {
+        return $this->belongsToMany(
+            MstGuidance::class,
+            'trs_skillguidance',  // pivot table
+            'skill_id',           // this model’s FK on pivot
+            'guidance_id'            // other model’s FK on pivot
+        );
+    }
 }
