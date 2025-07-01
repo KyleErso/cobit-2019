@@ -37,6 +37,7 @@ Route::post('/assessment/request', [AssessmentController::class, 'requestAssessm
      ->name('assessment.request');
 
 Route::get('/objectives', [MstObjectiveController::class, 'index']);
+Route::get('/objectives/{id}', [MstObjectiveController::class, 'show']);
 
 // Admin routes (auth + role check di controller)
 Route::prefix('admin')
