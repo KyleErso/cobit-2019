@@ -90,6 +90,9 @@ Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallba
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
 
+// Jika login dengan Google untuk pertama kali, redirect ke register-google
+
+
 // Home route
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
 
