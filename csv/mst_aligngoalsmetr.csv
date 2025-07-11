@@ -1,0 +1,7 @@
+aligngoalsmetr_id,aligngoals_id,description
+1,AG01,"""Cost of IT noncompliance, including settlements and fines, and the impact of reputational loss"""
+2,AG01,"""Number of IT-related noncompliance issues reported to the board, or causing public comment or embarrassment"""
+3,AG01,"""Number of noncompliance issues relating to contractual agreements with IT service providers"""
+4,AG03,"""Percent of I&T-enabled investments for which claimed benefits in the business case are met or exceeded"""
+5,AG03,"""Percent of I&T services for which expected benefits (as
+stated in service level agreements) are realized"""
