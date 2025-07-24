@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\GuestController;
 use App\Http\Controllers\Admin\AssessmentController as AdminAssessment;
+use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\AssessmentController;
 use App\Http\Controllers\cobit2019\DfController;
 use App\Http\Controllers\cobit2019\Df2Controller;
@@ -48,6 +49,10 @@ Route::prefix('admin')
          ->name('dashboard');
     Route::get('assessments', [AdminAssessment::class, 'index'])
          ->name('assessments.index');
+
+     // Page users
+     Route::get('users', [UserAdminController::class, 'index'])
+         ->name('users.index');
 
     // CRUD Assessment
     Route::post('assessments', [AdminAssessment::class, 'store'])

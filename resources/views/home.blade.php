@@ -9,11 +9,18 @@
         <!-- Header Card -->
         <div class="card-header bg-primary text-white text-center position-relative py-4">
           <h3 class="mb-0 fw-semibold">{{ __('Selamat Datang!') }}</h3>
-          @if(Auth::user()->role === 'admin')
+          @if(Auth::user()->role === 'admin' || Auth::user()->role === 'pic')
             <a href="{{ route('admin.assessments.index') }}"
                class="btn btn-sm btn-secondary position-absolute"
                style="top: 1rem; right: 1rem;">
               <i class="fas fa-tachometer-alt me-1"></i>Dashboard
+            </a>
+          @endif
+          @if(Auth::user()->role === 'admin')
+            <a href="{{ route('admin.users.index') }}"
+               class="btn btn-sm btn-success position-absolute"
+               style="top: 1rem; right: 7.5rem;">
+              <i class="fas fa-tachometer-alt me-1"></i>Manage Users
             </a>
           @endif
         </div>
