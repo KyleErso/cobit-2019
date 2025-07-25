@@ -22,16 +22,16 @@ class UserAdminController extends Controller
      */
     public function index(Request $request)
     {
-        // Pastikan hanya admin yang bisa akses
         if (Auth::user()->role !== 'admin') {
             abort(403);
         }
 
-        // Ambil semua user, kecuali admin dan pic
-        $users = User::get();
+        $activatedUsers = User::where('isActivated', true)->get();
+        $deactivatedUsers = User::where('isActivated', false)->get();
 
-        return view('admin.users.users', compact('users'));
+        return view('admin.users.users', compact('activatedUsers', 'deactivatedUsers'));
     }
+
 
     public function update(Request $request, $id)
     {
@@ -41,4 +41,19 @@ class UserAdminController extends Controller
         return redirect()->back()->with('success', 'User updated successfully.');
     }
 
+    public function deactivate(User $user)
+    {
+        $user->isActivated = false;
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil dinonaktifkan.');
+    }
+
+    public function activate(User $user)
+    {
+        $user->isActivated = true;
+        $user->save();
+
+        return redirect()->route('admin.users.index')->with('success', 'User berhasil diaktifkan kembali.');
+    }
 }

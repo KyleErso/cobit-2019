@@ -2,13 +2,13 @@
 
 @section('content')
 <div class="container">
-    <h2 class="mb-4">User List</h2>
+    <h2 class="mb-4">Daftar Akun</h2>
 
     {{-- Data Table --}}
     <div class="card">
-        <div class="card-header bg-secondary text-white py-3">
+        <div class="card-header bg-success text-white py-3">
             <div class="d-flex justify-content-between align-items-center">
-                <h6 class="m-0 font-weight-bold">Daftar Akun</h6>
+                <h6 class="m-0 font-weight-bold">Akun Aktif</h6>
             </div>
         </div>
     </div>
@@ -27,7 +27,7 @@
             }
         </style>
 
-        @if($users->isEmpty())
+        @if($activatedUsers->isEmpty())
             <div class="text-center py-5">
                 <i class="fas fa-database fa-3x text-muted mb-3"></i>
                 <p class="h5 text-muted">Belum ada akun terdaftar</p>
@@ -46,7 +46,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach($users as $u)
+                        @foreach($activatedUsers as $u)
                             <tr>
                                 <td class="align-middle">{{ $u->name }}</td>
                                 <td class="align-middle">{{ $u->email }}</td>
@@ -59,18 +59,19 @@
                                             data-bs-target="#editModal{{ $u->id }}">
                                         <i class="fas fa-edit me-1"></i>Edit
                                     </button>
-                                    <form action="{{ route('home', $u->id) }}" method="POST" 
-                                          style="display: inline-block;" onsubmit="return confirm('Apakah Anda yakin ingin menghapus akun ini?');">
+                                    <form action="{{ route('admin.users.deactivate', $u->id) }}" method="POST" 
+                                        style="display: inline-block;" 
+                                        onsubmit="return confirm('Apakah Anda yakin ingin menonaktifkan akun ini?');">
                                         @csrf
-                                        @method('DELETE')
-                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Hapus">
-                                            <i class="fas fa-trash me-1"></i>Hapus
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-outline-danger btn-sm" title="Nonaktifkan">
+                                            <i class="fas fa-user-slash me-1"></i>Nonaktifkan
                                         </button>
                                     </form>
                                 </td>
                             </tr>
                         @endforeach
-                        @foreach($users as $u)
+                        @foreach($activatedUsers as $u)
                         <!-- Modal -->
                         <div class="modal fade" id="editModal{{ $u->id }}" tabindex="-1" aria-labelledby="editModalLabel{{ $u->id }}" aria-hidden="true">
                             <div class="modal-dialog modal-dialog-centered">
@@ -122,7 +123,56 @@
                             </div>
                         </div>
                         @endforeach
+                    </tbody>
+                </table>
+            </div>
+        @endif
 
+        <div class="card">
+            <div class="card-header bg-danger text-white py-3 mt-4">
+                <div class="d-flex justify-content-between align-items-center">
+                    <h6 class="m-0 font-weight-bold">Akun Nonaktif</h6>
+                </div>
+            </div>
+        </div>
+        @if($deactivatedUsers->isEmpty())
+            <div class="text-center py-5">
+                <i class="fas fa-user-slash fa-3x text-muted mb-3"></i>
+                <p class="h5 text-muted">Tidak ada akun nonaktif</p>
+            </div>
+        @else
+            <div class="table-responsive" style="max-height: 400px;">
+                <table class="table table-striped table-hover table-sticky mb-0">
+                <thead>
+                    <tr>
+                        <th class="py-3">Nama</th>
+                        <th class="py-3">Email</th>
+                        <th class="py-3">Role</th>
+                        <th class="py-3">Organisasi</th>
+                        <th class="py-3">Jabatan</th>
+                        <th class="py-3 text-center">Aksi</th>
+                    </tr>
+                </thead>
+                    <tbody>
+                        @foreach($deactivatedUsers as $u)
+                            <tr>
+                                <td class="align-middle">{{ $u->name }}</td>
+                                <td class="align-middle">{{ $u->email }}</td>
+                                <td class="align-middle">{{ $u->role }}</td>
+                                <td class="align-middle">{{ $u->organisasi }}</td>
+                                <td class="align-middle">{{ $u->jabatan }}</td>
+                                <td class="align-middle text-center">
+                                    <form action="{{ route('admin.users.activate', $u->id) }}" method="POST" 
+                                        onsubmit="return confirm('Aktifkan kembali akun ini?');">
+                                        @csrf
+                                        @method('PUT')
+                                        <button type="submit" class="btn btn-outline-success btn-sm">
+                                            <i class="fas fa-user-check me-1"></i>Aktifkan
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>

@@ -54,6 +54,8 @@ Route::prefix('admin')
      Route::get('users', [UserAdminController::class, 'index'])
          ->name('users.index');
      Route::put('users/{id}', [UserAdminController::class, 'update'])->name('users.update');
+     Route::put('users/{user}/deactivate', [UserAdminController::class, 'deactivate'])->name('users.deactivate');
+     Route::put('users/{user}/activate', [UserAdminController::class, 'activate'])->name('users.activate');
 
     // CRUD Assessment
     Route::post('assessments', [AdminAssessment::class, 'store'])
