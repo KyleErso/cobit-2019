@@ -53,6 +53,7 @@ Route::prefix('admin')
      // Page users
      Route::get('users', [UserAdminController::class, 'index'])
          ->name('users.index');
+     Route::put('users/{id}', [UserAdminController::class, 'update'])->name('users.update');
 
     // CRUD Assessment
     Route::post('assessments', [AdminAssessment::class, 'store'])

@@ -32,4 +32,13 @@ class UserAdminController extends Controller
 
         return view('admin.users.users', compact('users'));
     }
+
+    public function update(Request $request, $id)
+    {
+        $user = User::findOrFail($id);
+        $user->update($request->only('name', 'email', 'role', 'jabatan', 'organisasi'));
+
+        return redirect()->back()->with('success', 'User updated successfully.');
+    }
+
 }
