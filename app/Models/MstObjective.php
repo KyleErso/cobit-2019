@@ -46,9 +46,18 @@ class MstObjective extends Model
         return $this->hasMany(MstPolicy::class, 'objective_id', 'objective_id');
     }
 
-    public function SIA()
+    // public function SIA()
+    // {
+    //     return $this->hasMany(MstSIA::class, 'objective_id', 'objective_id');
+    // }
+
+    public function s_i_a()
     {
-        return $this->hasMany(MstSIA::class, 'objective_id', 'objective_id');
+        return $this->hasMany(
+            MstSIA::class,        // your SIA model
+            'objective_id',       // foreign key on the MstSia table
+            'objective_id'        // local key on this model
+        );
     }
 
     public function entergoals()

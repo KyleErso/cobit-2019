@@ -37,7 +37,8 @@ Route::post('/assessment/request', [AssessmentController::class, 'requestAssessm
      ->name('assessment.request');
 
 Route::get('/objectives', [MstObjectiveController::class, 'index']);
-Route::get('/objectives/{id}', [MstObjectiveController::class, 'show']);
+// Route::get('/objectives/{id}', [MstObjectiveController::class, 'show']);
+Route::get('objectives/{id}', [MstObjectiveController::class, 'show'])->name('cobit2019.objectives.show');
 
 // Admin routes (auth + role check di controller)
 Route::prefix('admin')

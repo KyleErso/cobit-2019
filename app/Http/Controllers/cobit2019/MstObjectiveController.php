@@ -55,10 +55,12 @@ class MstObjectiveController extends Controller
         'skill.guidances',
         'keyculture',
         'keyculture.guidances',
-        'SIA',
+        's_i_a',
         'guidance',
         ])->findOrFail($id);
-        return response()->json($objective);
+        $allObjectives = MstObjective::select('objective_id', 'objective')->get();
+        // return response()->json($objective);
+        return view('cobit2019.objectives.show', compact('objective','allObjectives'));
     }
 
     /**
