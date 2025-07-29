@@ -27,12 +27,8 @@
             window.location.href = this.value;
         });
     </script>
+
     {{-- Objective Header --}}
-    {{-- <div class="mb-6">
-        <h1 class="text-3xl font-bold mb-2">{{ $objective['objective_id'] }} – {{ $objective['objective'] }}</h1>
-        <p class="text-gray-700">{{ $objective['objective_description'] }}</p>
-        <p class="text-gray-500 mt-1">{{ $objective['objective_purpose'] }}</p>
-    </div> --}}
     <h1 class="text-3xl font-bold mb-4">Objective: {{ $objective->objective_id }} - {{ $objective->objective }}</h1>
      <div class="bg-white shadow rounded p-4 mb-6">
         <h2 class="text-xl font-semibold mb-2">Description</h2>
@@ -42,15 +38,6 @@
     </div>
 
     {{-- Domains --}}
-    {{-- <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Domains</h2>
-        <ul class="list-disc list-inside">
-            @foreach($objective['domains'] as $dom)
-                <li>{{ $dom['area'] }} ({{ trim($dom['pivot']['domain'], '"') }})</li>
-            @endforeach
-        </ul>
-    </div> --}}
-
     <div class="mb-6">
         <h2 class="text-2xl font-semibold mb-2">Domains</h2>
         <ul class="list-disc pl-5">
@@ -98,37 +85,6 @@
                 <h3 class="font-medium mb-1">{{ trim($pr['practice_id'], '"') }}: {{ trim($pr['practice_name'], '"') }}</h3>
                 <p class="text-gray-700 mb-2">{{ trim($pr['practice_description'], '"') }}</p>
 
-                {{-- Guidance --}}
-                {{-- <div class="mb-2">
-                    <h4 class="font-semibold">Guidance</h4>
-                    <ul class="list-disc list-inside ml-4">
-                        @foreach($pr['guidances'] as $gd)
-                            <li>{{ trim($gd['guidance'], '"') }} ({{ trim($gd['reference'], '"') }})</li>
-                        @endforeach
-                    </ul>
-                </div> --}}
-
-                <div class="mb-2">
-                    <h4 class="font-semibold mb-1">Guidance</h4>
-                    <table class="w-full border border-gray-300 border-collapse">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="border border-gray-300 p-2 text-left">Guidance</th>
-                                <th class="border border-gray-300 p-2 text-left">Reference</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($pr['guidances'] as $gd)
-                            <tr>
-                                <td class="border border-gray-300 p-2">{{ trim($gd['guidance'], '"') }}</td>
-                                <td class="border border-gray-300 p-2">{{ trim($gd['reference'], '"') }}</td>
-                            </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-
-
                 {{-- Practice Metrics --}}
                 <div class="mb-2">
                     <h4 class="font-semibold mb-1">Practice Metrics</h4>
@@ -149,14 +105,6 @@
                 </div>
 
                 {{-- Activities --}}
-                {{-- <div class="mb-2">
-                    <h4 class="font-semibold">Activities</h4>
-                    <ul class="list-decimal list-inside ml-4">
-                        @foreach($pr['activities'] as $ac)
-                            <li>{{ trim($ac['description'], '"') }} (Level: {{ $ac['capability_lvl'] ?? '-' }})</li>
-                        @endforeach
-                    </ul>
-                </div> --}}
                 <div class="mb-2">
                     <h4 class="font-semibold mb-1">Activities</h4>
                     <table class="w-full border border-gray-300 border-collapse">
@@ -177,32 +125,26 @@
                     </table>
                 </div>
 
-                {{-- Info Flows --}}
-                {{-- <div class="mb-2 grid grid-cols-2 gap-4">
-                    <div>
-                        <h4 class="font-semibold">Inputs</h4>
-                        <ul class="list-disc list-inside ml-4">
-                            @foreach($pr['infoflowinput'] as $inp)
-                                <li>
-                                    <strong>{{ trim($inp['from'], '"') }}</strong>: {{ trim($inp['description'], '"') }}
-                                    <ul class="list-disc list-inside ml-6">
-                                        @foreach($inp['connectedoutputs'] as $co)
-                                            <li>{{ trim($co['description'], '"') }} (To: {{ trim($co['to'], '"') }})</li>
-                                        @endforeach
-                                    </ul>
-                                </li>
+                {{-- Guidance --}}
+                <div class="mb-2">
+                    <h4 class="font-semibold mb-1">Guidance</h4>
+                    <table class="w-full border border-gray-300 border-collapse">
+                        <thead class="bg-gray-100">
+                            <tr>
+                                <th class="border border-gray-300 p-2 text-left">Guidance</th>
+                                <th class="border border-gray-300 p-2 text-left">Reference</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($pr['guidances'] as $gd)
+                            <tr>
+                                <td class="border border-gray-300 p-2">{{ trim($gd['guidance'], '"') }}</td>
+                                <td class="border border-gray-300 p-2">{{ trim($gd['reference'], '"') }}</td>
+                            </tr>
                             @endforeach
-                        </ul>
-                    </div>
-                    <div>
-                        <h4 class="font-semibold">Outputs</h4>
-                        <ul class="list-disc list-inside ml-4">
-                            @foreach($pr['infoflowoutput'] as $out)
-                                <li><strong>{{ trim($out['to'], '"') }}</strong>: {{ trim($out['description'], '"') }}</li>
-                            @endforeach
-                        </ul>
-                    </div>
-                </div> --}}
+                        </tbody>
+                    </table>
+                </div>
             </div>
         @endforeach
     </div>
@@ -316,87 +258,7 @@
     </div>
     @endif
 
-    {{-- <div class="overflow-x-auto my-8 py-6">
-        <table class="min-w-full border-collapse border-2 border-gray-400 shadow-lg">
-            <thead class="bg-blue-800 text-black">
-                <tr>
-                    <th class="border border-gray-300 p-2">Component: Organizational Structures</th>
-                    <th class="border border-gray-300 p-2 text-left">Key Governance Practices</th>
-                    <th class="border border-gray-300 p-2">Roles (R/A)</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td class="border border-gray-300 p-2 font-semibold">Practices</td>
-                    <td class="border border-gray-300 p-2">
-                        <ul class="list-disc list-inside">
-                            @if(isset($objective->practices) && $objective->practices)
-                                @foreach($objective->practices as $practice)
-                                    <li>{{ trim($practice->practice_id, '"') }}</li>
-                                @endforeach
-                            @endif
-                        </ul>
-                    </td>
-                    <td class="border border-gray-300 p-2">
-                        @if(isset($objective->practices) && $objective->practices && $objective->practices->first() && isset($objective->practices->first()->roles))
-                            <table class="w-full border-collapse border border-gray-300">
-                                <thead>
-                                    <tr>
-                                        @foreach($objective->practices->first()->roles as $role)
-                                            <th class="border border-gray-300 p-1 text-sm">{{ trim($role->role, '"') }}</th>
-                                        @endforeach
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    @foreach($objective->practices as $practice)
-                                    <tr>
-                                        @if(isset($practice->roles) && $practice->roles)
-                                            @foreach($practice->roles as $role)
-                                                <td class="border border-gray-300 p-1 text-center">{{ $role->pivot->r_a }}</td>
-                                            @endforeach
-                                        @endif
-                                    </tr>
-                                    @endforeach
-                                </tbody>
-                            </table>
-                        @else
-                            <span class="text-gray-500">No roles available.</span>
-                        @endif
-                    </td>
-                </tr>
-                <tr class="bg-gray-100">
-                    <td colspan="3" class="border border-gray-300 p-2 font-semibold">Related Guidance</td>
-                </tr>
-                <tr>
-                    <td colspan="3" class="border border-gray-300 p-2">
-                        <ul class="list-disc list-inside">
-                            @if(isset($objective->guidance) && $objective->guidance)
-                                @foreach($objective->guidance as $g)
-                                    <li>{{ trim($g->guidance, '"') }} (Component: {{ $g->pivot->component }})</li>
-                                @endforeach
-                            @endif
-                        </ul>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div> --}}
-
     {{-- Policies --}}
-    {{-- <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Policies</h2>
-        @foreach($objective['policies'] as $po)
-            <div class="border p-4 rounded mb-2">
-                <h3 class="font-medium">{{ trim($po['policy'], '"') }}</h3>
-                <p class="text-gray-700 mb-2">{{ trim($po['description'], '"') }}</p>
-                <ul class="list-disc list-inside ml-4">
-                    @foreach($po['guidances'] as $pg)
-                        <li>{{ trim($pg['guidance'], '"') }} ({{ trim($pg['reference'], '"') }})</li>
-                    @endforeach
-                </ul>
-            </div>
-        @endforeach
-    </div> --}}
     <div class="mb-6">
         <h2 class="text-xl font-semibold mb-2">Policies</h2>
         <table class="w-full border border-gray-300 border-collapse">
@@ -432,23 +294,6 @@
     </div>
 
     {{-- Skills --}}
-    {{-- <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Skills</h2>
-        @foreach($objective['skill'] as $sk)
-            <div class="border p-4 rounded mb-2">
-                <h3 class="font-medium">{{ trim($sk['skill'], '"') }}</h3>
-                @if(!empty($sk['guidances']))
-                    <ul class="list-disc list-inside ml-4">
-                        @foreach($sk['guidances'] as $sg)
-                            <li>{{ trim($sg['guidance'], '"') }}</li>
-                        @endforeach
-                    </ul>
-                @else
-                    <p class="text-gray-500">No guidance</p>
-                @endif
-            </div>
-        @endforeach
-    </div> --}}
     <div class="mb-6">
         <h2 class="text-xl font-semibold mb-2">Skills</h2>
         <table class="w-full border border-gray-300 border-collapse">
@@ -490,22 +335,6 @@
     </div>
 
     {{-- Culture, Ethics and Behavior --}}
-    {{-- <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Culture, Ethics and Behavior</h2>
-        @foreach($objective['keyculture'] as $kc)
-            <div class="border p-4 rounded mb-2">
-                <p>{{ trim($kc['element'], '"') }}</p>
-                @if(!empty($kc['guidances']))
-                    <ul class="list-disc list-inside ml-4">
-                        @foreach($kc['guidances'] as $kg)
-                            <li>{{ trim($kg['guidance'], '"') }}</li>
-                        @endforeach
-                    </ul>
-                @endif
-            </div>
-        @endforeach
-    </div> --}}
-
     <div class="mb-6">
         <h2 class="text-xl font-semibold mb-2">Culture, Ethics and Behavior</h2>
         <table class="w-full border border-gray-300 border-collapse">
@@ -555,15 +384,5 @@
             @endforeach
         </ul>
     </div>
-
-    {{-- Guidance Components --}}
-    {{-- <div class="mb-6">
-        <h2 class="text-xl font-semibold mb-2">Guidance Components</h2>
-        <ul class="list-disc list-inside ml-4">
-            @foreach($objective['guidance'] as $g)
-                <li>{{ trim($g['guidance'], '"') }} ({{ $g['pivot']['component'] }})</li>
-            @endforeach
-        </ul>
-    </div> --}}
 </div>
 @endsection
