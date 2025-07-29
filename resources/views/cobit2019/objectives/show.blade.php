@@ -279,9 +279,14 @@
                         </ul>
                     </td>
                     <td class="border border-gray-300 p-2">
-                        @foreach($po['guidances'] as $pg)
-                            <div>{{ trim($pg['reference'], '"') }}</div>
-                        @endforeach
+                        {{-- @foreach($po['guidances'] as $pg)
+                            <li>{{ trim($pg['reference'], '"') }}</li>
+                        @endforeach --}}
+                        <ul class="list-disc list-inside ml-4">
+                            @foreach($po['guidances'] as $pg)
+                                <li>{{ trim($pg['reference'], '"') }}</li>
+                            @endforeach
+                        </ul>
                     </td>
                 </tr>
                 @endforeach
@@ -318,7 +323,7 @@
                     <td class="border border-gray-300 p-2">
                         @if(!empty($sk['guidances']))
                             @foreach($sk['guidances'] as $sg)
-                                <div>{{ trim($sg['reference'] ?? '', '"') }}</div>
+                                <li>{{ trim($sg['reference'] ?? '', '"') }}</li>
                             @endforeach
                         @else
                             <span class="text-gray-500">-</span>
@@ -359,7 +364,7 @@
                     <td class="border border-gray-300 p-2">
                         @if(!empty($kc['guidances']))
                             @foreach($kc['guidances'] as $kg)
-                                <div>{{ trim($kg['pivot']['reference'] ?? '', '"') }}</div>
+                                <li>{{ trim($kg['pivot']['reference'] ?? '', '"') }}</li>
                             @endforeach
                         @else
                             <span class="text-gray-500">-</span>
