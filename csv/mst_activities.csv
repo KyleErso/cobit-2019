@@ -1,0 +1,9 @@
+acticity_id,practice_id,description,capability_lvl
+1,"""EDM01.01""","""Analyze and identify the internal and external environmental factors (legal, regulatory and contractual obligations) and trends in the business environment that may influence governance design.""",2
+2,"""EDM01.01""","""Determine the significance of I&T and its role with respect to the business.""",2
+3,"""EDM01.01""","""Consider external regulations, laws and contractual obligations and determine how they should be applied within the governance of enterprise I&T.""",2
+4,"""EDM01.01""","""Determine the implications of the overall enterprise control environment with regard to I&T.""",2
+5,"""EDM01.01""","""Align the ethical use and processing of information and its impact on society, the natural environment, and internal and external stakeholder interests with the enterprise’s direction, goals and objectives.""",3
+6,"""EDM01.01""","""Articulate principles that will guide the design of governance and decision making of I&T.""",3
+7,"""EDM01.01""","""Determine the optimal decision-making model for I&T""",3
+8,"""EDM01.01""","""Determine the appropriate levels of authority delegation, including threshold rules, for I&T decisions.""",3

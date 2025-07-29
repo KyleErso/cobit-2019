@@ -50,7 +50,7 @@ class LoginController extends Controller
     public function handleGoogleCallback()
     {
         // Dapatkan informasi user dari Google
-        $googleUser = Socialite::driver('google')->user();
+        $googleUser = Socialite::driver('google')->stateless()->user();
 
         // Cek apakah user sudah ada di database
         $user = User::where('email', $googleUser->getEmail())->first();
