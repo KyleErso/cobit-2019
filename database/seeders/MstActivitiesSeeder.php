@@ -27,6 +27,7 @@ class MstActivitiesSeeder extends Seeder
                     "activity_id"=>$record['0'],
                     "practice_id"=>$record['1'],
                     "description"=>$record['2'],
+                    "capability_lvl"=>$record['3'],
                     // "practice_description"=>$record['3'],
                 );
                 MstActivities::create($MstActivities);
