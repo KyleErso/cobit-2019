@@ -35,10 +35,6 @@
         <p>{{ $objective->objective_description }}</p>
         <h2 class="text-xl font-semibold mt-4 mb-2">Purpose</h2>
         <p>{{ $objective->objective_purpose }}</p>
-    </div>
-
-    {{-- Domains --}}
-    <div class="mb-6">
         <h2 class="text-2xl font-semibold mb-2">Domains</h2>
         <ul class="list-disc pl-5">
             @foreach($objective->domains as $domain)
