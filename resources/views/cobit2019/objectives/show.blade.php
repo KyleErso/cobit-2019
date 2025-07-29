@@ -8,9 +8,9 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container mx-auto p-6">
+<div class="container mx-auto p-6 mb-8">
     {{-- Objective Selector Navigation --}}
-    <div class="my-8 py-6">
+    <div class="my-8 py-6 mb-4">
         <label for="objectiveSelect" class="block text-sm font-medium text-gray-700">Select Objective</label>
         <select id="objectiveSelect" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md">
             @if(isset($allObjectives) && $allObjectives)
@@ -44,7 +44,7 @@
     </div>
 
     {{-- Enterprise Goals --}}
-    <div class="mb-6">
+    <div class="mt-4 mb-4">
         <h2 class="text-xl font-semibold mb-2">Enterprise Goals</h2>
         @foreach($objective['entergoals'] as $eg)
             <div class="border p-4 rounded mb-2">
@@ -59,7 +59,7 @@
     </div>
 
     {{-- Alignment Goals --}}
-    <div class="mb-6">
+    <div class="mt-4 mb-4">
         <h2 class="text-xl font-semibold mb-2">Alignment Goals</h2>
         @foreach($objective['aligngoals'] as $ag)
             <div class="border p-4 rounded mb-2">
@@ -74,7 +74,7 @@
     </div>
 
     {{-- Practices --}}
-    <div class="mb-6">
+    <div class="mt-4 mb-4">
         <h2 class="text-xl font-semibold mb-2">Practices</h2>
         @foreach($objective['practices'] as $pr)
             <div class="border p-4 rounded mb-4">
@@ -146,7 +146,7 @@
     </div>
 
     {{-- Info Flows Table --}}
-    <div class="mb-6">
+    <div class="mt-4 mb-4">
         <h2 class="text-xl font-semibold mb-2">Information Flows</h2>
         <table class="w-full border border-gray-300 border-collapse">
             <thead class="bg-gray-100">
@@ -206,7 +206,7 @@
 
     {{-- Component: Organizational Structures --}}
     {{-- Roles Matrix --}}
-    <div class="mb-6">
+    <div class="mt-4 mb-4">
         <h2 class="text-xl font-semibold mb-2">Organizational Structures</h2>
         <table class="w-full border border-gray-300 border-collapse">
             <thead class="bg-gray-100">
@@ -255,7 +255,7 @@
     @endif
 
     {{-- Policies --}}
-    <div class="mb-6">
+    <div class="mt-4 mb-4">
         <h2 class="text-xl font-semibold mb-2">Policies</h2>
         <table class="w-full border border-gray-300 border-collapse">
             <thead class="bg-gray-100">
@@ -290,7 +290,7 @@
     </div>
 
     {{-- Skills --}}
-    <div class="mb-6">
+    <div class="mt-4 mb-4">
         <h2 class="text-xl font-semibold mb-2">Skills</h2>
         <table class="w-full border border-gray-300 border-collapse">
             <thead class="bg-gray-100">
@@ -331,7 +331,7 @@
     </div>
 
     {{-- Culture, Ethics and Behavior --}}
-    <div class="mb-6">
+    <div class="mt-4 mb-4">
         <h2 class="text-xl font-semibold mb-2">Culture, Ethics and Behavior</h2>
         <table class="w-full border border-gray-300 border-collapse">
             <thead class="bg-gray-100">
@@ -372,7 +372,7 @@
     </div>
 
     {{-- Services, Infrastructure and Applications --}}
-    <div class="mb-6">
+    <div class="mt-4 mb-4">
         <h2 class="text-xl font-semibold mb-2">Services, Infrastructure and Applications</h2>
         <ul class="list-disc list-inside ml-4">
             @foreach($objective['s_i_a'] as $sia)
