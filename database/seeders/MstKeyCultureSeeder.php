@@ -14,7 +14,7 @@ class MstKeyCultureSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('PRAGMA foreign_keys = OFF;');
+        // DB::statement('PRAGMA foreign_keys = OFF;');
         MstKeyCulture::truncate();
         // DB::statement('PRAGMA foreign_keys = ON;');
         $heading = true;

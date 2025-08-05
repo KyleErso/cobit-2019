@@ -14,7 +14,7 @@ class TrsObjectiveGuidanceSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('PRAGMA foreign_keys = OFF;');
+        // DB::statement('PRAGMA foreign_keys = OFF;');
         TrsObjectiveGuidance::truncate();
         // DB::statement('PRAGMA foreign_keys = ON;');
         $heading = true;

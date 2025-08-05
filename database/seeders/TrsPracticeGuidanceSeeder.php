@@ -14,9 +14,9 @@ class TrsPracticeGuidanceSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('PRAGMA foreign_keys = OFF;');
+        // DB::statement('PRAGMA foreign_keys = OFF;');
         TrsPracticeGuidance::truncate();
-        DB::statement('PRAGMA foreign_keys = ON;');
+        // DB::statement('PRAGMA foreign_keys = ON;');
         $heading = true;
         $input_file = fopen(base_path("csv/trs_practiceguidance.csv"), "r");
         while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)

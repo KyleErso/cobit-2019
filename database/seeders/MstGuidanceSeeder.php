@@ -14,9 +14,9 @@ class MstGuidanceSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('PRAGMA foreign_keys = OFF;');
+        // DB::statement('PRAGMA foreign_keys = OFF;');
         MstGuidance::truncate();
-        DB::statement('PRAGMA foreign_keys = ON;');
+        // DB::statement('PRAGMA foreign_keys = ON;');
         $heading = true;
         $input_file = fopen(base_path("csv/mst_guidance.csv"), "r");
         while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)

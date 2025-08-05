@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('mst_guidance', function (Blueprint $table) {
             $table->integer("guidance_id");
             $table->text("guidance")->nullable();
-            $table->string("reference")->nullable();
+            $table->text("reference")->nullable();
             $table->primary("guidance_id");
         });
     }

@@ -14,7 +14,7 @@ class MstInfoflowOutputSeeder extends Seeder
      */
     public function run(): void
     {
-        DB::statement('PRAGMA foreign_keys = OFF;');
+        // DB::statement('PRAGMA foreign_keys = OFF;');
         MstInfoflowOutput::truncate();
         // DB::statement('PRAGMA foreign_keys = ON;');
         $heading = true;
