@@ -258,6 +258,6 @@ class Df8Controller extends Controller
             ->first();
 
         // Menampilkan tampilan output dengan data yang diambil
-        return view('cobit2019.df8.df8_output', compact('designFactor8', 'designFactorRelativeImportance'));
+        return view('cobit2019.df8.df8_output', compact('designFactor8', 'designFactorRelativeImportance','id'));
     }
 }

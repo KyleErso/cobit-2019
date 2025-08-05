@@ -38,10 +38,17 @@
                         </div>
 
                         <!-- Login Button -->
-                        <div class="d-grid">
+                        <div class="d-grid mb-2">
                             <button type="submit" class="btn btn-warning btn-lg text-white fw-bold">
                                 {{ __('Login') }}
                             </button>
+                        </div>
+
+                        <!-- Login with Google Button -->
+                        <div class="d-grid">
+                            <a href="{{ url('/login/google') }}" class="btn btn-outline-success btn-lg fw-bold">
+                                Login with Google
+                            </a>
                         </div>
                     </form>
                 </div>

@@ -87,8 +87,14 @@ Route::get('/login', [LoginController::class, 'showLoginForm'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->name('logout');
 
+Route::get('login/google', [LoginController::class, 'redirectToGoogle']);
+Route::get('login/google/callback', [LoginController::class, 'handleGoogleCallback']);
+
 Route::get('/register', [RegisterController::class, 'showRegistrationForm'])->name('register');
 Route::post('/register', [RegisterController::class, 'register']);
+
+// Jika login dengan Google untuk pertama kali, redirect ke register-google
+
 
 // Home route
 Route::get('/home', [HomeController::class, 'index'])->name('home')->middleware('auth');
