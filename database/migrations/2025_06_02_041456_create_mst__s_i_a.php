@@ -12,7 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mst_SIA', function (Blueprint $table) {
-            $table->id("sia_id");
+            $table->unsignedBigInteger("sia_id");
+            $table->primary("sia_id");
             $table->string("objective_id")->nullable();
             $table->text("description")->nullable();
             // No timestamps

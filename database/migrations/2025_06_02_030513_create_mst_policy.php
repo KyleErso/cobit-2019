@@ -12,11 +12,12 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mst_policy', function (Blueprint $table) {
-            $table->id("policy_id");
+            $table->integer("policy_id");
             $table->string("objective_id")->nullable();
             $table->text("policy")->nullable();
             $table->text("description")->nullable();
             // No timestamps
+            $table->primary("policy_id");
 
             $table->foreign("objective_id")->references("objective_id")->on("mst_objective")->onDelete("cascade");
         });

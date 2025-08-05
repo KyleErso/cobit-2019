@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('trs_practroles', function (Blueprint $table) {
             $table->string("practice_id");
-            $table->integer("role_id");
+            $table->unsignedBigInteger("role_id");
             // Ignoring r_a as placeholder
             // No timestamps
             $table->string("r_a")->nullable();

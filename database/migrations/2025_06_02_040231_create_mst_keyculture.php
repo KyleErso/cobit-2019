@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mst_keyculture', function (Blueprint $table) {
-            $table->id("keyculture_id");
-            // $table->primary("keyculture_id");
+            $table->unsignedBigInteger("keyculture_id");
+            $table->primary("keyculture_id");
             $table->string("objective_id");
             $table->text("element")->nullable();
 

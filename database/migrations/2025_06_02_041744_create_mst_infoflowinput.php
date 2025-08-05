@@ -12,8 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('mst_infoflowinput', function (Blueprint $table) {
-            $table->id("input_id"); 
-            $table->integer("practice_id")->nullable();
+            $table->unsignedBigInteger("input_id");
+            $table->primary("input_id");
+            // $table->integer("practice_id")->nullable();
+            $table->string("practice_id")->nullable();
             $table->string("from")->nullable();
             $table->text("description")->nullable();
             // No timestamps

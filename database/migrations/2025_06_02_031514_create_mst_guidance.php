@@ -11,10 +11,11 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('mst_roles', function (Blueprint $table) {
-            $table->id("role_id");
-            $table->string("role")->nullable();
-            $table->text("description")->nullable();
+        Schema::create('mst_guidance', function (Blueprint $table) {
+            $table->integer("guidance_id");
+            $table->text("guidance")->nullable();
+            $table->string("reference")->nullable();
+            $table->primary("guidance_id");
         });
     }
 
@@ -23,7 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('trs_practroles');
-        Schema::dropIfExists('mst_roles');
+        Schema::dropIfExists('mst_guidance');
     }
 };

@@ -12,7 +12,7 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('trs_skillguidance', function (Blueprint $table) {
-            $table->integer("skill_id");
+            $table->unsignedBigInteger("skill_id");
             $table->integer("guidance_id");
             // No timestamps
 
