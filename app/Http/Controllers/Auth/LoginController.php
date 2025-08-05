@@ -13,7 +13,6 @@ class LoginController extends Controller
 {
     use AuthenticatesUsers;
 
-    // you can leave this or change to your default fallback
     protected $redirectTo = '/home';
 
     public function __construct()
@@ -55,6 +54,7 @@ class LoginController extends Controller
     public function handleGoogleCallback()
     {
         $googleUser = Socialite::driver('google')->stateless()->user();
+
         $user = User::where('email', $googleUser->getEmail())->first();
 
         if (!$user) {
@@ -73,5 +73,4 @@ class LoginController extends Controller
         Auth::login($user);
         return redirect('/home');
     }
-
 }

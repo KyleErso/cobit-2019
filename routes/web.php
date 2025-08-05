@@ -21,6 +21,7 @@ use App\Http\Controllers\cobit2019\Df10Controller;
 use App\Http\Controllers\cobit2019\Step2Controller;
 use App\Http\Controllers\cobit2019\Step3Controller;
 use App\Http\Controllers\cobit2019\Step4Controller;
+use App\Http\Controllers\cobit2019\MstObjectiveController;
 
 // Public routes
 
@@ -36,7 +37,9 @@ Route::post('/assessment/request', [AssessmentController::class, 'requestAssessm
      ->middleware('auth')
      ->name('assessment.request');
 
-
+Route::get('/objectives', [MstObjectiveController::class, 'index']);
+// Route::get('/objectives/{id}', [MstObjectiveController::class, 'show']);
+Route::get('objectives/{id}', [MstObjectiveController::class, 'show'])->name('cobit2019.objectives.show');
 
 // Admin routes (auth + role check di controller)
 Route::prefix('admin')

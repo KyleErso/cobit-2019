@@ -1,0 +1,12 @@
+entergoalsmetr_id,entergoals_id,description
+1,EG03,"""Cost of regulatory noncompliance, including settlements and fines"""
+2,EG03,"""Number of regulatory noncompliance issues causing public comment or negative publicity"""
+3,EG03,"""Number of noncompliance matters noted by regulators"""
+4,EG03,"""Number of regulatory noncompliance issues relating to contractual agreements with business partners"""
+5,EG08,"""Satisfaction levels of board and executive management with business process capabilities"""
+6,EG08,"""Satisfaction levels of customers with service delivery capabilities"""
+7,EG08,"""Satisfaction levels of suppliers with supply chain capabilities"""
+8,EG12,"""Number of programs on time and within budget"""
+9,EG12,"""Percent of stakeholders satisfied with program delivery"""
+10,EG12,"""Percent of business transformation programs stopped"""
+11,EG12,"""Percent of business transformation programs with regular reported status updates"""
