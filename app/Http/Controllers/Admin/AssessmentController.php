@@ -28,10 +28,8 @@ class AssessmentController extends Controller
         if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'pic') {
             abort(403);
         }
-
         // Bangun query dasar
         $query = Assessment::query();
-
         // Filter exact by ID
         if ($request->filled('id')) {
             $query->where('assessment_id', $request->id);
