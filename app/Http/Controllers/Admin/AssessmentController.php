@@ -142,7 +142,6 @@ class AssessmentController extends Controller
         }
 
         try {
-            // Eager load semua relasi df/score/relativeImportance terbaru
             $relations = [];
             for ($i = 1; $i <= 10; $i++) {
                 $relations[] = "df{$i}";
@@ -158,7 +157,13 @@ class AssessmentController extends Controller
             ))->findOrFail($assessment_id);
 
             $users = User::pluck('name', 'id')->toArray();
-            return view('admin.assessments.show', compact('assessment', 'users'));
+
+            // Kirim ke view utama dan ke partial pagination
+            return view('admin.assessments.show', [
+                'assessment' => $assessment,
+                'users' => $users,
+                // Tambahkan jika perlu data lain untuk pagination
+            ]);
         } catch (ModelNotFoundException $e) {
             return redirect()
                 ->route('admin.assessments.index')

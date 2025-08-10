@@ -178,16 +178,16 @@
 
     {{-- Calendar Card --}}
     <div class="col-md-4">
-      <div class="card shadow-lg border-0 rounded-3 h-100 overflow-hidden">
+      <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
         <div class="card-header bg-primary text-white text-center py-3">
           <h5 class="mb-0 fw-semibold">Kalender</h5>
         </div>
         <div class="card-body p-4">
           <div class="text-center mb-4">
             <div class="datetime-container bg-primary bg-opacity-10 p-3 rounded-3 border border-primary border-opacity-25">
-              <div class="h3 mb-2 text-primary fw-bold" id="current-time"></div>
-              <div class="text-primary mb-1" id="current-date"></div>
-              <div class="text-uppercase text-primary fw-semibold" id="current-day"></div>
+              <div class="display-4 fw-bold text-primary mb-0" id="current-time"></div>
+              <div class="h5 text-secondary mb-1" id="current-day"></div>
+              <div class="text-muted" id="current-date"></div>
             </div>
           </div>
           <div id="calendar" class="border-primary border-opacity-25 rounded-3"></div>
@@ -199,7 +199,13 @@
 
 {{-- Styles --}}
 <style>
-/* … gaya yang sama seperti sebelumnya … */
+.display-4 {
+  font-size: 2.5rem;
+  font-weight: 700;
+}
+.datetime-container {
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+}
 </style>
 
 {{-- Scripts --}}
@@ -216,23 +222,19 @@
       window.location.href = "{{ route('df1.form', ['id' => Auth::id()]) }}";
     });
 
-    // Time & Date
-    function updateTime() {
-      const now = new Date();
-      document.getElementById('current-time').textContent = now.toLocaleTimeString('id-ID');
-      document.getElementById('current-date').textContent = now.toLocaleDateString('id-ID');
-      document.getElementById('current-day').textContent = now.toLocaleDateString('id-ID', { weekday:'long' });
-    }
-    setInterval(updateTime,1000);
-    updateTime();
+      // Update time setiap detik
+      function updateTime() {
+        const now = new Date();
+        document.getElementById('current-time').textContent =
+          now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('current-date').textContent =
+          now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+        document.getElementById('current-day').textContent =
+          now.toLocaleDateString('id-ID', { weekday: 'long' });
+      }
+      setInterval(updateTime, 1000);
+      updateTime();
 
-    // FullCalendar
-    const cal = new FullCalendar.Calendar(document.getElementById('calendar'), {
-      initialView: 'dayGridMonth',
-      locale: 'id',
-      headerToolbar: { left: 'prev,next today', center: 'title', right: '' }
-    });
-    cal.render();
   });
 
   
