@@ -22,6 +22,7 @@ use App\Http\Controllers\cobit2019\Step2Controller;
 use App\Http\Controllers\cobit2019\Step3Controller;
 use App\Http\Controllers\cobit2019\Step4Controller;
 use App\Http\Controllers\cobit2019\MstObjectiveController;
+use App\Http\Controllers\AssessmentEval\AssessmentEvalController;
 
 // Public routes
 
@@ -191,3 +192,8 @@ Route::get('/df9/output/{id}', [Df9Controller::class, 'showOutput'])->name('df9.
 Route::get('/df10/form/{id}', [Df10Controller::class, 'showDesignFactor10Form'])->name('df10.form')->middleware('auth');
 Route::post('/df10/store', [Df10Controller::class, 'store'])->name('df10.store')->middleware('auth');
 Route::get('/df10/output/{id}', [Df10Controller::class, 'showOutput'])->name('df10.output')->middleware('auth');
+
+// Assessment Evaluation routes
+Route::get('/assessment-eval', [AssessmentEvalController::class, 'index'])
+     ->name('assessment-eval.index')
+     ->middleware('auth');

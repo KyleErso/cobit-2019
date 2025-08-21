@@ -21,7 +21,7 @@ class MstObjectiveController extends Controller
         'practices',
         'practices.guidances', 
         'policies',
-        'SIA'])->get();
+        's_i_a'])->get();
 
         // Return as JSON (you could also pass to a view)
         return response()->json($objectives);
