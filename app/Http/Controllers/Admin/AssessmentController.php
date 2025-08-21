@@ -25,7 +25,7 @@ class AssessmentController extends Controller
     public function index(Request $request)
     {
         // Pastikan hanya admin yang bisa akses
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'pic') {
             abort(403);
         }
 
@@ -58,7 +58,7 @@ class AssessmentController extends Controller
      */
     public function store(Request $request)
     {
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'pic') {
             abort(403);
         }
 
@@ -84,7 +84,7 @@ class AssessmentController extends Controller
      */
     public function pendingRequests()
     {
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'pic') {
             abort(403);
         }
 
@@ -108,7 +108,7 @@ class AssessmentController extends Controller
      */
     public function approveRequest($idx)
     {
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'pic') {
             abort(403);
         }
 
@@ -137,7 +137,7 @@ class AssessmentController extends Controller
      */
     public function show($assessment_id)
     {
-        if (Auth::user()->role !== 'admin') {
+        if (Auth::user()->role !== 'admin' && Auth::user()->role !== 'pic') {
             abort(403);
         }
 
