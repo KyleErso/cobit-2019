@@ -3,11 +3,11 @@
 namespace Database\Seeders;
 
 use Illuminate\Support\Facades\DB;
-use App\Models\MstInfoflowOutput;
+use App\Models\MstPracticeOutput;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
-class MstInfoflowOutputSeeder extends Seeder
+class MstPracticeOutputSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -15,22 +15,23 @@ class MstInfoflowOutputSeeder extends Seeder
     public function run(): void
     {
         // DB::statement('PRAGMA foreign_keys = OFF;');
-        MstInfoflowOutput::truncate();
+        MstPracticeOutput::truncate();
         // DB::statement('PRAGMA foreign_keys = ON;');
         $heading = true;
-        $input_file = fopen(base_path("csv/mst_infoflowoutput.csv"), "r");
+        $input_file = fopen(base_path("csv/mst_practiceoutput.csv"), "r");
         while (($record = fgetcsv($input_file, 1000, ",")) !== FALSE)
         {
             if (!$heading)
             {
-                $MstInfoflowOutput = array(
-                    "output_id"=>$record['0'],
-                    "practice_id"=>$record['1'],
+                $MstPracticeOutput = array(
+                    "practiceoutput_id"=>$record['0'],
+                    "output_id"=>$record['1'],
+                    "practice_id"=>$record['2'],
                     // "to"=>$record['2'],
-                    "description"=>$record['2'],
+                    // "description"=>$record['3'],
                     // "practice_description"=>$record['3'],
                 );
-                MstInfoflowOutput::create($MstInfoflowOutput);
+                MstPracticeOutput::create($MstPracticeOutput);
             }
             $heading = false;
         }

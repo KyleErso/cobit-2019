@@ -42,6 +42,7 @@ class DatabaseSeeder extends Seeder
             MstGuidanceSeeder::class,
             MstInfoflowInputSeeder::class,
             MstInfoflowOutputSeeder::class,
+            MstPracticeOutputSeeder::class,
             MstKeyCultureSeeder::class,
             MstObjectiveSeeder::class,
             MstPolicySeeder::class,

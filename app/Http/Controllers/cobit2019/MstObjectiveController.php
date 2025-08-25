@@ -48,6 +48,7 @@ class MstObjectiveController extends Controller
         'practices.roles',
         'practices.infoflowinput',
         'practices.infoflowinput.connectedoutputs',
+        'practices.infoflowinput.connectedoutputs.practiceoutputs',
         'practices.infoflowoutput',
         'policies',
         'policies.guidances',

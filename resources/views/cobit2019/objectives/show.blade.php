@@ -247,7 +247,13 @@
                       <td x-html="highlight(`{{ trim($inp['from'],'\"') }}`)"></td>
                       <td x-html="highlight(`{{ trim($inp['description'],'\"') }}`)"></td>
                       <td x-html="highlight(`{{ trim($co['description'],'\"') }}`)"></td>
-                      <td x-html="highlight(`{{ trim($co['to'],'\"') }}`)"></td>
+                      {{-- <td x-html="highlight(`{{ trim($co['to'],'\"') }}`)"></td> --}}
+                      {{-- <td x-html="highlight(`{{ trim($co['practiceoutputs'],'\"') }}`)"></td> --}}
+                      <td>
+                        @foreach($co['practiceoutputs'] as $po)
+                          <span x-html="highlight(`{{ trim($po['practice_id'],'\"') }}`)"></span>@if(!$loop->last), @endif
+                        @endforeach
+                      </td>
                     </tr>
                   @endforeach
                 @endforeach
@@ -255,6 +261,25 @@
             </tbody>
           </table>
         </div>
+        {{-- <tbody>
+          @foreach($objective['practices'] as $pr)
+            @foreach($pr['infoflowinput'] as $inp)
+              @foreach($inp['connectedoutputs'] as $co)
+                @foreach($co['practiceoutputs'] as $po)
+                  <tr 
+                    x-show="matches('{{ $inp['description'] }}') || matches('{{ $co['description'] }}')"
+                  >
+                    <td>{{ trim($pr['practice_id'],'\"') }}</td>
+                    <td x-html="highlight('{{ trim($inp['from'],'\"') }}')"></td>
+                    <td x-html="highlight('{{ trim($inp['description'],'\"') }}')"></td>
+                    <td x-html="highlight('{{ trim($co['description'],'\"') }}')"></td>
+                    <td x-html="highlight('{{ trim($po['practice_id'],'\"') }}')"></td>
+                  </tr>
+                @endforeach
+              @endforeach
+            @endforeach
+          @endforeach
+        </tbody> --}}
         @if(isset($guidanceByComponent['Infoflow']))
           <h5 class="mt-3">Guidance (Infoflow)</h5>
           <div class="table-responsive">

@@ -5,35 +5,34 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class MstInfoflowInput extends Model
+class MstPracticeOutput extends Model
 {
     use HasFactory;
 
-    protected $table = 'mst_infoflowinput';
+    protected $table = 'mst_practiceoutput';
 
-    protected $primaryKey = 'input_id';
+    protected $primaryKey = 'output_id';
 
     // public $incrementing = false;
+
     protected $keyType = 'int';
-    // protected $keyType = 'unsignedBigInteger';
 
     public $timestamps = false;
 
     protected $fillable = [
-        'input_id',
+        'practiceoutput_id',
+        'output_id',
         'practice_id',
-        'from',
-        'description',
+        // 'description',
         // 'skill',
         // 'objective_purpose',
     ];
 
-    public function connectedoutputs()
+    public function infoflowoutput()
     {
-        return $this->belongsToMany(
+        return $this->belongsTo(
             MstInfoflowOutput::class,
-            'trs_infoflowio',
-            'input_id',
+            'output_id',
             'output_id'
         );
     }
