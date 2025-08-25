@@ -1,4 +1,4 @@
-
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 @auth
     @php
@@ -10,6 +10,7 @@
                 break;
             }
         }
+        $validasiAktif = session('jabatan_df_middleware_enabled', true);
     @endphp
 
     <div class="container-fluid d-flex justify-content-center" id="paginationContainer" data-current-df="{{ $currentDF }}">
@@ -59,7 +60,6 @@
                     @endif
                 @endfor
 
-
                 {{-- Next --}}
                 <li class="page-item {{ $currentDF == 10 ? 'disabled' : '' }}">
                     <a class="page-link" data-df="{{ $currentDF + 1 }}"
@@ -71,5 +71,41 @@
         </nav>
     </div>
 
-    {{-- Hapus atau non‑aktifkan script coming‑soon jika tidak diperlukan --}}
+    <div class="mb-2 text-center">
+        <form action="{{ route('akses-df.toggle') }}" method="get" style="display:inline;">
+            <div class="form-check form-switch d-inline-flex align-items-center mb-2">
+                <input class="form-check-input" type="checkbox" id="validasiJabatanSwitch"
+                    name="validasiJabatanSwitch"
+                    onchange="this.form.submit()" {{ $validasiAktif ? 'checked' : '' }}>
+                <label class="form-check-label ms-2 small" for="validasiJabatanSwitch">
+                    {{ $validasiAktif ? 'Validasi Jabatan Aktif' : 'Validasi Jabatan Nonaktif' }}
+                </label>
+            </div>
+        </form>
+
+        @if(session('show_alert'))
+            @if($validasiAktif)
+                <div class="alert alert-info alert-dismissible fade show py-1 px-2 small" role="alert">
+                    <i class="fas fa-info-circle me-1"></i>
+                    Anda hanya punya akses ke DF sesuai jabatan.
+                </div>
+            @else
+                <div class="alert alert-warning alert-dismissible fade show py-1 px-2 small" role="alert">
+                    <i class="fas fa-exclamation-triangle me-1"></i>
+                    Dengan menonaktifkan validasi jabatan, Anda akan memiliki akses ke DF 1 sampai 10.
+                </div>
+            @endif
+        @endif
+    </div>
+
+    @if(session('jabatan_warning'))
+    <script>
+        Swal.fire({
+            icon: 'warning',
+            title: 'Akses Ditolak',
+            text: '{{ session('jabatan_warning') }}',
+            confirmButtonText: 'OK'
+        });
+    </script>
+    @endif
 @endauth
