@@ -8,7 +8,7 @@
     ->groupBy(fn($g) => $g['pivot']['component']);
 @endphp
 
-{{-- // update view cobit components --}}
+{{-- /// update view cobit components --}}
 <div class="container p-3"
      x-data="{
        activeComponent: 'overview',
