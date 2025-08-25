@@ -1,4 +1,5 @@
 {{-- resources/views/cobit2019/objectives/show.blade.php --}}
+
 @extends('layouts.app')
 
 @section('content')
@@ -7,6 +8,7 @@
     ->groupBy(fn($g) => $g['pivot']['component']);
 @endphp
 
+{{-- // update view cobit components --}}
 <div class="container p-3"
      x-data="{
        activeComponent: 'overview',
