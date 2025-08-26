@@ -271,6 +271,27 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                {{-- Evidence / Notes section --}}
+                                                                <div class="row mt-3">
+                                                                    <div class="col-md-1"></div>
+                                                                    <div class="col-md-11">
+                                                                        <div class="evidence-notes-section">
+                                                                            <label for="evidence_{{ $activity->activity_id }}" class="form-label text-muted">
+                                                                                <i class="fas fa-clipboard-list me-1"></i>
+                                                                                <small><strong>Evidence / Notes:</strong></small>
+                                                                            </label>
+                                                                            <textarea 
+                                                                                class="form-control form-control-sm evidence-notes" 
+                                                                                id="evidence_{{ $activity->activity_id }}" 
+                                                                                name="evidence_{{ $activity->activity_id }}"
+                                                                                data-activity-id="{{ $activity->activity_id }}"
+                                                                                data-objective-id="{{ $objective->objective_id }}"
+                                                                                data-level="{{ $level }}"
+                                                                                rows="2" 
+                                                                                placeholder="Enter evidence, documentation references, or notes to support your rating..."></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             @php $activityCounter++; @endphp
                                                         @endforeach
@@ -344,7 +365,8 @@ class COBITAssessmentManager {
             this.levelScores[objectiveId][level] = {
                 letter: 'N',
                 score: 0.00,
-                activities: {}
+                activities: {},
+                evidence: {}
             };
         }
     }
@@ -423,6 +445,7 @@ class COBITAssessmentManager {
     setupActivityRating() {
         const ratingInputs = document.querySelectorAll('.activity-rating');
         const clearButtons = document.querySelectorAll('.clear-rating');
+        const evidenceTextareas = document.querySelectorAll('.evidence-notes');
         
         ratingInputs.forEach(input => {
             input.addEventListener('change', () => {
@@ -455,6 +478,18 @@ class COBITAssessmentManager {
                 this.checkAllLevelLocks(objectiveId);
             });
         });
+
+        // Handle evidence/notes saving
+        evidenceTextareas.forEach(textarea => {
+            textarea.addEventListener('input', () => {
+                const activityId = textarea.getAttribute('data-activity-id');
+                const objectiveId = textarea.getAttribute('data-objective-id');
+                const level = parseInt(textarea.getAttribute('data-level'));
+                const evidence = textarea.value;
+                
+                this.setActivityEvidence(objectiveId, level, activityId, evidence);
+            });
+        });
     }
 
     setActivityRating(objectiveId, level, activityId, rating) {
@@ -462,9 +497,22 @@ class COBITAssessmentManager {
         this.levelScores[objectiveId][level].activities[activityId] = this.getRatingValue(rating);
     }
 
+    setActivityEvidence(objectiveId, level, activityId, evidence) {
+        this.initializeLevelScore(objectiveId, level);
+        this.levelScores[objectiveId][level].evidence[activityId] = evidence;
+    }
+
     clearActivityRating(objectiveId, level, activityId) {
         if (this.levelScores[objectiveId] && this.levelScores[objectiveId][level]) {
             delete this.levelScores[objectiveId][level].activities[activityId];
+            // Also clear evidence when rating is cleared
+            delete this.levelScores[objectiveId][level].evidence[activityId];
+            
+            // Clear the evidence textarea
+            const evidenceTextarea = document.getElementById(`evidence_${activityId}`);
+            if (evidenceTextarea) {
+                evidenceTextarea.value = '';
+            }
         }
     }
 
@@ -573,7 +621,8 @@ class COBITAssessmentManager {
                 this.levelScores[objectiveId][level] = {
                     letter: 'N',
                     score: 0.00,
-                    activities: {}
+                    activities: {},
+                    evidence: {}
                 };
             } else {
                 button.querySelector('.toggle-text').textContent = 'Start Assessment';
@@ -805,6 +854,37 @@ document.addEventListener('DOMContentLoaded', () => {
 .btn-group .btn-sm {
     font-size: 0.8rem;
     padding: 0.25rem 0.5rem;
+}
+
+/* Evidence/Notes section styling */
+.evidence-notes-section {
+    background-color: #f8f9fa;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    border-left: 2px solid #6c757d;
+}
+
+.evidence-notes-section .form-label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.evidence-notes {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    resize: vertical;
+    min-height: 60px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.evidence-notes:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.evidence-notes::placeholder {
+    color: #6c757d;
+    font-style: italic;
 }
 
 /* Smooth animations */
