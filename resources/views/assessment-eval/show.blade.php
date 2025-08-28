@@ -205,10 +205,6 @@
                                                 </div>
                                                 <div class="col-md-4 text-end">
                                                     <div class="capability-score-display">
-                                                        <small class="text-muted d-block">Current Capability Level</small>
-                                                        <span class="badge fs-5 px-3 py-2 bg-danger" id="capability-score-{{ $objective->objective_id }}-{{ $level }}">
-                                                            Level <span class="level-number">1</span>
-                                                        </span>
                                                         <div class="mt-2">
                                                             <small class="text-muted d-block">Average Score</small>
                                                             <span class="badge bg-secondary" id="average-score-{{ $objective->objective_id }}-{{ $level }}">
@@ -371,6 +367,9 @@ class COBITAssessmentManager {
                 this.updateLevelDisplay(objectiveId, level);
                 this.checkLevelLock(objectiveId, level);
             });
+            
+            // Update overall objective capability level
+            this.updateObjectiveCapabilityLevel(objectiveId);
         });
     }
 
@@ -532,6 +531,9 @@ class COBITAssessmentManager {
                 this.updateLevelCapability(objectiveId, level);
                 this.checkLevelLock(objectiveId, level);
             });
+            
+            // Update overall objective capability level
+            this.updateObjectiveCapabilityLevel(objectiveId);
         });
     }
 
@@ -741,23 +743,48 @@ class COBITAssessmentManager {
     }
 
     updateLevelStats(objectiveId, level, averageScore, ratedActivities, totalActivities) {
-        const capabilityLevel = this.calculateCapabilityFromScore(averageScore);
-        const levelBadge = document.getElementById(`capability-score-${objectiveId}-${level}`);
-        if (levelBadge) {
-            this.updateCapabilityBadge(levelBadge, capabilityLevel);
-        }
-        
+        // Update average score display
         const averageScoreElement = document.getElementById(`average-score-${objectiveId}-${level}`);
         if (averageScoreElement) {
             averageScoreElement.textContent = averageScore.toFixed(2);
             averageScoreElement.className = `badge ${this.getScoreColorClass(averageScore)}`;
         }
         
+        // Update activities count display
         const activitiesCountElement = document.getElementById(`activities-count-${objectiveId}-${level}`);
         if (activitiesCountElement) {
             activitiesCountElement.textContent = `${ratedActivities}/${totalActivities}`;
             const completionRatio = totalActivities > 0 ? ratedActivities / totalActivities : 0;
             activitiesCountElement.className = `badge ${this.getCompletionColorClass(completionRatio)}`;
+        }
+        
+        // Update the overall objective capability level
+        this.updateObjectiveCapabilityLevel(objectiveId);
+    }
+
+    updateObjectiveCapabilityLevel(objectiveId) {
+        // Find the highest level that is at least L (Largely)
+        let highestLevel = 1; // Default to level 1
+        
+        // Get all levels for this objective
+        const objectiveCard = document.querySelector(`[data-objective-id="${objectiveId}"].objective-card`);
+        if (objectiveCard) {
+            const levelSections = objectiveCard.querySelectorAll('.capability-level-section');
+            
+            levelSections.forEach(section => {
+                const level = parseInt(section.getAttribute('data-level'));
+                const levelData = this.levelScores[objectiveId] && this.levelScores[objectiveId][level];
+                
+                if (levelData && levelData.score >= 0.50) { // L (Largely) threshold is 0.50
+                    highestLevel = Math.max(highestLevel, level);
+                }
+            });
+        }
+        
+        // Update the objective capability level badge
+        const capabilityBadge = document.getElementById(`capability-level-${objectiveId}`);
+        if (capabilityBadge) {
+            this.updateCapabilityBadge(capabilityBadge, highestLevel);
         }
     }
 
