@@ -23,11 +23,20 @@ class MstActivities extends Model
         'activity_id',
         'practice_id',
         'description',
+        'capability_lvl',
         // 'objective_purpose',
     ];
 
     public function practices()
     {
         return $this->belongsTo(MstPractice::class, 'practice_id');
+    }
+
+    /**
+     * Get all evaluations for this activity
+     */
+    public function evaluations()
+    {
+        return $this->hasMany(TrsActivityeval::class, 'activity_id', 'activity_id');
     }
 }

@@ -39,4 +39,12 @@ class User extends Authenticatable
     {
         return ucfirst($this->name);
     }
+
+    /**
+     * Get all evaluations created by this user
+     */
+    public function evaluations()
+    {
+        return $this->hasMany(MstEval::class, 'user_id', 'id');
+    }
 }

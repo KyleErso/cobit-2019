@@ -99,4 +99,12 @@ class MstObjective extends Model
     {
         return $this->hasMany(MstSkill::class, 'objective_id', 'objective_id');
     }
+
+    /**
+     * Get all evaluations for this objective
+     */
+    public function evaluations()
+    {
+        return $this->hasMany(MstEval::class, 'objective_id', 'objective_id');
+    }
 }
