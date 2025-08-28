@@ -194,6 +194,26 @@ Route::post('/df10/store', [Df10Controller::class, 'store'])->name('df10.store')
 Route::get('/df10/output/{id}', [Df10Controller::class, 'showOutput'])->name('df10.output')->middleware('auth');
 
 // Assessment Evaluation routes
-Route::get('/assessment-eval', [AssessmentEvalController::class, 'index'])
-     ->name('assessment-eval.index')
+Route::get('/assessment-eval', [AssessmentEvalController::class, 'listAssessments'])
+     ->name('assessment-eval.list')
+     ->middleware('auth');
+
+Route::post('/assessment-eval/create', [AssessmentEvalController::class, 'createAssessment'])
+     ->name('assessment-eval.create')
+     ->middleware('auth');
+
+Route::get('/assessment-eval/{evalId}', [AssessmentEvalController::class, 'showAssessment'])
+     ->name('assessment-eval.show')
+     ->middleware('auth');
+
+Route::post('/assessment-eval/{evalId}/save', [AssessmentEvalController::class, 'save'])
+     ->name('assessment-eval.save')
+     ->middleware('auth');
+
+Route::get('/assessment-eval/{evalId}/load', [AssessmentEvalController::class, 'load'])
+     ->name('assessment-eval.load')
+     ->middleware('auth');
+
+Route::delete('/assessment-eval/{evalId}', [AssessmentEvalController::class, 'delete'])
+     ->name('assessment-eval.delete')
      ->middleware('auth');
