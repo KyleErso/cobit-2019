@@ -45,7 +45,7 @@
                                 <div>
                                     <h6 class="mb-0 fw-bold">
                                         <i class="fas fa-file-alt text-primary me-2"></i>
-                                        Assessment #{{ $evaluation->eval_id ?? '—' }}
+                                        Assessment - {{ $evaluation->eval_id ?? '—' }}
                                     </h6>
                                     <small class="text-muted d-block">
                                         <strong>DB ID:</strong> {{ $evaluation->id ?? '—' }} &middot;

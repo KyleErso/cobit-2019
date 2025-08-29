@@ -179,30 +179,15 @@ class EvaluationService
             ]);
             
             DB::commit();
-            
-            if (app()->environment('production')) {
-                usleep(100000);
+
+            // refresh model to ensure any DB-generated fields are loaded
+            try {
+                $evaluation->refresh();
+            } catch (\Exception $e) {
+                // ignore refresh failures, return created model anyway
             }
-            
-            $maxRetries = 3;
-            $retryCount = 0;
-            
-            while ($retryCount < $maxRetries) {
-                $verificationEvaluation = MstEval::where('eval_id', $evaluation->eval_id)
-                    ->where('user_id', $userId)
-                    ->first();
-                    
-                if ($verificationEvaluation) {
-                    return $verificationEvaluation;
-                }
-                
-                $retryCount++;
-                if ($retryCount < $maxRetries) {
-                    usleep(50000);
-                }
-            }
-            
-            throw new \Exception("Created evaluation could not be verified after {$maxRetries} attempts");
+
+            return $evaluation;
             
         } catch (\Exception $e) {
             DB::rollBack();

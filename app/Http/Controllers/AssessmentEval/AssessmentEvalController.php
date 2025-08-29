@@ -38,19 +38,16 @@ class AssessmentEvalController extends Controller
     {
         try {
             $evaluation = $this->evaluationService->createNewEvaluation(Auth::id());
-            
-            $verifyEvaluation = $this->evaluationService->getEvaluationById($evaluation->eval_id);
-            
-            if (!$verifyEvaluation || $verifyEvaluation->user_id !== Auth::id()) {
-                Log::error("Created evaluation verification failed", [
-                    'eval_id' => $evaluation->eval_id,
-                    'user_id' => Auth::id(),
-                    'verification_result' => $verifyEvaluation ? 'found but wrong user' : 'not found'
-                ]);
-                throw new \Exception('Failed to verify created assessment');
+
+            // pastikan kita punya identifier untuk redirect (eval_id jika ada, fallback ke primary key)
+            $evalId = $evaluation->eval_id ?? $evaluation->{$evaluation->getKeyName()};
+
+            // generate activity evaluations supaya halaman tidak kosong
+            if (method_exists($this->evaluationService, 'generateActivityEvaluations')) {
+                $this->evaluationService->generateActivityEvaluations($evalId);
             }
-            
-            return redirect()->route('assessment-eval.show', ['evalId' => $evaluation->eval_id]);
+
+            return redirect()->route('assessment-eval.show', ['evalId' => $evalId]);
         } catch (\Exception $e) {
             Log::error("Failed to create assessment", [
                 'user_id' => Auth::id(),
@@ -68,33 +65,23 @@ class AssessmentEvalController extends Controller
     {
         try {
             $evaluation = $this->evaluationService->getEvaluationById($evalId);
-            
-            if (!$evaluation) {
-                Log::error("Assessment not found in database", [
+
+            // jangan langsung abort — kirim flag ke view agar frontend menampilkan alert
+            $accessDenied = false;
+            if (!$evaluation || $evaluation->user_id !== Auth::id()) {
+                \Illuminate\Support\Facades\Log::warning('Assessment access issue', [
                     'eval_id' => $evalId,
-                    'user_id' => Auth::id(),
-                    'all_evaluations' => $this->evaluationService->getUserEvaluations()
+                    'auth_id' => Auth::id(),
+                    'found_evaluation' => $evaluation ? $evaluation->toArray() : null
                 ]);
-                abort(404, 'Assessment not found');
-            }
-            
-            if ($evaluation->user_id !== Auth::id()) {
-                Log::error("Assessment access denied", [
-                    'eval_id' => $evalId,
-                    'requesting_user_id' => Auth::id(),
-                    'owner_user_id' => $evaluation->user_id
-                ]);
-                abort(404, 'Assessment not found');
+                $accessDenied = true;
             }
 
             $objectives = MstObjective::with(['practices.activities'])->get();
-            return view('assessment-eval.show', compact('objectives', 'evalId'));
+            return view('assessment-eval.show', compact('objectives', 'evalId', 'evaluation', 'accessDenied'));
         } catch (\Exception $e) {
-            Log::error("Failed to load assessment", [
-                'eval_id' => $evalId,
-                'user_id' => Auth::id(),
-                'error' => $e->getMessage(),
-                'trace' => $e->getTraceAsString()
+            \Illuminate\Support\Facades\Log::error('Failed to load assessment', [
+                'eval_id' => $evalId, 'error' => $e->getMessage()
             ]);
             return redirect()->route('assessment-eval.list')->withErrors(['error' => 'Failed to load assessment: ' . $e->getMessage()]);
         }
