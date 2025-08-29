@@ -230,7 +230,28 @@ Route::get('/akses-df/toggle', function () {
     return back();
 })->name('akses-df.toggle');
 
-// Assessment Evaluation routes
-Route::get('/assessment-eval', [AssessmentEvalController::class, 'index'])
+// --- Assessment Evaluation routes (resolved & merged) ---
+Route::get('/assessment-eval', [AssessmentEvalController::class, 'listAssessments'])
      ->name('assessment-eval.index')
      ->middleware('auth');
+
+Route::post('/assessment-eval/create', [AssessmentEvalController::class, 'createAssessment'])
+     ->name('assessment-eval.create')
+     ->middleware('auth');
+
+Route::get('/assessment-eval/{evalId}', [AssessmentEvalController::class, 'showAssessment'])
+     ->name('assessment-eval.show')
+     ->middleware('auth');
+
+Route::post('/assessment-eval/{evalId}/save', [AssessmentEvalController::class, 'save'])
+     ->name('assessment-eval.save')
+     ->middleware('auth');
+
+Route::get('/assessment-eval/{evalId}/load', [AssessmentEvalController::class, 'load'])
+     ->name('assessment-eval.load')
+     ->middleware('auth');
+
+Route::delete('/assessment-eval/{evalId}', [AssessmentEvalController::class, 'delete'])
+     ->name('assessment-eval.delete')
+     ->middleware('auth');
+// --- end assessment-eval ---

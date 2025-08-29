@@ -1,15 +1,32 @@
 @extends('layouts.app')
 
 @section('content')
+<meta name="csrf-token" content="{{ csrf_token() }}">
 <div class="container mx-auto p-6">
     {{-- Main Card --}}
     <div class="card shadow-sm mb-4">
         <div class="card-header bg-primary text-white py-3">
             <div class="d-flex justify-content-between align-items-center">
-                <h3 class="mb-0">COBIT 2019 Assessment Evaluation</h3>
-                <span class="badge bg-light text-dark px-3 py-2">
-                    {{ $objectives->count() }} Objectives to Evaluate
-                </span>
+                <div>
+                    <h3 class="mb-0">COBIT 2019 Assessment Evaluation</h3>
+                    <small class="opacity-75">Assessment ID: #{{ $evalId }}</small>
+                </div>
+                <div class="d-flex align-items-center gap-3">
+                    <span class="badge bg-light text-dark px-3 py-2">
+                        {{ $objectives->count() }} Objectives to Evaluate
+                    </span>
+                    <div class="btn-group" role="group">
+                        <a href="{{ route('assessment-eval.list') }}" class="btn btn-light btn-sm" title="Back to List">
+                            <i class="fas fa-arrow-left me-1"></i>Back
+                        </a>
+                        <button type="button" class="btn btn-light btn-sm" id="save-assessment" title="Save Assessment">
+                            <i class="fas fa-save me-1"></i>Save
+                        </button>
+                        <button type="button" class="btn btn-light btn-sm" id="load-assessment" title="Load Assessment">
+                            <i class="fas fa-sync me-1"></i>Reload
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="card-body">
@@ -59,7 +76,6 @@
     <div class="row" id="objectives-container">
         @foreach($objectives as $objective)
             @php
-                // Extract domain from objective_id (e.g., EDM01 -> EDM)
                 $domain = preg_replace('/\d+/', '', $objective->objective_id);
             @endphp
             <div class="col-12 mb-4 objective-card" data-domain="{{ $domain }}" data-objective-id="{{ $objective->objective_id }}">
@@ -123,7 +139,6 @@
                     {{-- Card Footer with Multi-Level Assessment --}}
                     <div class="card-footer bg-light">
                         @php
-                            // Get all capability levels that exist for this objective
                             $availableLevels = [];
                             foreach($objective->practices as $practice) {
                                 if($practice->activities) {
@@ -135,8 +150,8 @@
                                 }
                             }
                             sort($availableLevels);
-                            $minLevel = min($availableLevels ?? [2]); // Find the minimum available level
-                            $maxLevel = min(5, max($availableLevels ?? [2])); // Cap at 5, default to 2
+                            $minLevel = min($availableLevels ?? [2]);
+                            $maxLevel = min(5, max($availableLevels ?? [2]));
                         @endphp
                         
                         @for($level = $minLevel; $level <= $maxLevel; $level++)
@@ -190,10 +205,6 @@
                                                 </div>
                                                 <div class="col-md-4 text-end">
                                                     <div class="capability-score-display">
-                                                        <small class="text-muted d-block">Current Capability Level</small>
-                                                        <span class="badge fs-5 px-3 py-2 bg-danger" id="capability-score-{{ $objective->objective_id }}-{{ $level }}">
-                                                            Level <span class="level-number">1</span>
-                                                        </span>
                                                         <div class="mt-2">
                                                             <small class="text-muted d-block">Average Score</small>
                                                             <span class="badge bg-secondary" id="average-score-{{ $objective->objective_id }}-{{ $level }}">
@@ -271,6 +282,27 @@
                                                                         </div>
                                                                     </div>
                                                                 </div>
+                                                                {{-- Evidence / Notes section --}}
+                                                                <div class="row mt-3">
+                                                                    <div class="col-md-1"></div>
+                                                                    <div class="col-md-11">
+                                                                        <div class="evidence-notes-section">
+                                                                            <label for="evidence_{{ $activity->activity_id }}" class="form-label text-muted">
+                                                                                <i class="fas fa-clipboard-list me-1"></i>
+                                                                                <small><strong>Evidence / Notes:</strong></small>
+                                                                            </label>
+                                                                            <textarea 
+                                                                                class="form-control form-control-sm evidence-notes" 
+                                                                                id="evidence_{{ $activity->activity_id }}" 
+                                                                                name="evidence_{{ $activity->activity_id }}"
+                                                                                data-activity-id="{{ $activity->activity_id }}"
+                                                                                data-objective-id="{{ $objective->objective_id }}"
+                                                                                data-level="{{ $level }}"
+                                                                                rows="2" 
+                                                                                placeholder="Enter evidence, documentation references, or notes to support your rating..."></textarea>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
                                                             </div>
                                                             @php $activityCounter++; @endphp
                                                         @endforeach
@@ -307,9 +339,10 @@
 
 <script>
 class COBITAssessmentManager {
-    constructor() {
+    constructor(evalId) {
         this.assessmentData = {};
-        this.levelScores = {}; // Track scores by objective and level
+        this.levelScores = {};
+        this.currentEvalId = evalId;
         this.init();
     }
 
@@ -318,10 +351,11 @@ class COBITAssessmentManager {
         this.setupAssessmentToggles();
         this.setupActivityRating();
         this.initializeDefaultStates();
+        this.setupSaveLoadButtons();
+        this.loadAssessment();
     }
 
     initializeDefaultStates() {
-        // Initialize all capability levels with default N (0) scores
         const objectiveCards = document.querySelectorAll('.objective-card');
         objectiveCards.forEach(card => {
             const objectiveId = card.getAttribute('data-objective-id');
@@ -333,6 +367,9 @@ class COBITAssessmentManager {
                 this.updateLevelDisplay(objectiveId, level);
                 this.checkLevelLock(objectiveId, level);
             });
+            
+            // Update overall objective capability level
+            this.updateObjectiveCapabilityLevel(objectiveId);
         });
     }
 
@@ -344,9 +381,189 @@ class COBITAssessmentManager {
             this.levelScores[objectiveId][level] = {
                 letter: 'N',
                 score: 0.00,
-                activities: {}
+                activities: {},
+                evidence: {}
             };
         }
+    }
+
+    setupSaveLoadButtons() {
+        const saveBtn = document.getElementById('save-assessment');
+        const loadBtn = document.getElementById('load-assessment');
+
+        if (saveBtn) {
+            saveBtn.addEventListener('click', () => this.saveAssessment());
+        }
+
+        if (loadBtn) {
+            loadBtn.addEventListener('click', () => this.loadAssessment());
+        }
+    }
+
+    async saveAssessment() {
+        try {
+            const assessmentData = {
+                assessmentData: this.levelScores,
+                notes: this.getNotesData()
+            };
+
+            const response = await fetch(`/assessment-eval/${this.currentEvalId}/save`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                },
+                body: JSON.stringify(assessmentData)
+            });
+
+            const result = await response.json();
+
+            if (response.ok) {
+                this.showNotification('Assessment saved successfully!', 'success');
+            } else {
+                this.showNotification(result.message || 'Failed to save assessment', 'error');
+            }
+        } catch (error) {
+            console.error('Save error:', error);
+            this.showNotification('Failed to save assessment', 'error');
+        }
+    }
+
+    async loadAssessment() {
+        try {
+            const response = await fetch(`/assessment-eval/${this.currentEvalId}/load`, {
+                method: 'GET',
+                headers: {
+                    'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+                }
+            });
+
+            const result = await response.json();
+
+            if (response.ok && result.data) {
+                this.populateAssessmentData(result.data);
+                if (event && event.target && event.target.id === 'load-assessment') {
+                    this.showNotification('Assessment loaded successfully!', 'success');
+                }
+            } else if (!response.ok) {
+                console.log('No existing data found or error loading');
+            }
+        } catch (error) {
+            console.error('Load error:', error);
+            if (event && event.target && event.target.id === 'load-assessment') {
+                this.showNotification('Failed to load assessment', 'error');
+            }
+        }
+    }
+
+    populateAssessmentData(data) {
+        this.levelScores = {};
+        
+        document.querySelectorAll('.activity-rating').forEach(input => input.checked = false);
+        document.querySelectorAll('.evidence-notes').forEach(textarea => textarea.value = '');
+
+        const objectiveCards = document.querySelectorAll('.objective-card');
+        objectiveCards.forEach(card => {
+            const objectiveId = card.getAttribute('data-objective-id');
+            const levelSections = card.querySelectorAll('.capability-level-section');
+            
+            levelSections.forEach(section => {
+                const level = parseInt(section.getAttribute('data-level'));
+                this.initializeLevelScore(objectiveId, level);
+                
+                const activityInputs = section.querySelectorAll('.activity-rating');
+                const activityIds = new Set();
+                activityInputs.forEach(input => {
+                    const activityId = input.getAttribute('data-activity-id');
+                    activityIds.add(activityId);
+                });
+                
+                activityIds.forEach(activityId => {
+                    this.levelScores[objectiveId][level].activities[activityId] = 0;
+                });
+            });
+        });
+
+        if (data.notes) {
+            Object.keys(data.notes).forEach(activityId => {
+                const textarea = document.querySelector(`textarea[data-activity-id="${activityId}"]`);
+                if (textarea && data.notes[activityId]) {
+                    textarea.value = data.notes[activityId];
+                }
+            });
+        }
+
+        if (data.activityData) {
+            Object.keys(data.activityData).forEach(activityId => {
+                const activityData = data.activityData[activityId];
+                const levelAchieved = activityData.level_achieved;
+                const capabilityLevel = activityData.capability_lvl;
+                const objectiveId = activityData.objective_id;
+                
+                const radioInput = document.querySelector(`input[name="activity_${activityId}"][value="${levelAchieved}"]`);
+                if (radioInput && objectiveId && capabilityLevel) {
+                    radioInput.checked = true;
+                    
+                    if (this.levelScores[objectiveId] && this.levelScores[objectiveId][capabilityLevel]) {
+                        this.levelScores[objectiveId][capabilityLevel].activities[activityId] = this.getRatingValue(levelAchieved);
+                        
+                        if (activityData.notes) {
+                            this.levelScores[objectiveId][capabilityLevel].evidence[activityId] = activityData.notes;
+                        }
+                        
+                        this.updateActivityScore(activityId, levelAchieved);
+                    }
+                }
+            });
+        }
+
+        this.updateAllCalculations();
+    }
+
+    updateAllCalculations() {
+        const objectiveCards = document.querySelectorAll('.objective-card');
+        objectiveCards.forEach(card => {
+            const objectiveId = card.getAttribute('data-objective-id');
+            const levelSections = card.querySelectorAll('.capability-level-section');
+            
+            levelSections.forEach(section => {
+                const level = parseInt(section.getAttribute('data-level'));
+                this.updateLevelCapability(objectiveId, level);
+                this.checkLevelLock(objectiveId, level);
+            });
+            
+            // Update overall objective capability level
+            this.updateObjectiveCapabilityLevel(objectiveId);
+        });
+    }
+
+    getNotesData() {
+        const notes = {};
+        document.querySelectorAll('textarea[data-activity-id]').forEach(textarea => {
+            const activityId = textarea.getAttribute('data-activity-id');
+            if (textarea.value.trim()) {
+                notes[activityId] = textarea.value.trim();
+            }
+        });
+        return notes;
+    }
+
+    showNotification(message, type = 'info') {
+        const notification = document.createElement('div');
+        notification.className = `alert alert-${type === 'error' ? 'danger' : type} alert-dismissible fade show position-fixed`;
+        notification.style.cssText = 'top: 20px; right: 20px; z-index: 9999; min-width: 300px;';
+        notification.innerHTML = `
+            ${message}
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        `;
+
+        document.body.appendChild(notification);
+
+        setTimeout(() => {
+            if (notification.parentNode) {
+                notification.remove();
+            }
+        }, 5000);
     }
 
     setupDomainFiltering() {
@@ -356,7 +573,6 @@ class COBITAssessmentManager {
 
         filterButtons.forEach(button => {
             button.addEventListener('click', () => {
-                // Update active button
                 filterButtons.forEach(btn => {
                     btn.classList.remove('active', 'btn-primary');
                     btn.classList.add('btn-outline-primary');
@@ -368,7 +584,6 @@ class COBITAssessmentManager {
                 const selectedDomain = button.getAttribute('data-domain');
                 let visibleCount = 0;
 
-                // Filter cards
                 objectiveCards.forEach(card => {
                     const cardDomain = card.getAttribute('data-domain');
                     
@@ -380,7 +595,6 @@ class COBITAssessmentManager {
                     }
                 });
 
-                // Show/hide no results message
                 noResultsDiv.style.display = visibleCount === 0 ? 'block' : 'none';
             });
         });
@@ -397,20 +611,17 @@ class COBITAssessmentManager {
                 const icon = button.querySelector('.toggle-icon');
                 const text = button.querySelector('.toggle-text');
                 
-                // Check if level is locked
                 if (text.textContent === 'Locked') {
-                    return; // Don't toggle if locked
+                    return;
                 }
                 
                 if (assessmentSection.style.display === 'none' || !assessmentSection.style.display) {
-                    // Show assessment
                     assessmentSection.style.display = 'block';
                     assessmentSection.style.animation = 'slideDown 0.3s ease-out';
                     icon.classList.remove('fa-chevron-down');
                     icon.classList.add('fa-chevron-up');
                     text.textContent = 'Hide Assessment';
                 } else {
-                    // Hide assessment
                     assessmentSection.style.display = 'none';
                     icon.classList.remove('fa-chevron-up');
                     icon.classList.add('fa-chevron-down');
@@ -423,6 +634,7 @@ class COBITAssessmentManager {
     setupActivityRating() {
         const ratingInputs = document.querySelectorAll('.activity-rating');
         const clearButtons = document.querySelectorAll('.clear-rating');
+        const evidenceTextareas = document.querySelectorAll('.evidence-notes');
         
         ratingInputs.forEach(input => {
             input.addEventListener('change', () => {
@@ -444,15 +656,24 @@ class COBITAssessmentManager {
                 const objectiveId = button.getAttribute('data-objective-id');
                 const level = parseInt(button.getAttribute('data-level'));
                 
-                // Clear the radio button selection
                 const radioButtons = document.querySelectorAll(`input[name="activity_${activityId}"]`);
                 radioButtons.forEach(radio => radio.checked = false);
                 
-                // Remove from assessment data
                 this.clearActivityRating(objectiveId, level, activityId);
                 this.updateActivityScore(activityId, null);
                 this.updateLevelCapability(objectiveId, level);
                 this.checkAllLevelLocks(objectiveId);
+            });
+        });
+
+        evidenceTextareas.forEach(textarea => {
+            textarea.addEventListener('input', () => {
+                const activityId = textarea.getAttribute('data-activity-id');
+                const objectiveId = textarea.getAttribute('data-objective-id');
+                const level = parseInt(textarea.getAttribute('data-level'));
+                const evidence = textarea.value;
+                
+                this.setActivityEvidence(objectiveId, level, activityId, evidence);
             });
         });
     }
@@ -462,9 +683,20 @@ class COBITAssessmentManager {
         this.levelScores[objectiveId][level].activities[activityId] = this.getRatingValue(rating);
     }
 
+    setActivityEvidence(objectiveId, level, activityId, evidence) {
+        this.initializeLevelScore(objectiveId, level);
+        this.levelScores[objectiveId][level].evidence[activityId] = evidence;
+    }
+
     clearActivityRating(objectiveId, level, activityId) {
         if (this.levelScores[objectiveId] && this.levelScores[objectiveId][level]) {
             delete this.levelScores[objectiveId][level].activities[activityId];
+            delete this.levelScores[objectiveId][level].evidence[activityId];
+            
+            const evidenceTextarea = document.getElementById(`evidence_${activityId}`);
+            if (evidenceTextarea) {
+                evidenceTextarea.value = '';
+            }
         }
     }
 
@@ -487,18 +719,15 @@ class COBITAssessmentManager {
         const totalActivities = this.getTotalActivitiesForLevel(objectiveId, level);
         const ratedActivities = Object.keys(levelData.activities).length;
         
-        // Calculate average score (including unrated as 0)
         let totalScore = 0;
         if (levelData.activities) {
             totalScore = Object.values(levelData.activities).reduce((sum, score) => sum + score, 0);
         }
         const averageScore = totalActivities > 0 ? totalScore / totalActivities : 0;
         
-        // Update level data
         levelData.score = averageScore;
         levelData.letter = this.getScoreLetter(averageScore);
         
-        // Update displays
         this.updateLevelDisplay(objectiveId, level);
         this.updateLevelStats(objectiveId, level, averageScore, ratedActivities, totalActivities);
     }
@@ -514,13 +743,6 @@ class COBITAssessmentManager {
     }
 
     updateLevelStats(objectiveId, level, averageScore, ratedActivities, totalActivities) {
-        // Update capability level badge
-        const capabilityLevel = this.calculateCapabilityFromScore(averageScore);
-        const levelBadge = document.getElementById(`capability-score-${objectiveId}-${level}`);
-        if (levelBadge) {
-            this.updateCapabilityBadge(levelBadge, capabilityLevel);
-        }
-        
         // Update average score display
         const averageScoreElement = document.getElementById(`average-score-${objectiveId}-${level}`);
         if (averageScoreElement) {
@@ -528,29 +750,57 @@ class COBITAssessmentManager {
             averageScoreElement.className = `badge ${this.getScoreColorClass(averageScore)}`;
         }
         
-        // Update activities count
+        // Update activities count display
         const activitiesCountElement = document.getElementById(`activities-count-${objectiveId}-${level}`);
         if (activitiesCountElement) {
             activitiesCountElement.textContent = `${ratedActivities}/${totalActivities}`;
             const completionRatio = totalActivities > 0 ? ratedActivities / totalActivities : 0;
             activitiesCountElement.className = `badge ${this.getCompletionColorClass(completionRatio)}`;
         }
+        
+        // Update the overall objective capability level
+        this.updateObjectiveCapabilityLevel(objectiveId);
+    }
+
+    updateObjectiveCapabilityLevel(objectiveId) {
+        // Find the highest level that is at least L (Largely)
+        let highestLevel = 1; // Default to level 1
+        
+        // Get all levels for this objective
+        const objectiveCard = document.querySelector(`[data-objective-id="${objectiveId}"].objective-card`);
+        if (objectiveCard) {
+            const levelSections = objectiveCard.querySelectorAll('.capability-level-section');
+            
+            levelSections.forEach(section => {
+                const level = parseInt(section.getAttribute('data-level'));
+                const levelData = this.levelScores[objectiveId] && this.levelScores[objectiveId][level];
+                
+                if (levelData && levelData.score >= 0.50) { // L (Largely) threshold is 0.50
+                    highestLevel = Math.max(highestLevel, level);
+                }
+            });
+        }
+        
+        // Update the objective capability level badge
+        const capabilityBadge = document.getElementById(`capability-level-${objectiveId}`);
+        if (capabilityBadge) {
+            this.updateCapabilityBadge(capabilityBadge, highestLevel);
+        }
     }
 
     getMinLevelForObjective(objectiveId) {
-        // Get minimum level from the data attribute
         const firstButton = document.querySelector(`[data-objective-id="${objectiveId}"].toggle-level-details`);
         if (firstButton) {
             return parseInt(firstButton.getAttribute('data-min-level')) || 2;
         }
-        return 2; // Default fallback
+        return 2;
     }
 
     checkLevelLock(objectiveId, level) {
         const minLevel = this.getMinLevelForObjective(objectiveId);
         
         if (level === minLevel) {
-            return; // First level is never locked
+            return;
         }
         
         const previousLevel = level - 1;
@@ -573,7 +823,8 @@ class COBITAssessmentManager {
                 this.levelScores[objectiveId][level] = {
                     letter: 'N',
                     score: 0.00,
-                    activities: {}
+                    activities: {},
+                    evidence: {}
                 };
             } else {
                 button.querySelector('.toggle-text').textContent = 'Start Assessment';
@@ -606,11 +857,10 @@ class COBITAssessmentManager {
         if (score <= 0.15) return 1;
         if (score <= 0.5) return 1;
         if (score <= 0.85) return 2;
-        return 2; // For now, focusing on Level 2
+        return 2;
     }
 
     updateCapabilityBadge(badge, level) {
-        // Remove all level classes
         badge.className = badge.className.replace(/bg-(danger|warning|info|primary|success)/g, '');
         
         const levelConfig = {
@@ -633,7 +883,7 @@ class COBITAssessmentManager {
     getTotalActivitiesForLevel(objectiveId, level) {
         const assessmentSection = document.getElementById(`assessment-${objectiveId}-${level}`);
         if (assessmentSection) {
-            return assessmentSection.querySelectorAll('.activity-rating').length / 4; // Divide by 4 since each activity has 4 radio buttons
+            return assessmentSection.querySelectorAll('.activity-rating').length / 4;
         }
         return 0;
     }
@@ -663,9 +913,8 @@ class COBITAssessmentManager {
     }
 }
 
-// Initialize when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    new COBITAssessmentManager();
+    new COBITAssessmentManager({{ $evalId }});
 });
 </script>
 
@@ -805,6 +1054,37 @@ document.addEventListener('DOMContentLoaded', () => {
 .btn-group .btn-sm {
     font-size: 0.8rem;
     padding: 0.25rem 0.5rem;
+}
+
+/* Evidence/Notes section styling */
+.evidence-notes-section {
+    background-color: #f8f9fa;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
+    border-left: 2px solid #6c757d;
+}
+
+.evidence-notes-section .form-label {
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+}
+
+.evidence-notes {
+    border: 1px solid #dee2e6;
+    border-radius: 0.375rem;
+    resize: vertical;
+    min-height: 60px;
+    transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+
+.evidence-notes:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25);
+}
+
+.evidence-notes::placeholder {
+    color: #6c757d;
+    font-style: italic;
 }
 
 /* Smooth animations */

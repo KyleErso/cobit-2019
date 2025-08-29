@@ -50,7 +50,7 @@
               <!-- Assessment Card -->
               <div class="col-md-6 col-xl-4">
                 <div class="card border-0 shadow p-3 h-100 transition-all hover-lift">
-                  <a href="#" id="assessment-btn" class="text-decoration-none">
+                  <a href="{{ route('assessment-eval.index') }}" class="text-decoration-none">
                     <div class="card-body text-center p-4">
                       <div class="icon-circle bg-info-light mb-3 mx-auto">
                         <i class="fas fa-clipboard-check fa-2x text-info"></i>
