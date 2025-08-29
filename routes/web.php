@@ -234,7 +234,8 @@ Route::get('/akses-df/toggle', function () {
 Route::get('/assessment-eval', [AssessmentEvalController::class, 'index'])
      ->name('assessment-eval.index')
      ->middleware('auth');
-Route::get('/assessment-eval', [AssessmentEvalController::class, 'listAssessments'])
+
+Route::get('/assessment-eval/list', [AssessmentEvalController::class, 'listAssessments'])
      ->name('assessment-eval.list')
      ->middleware('auth');
 
