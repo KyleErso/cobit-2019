@@ -7,6 +7,7 @@ use App\Services\EvaluationService;
 use App\Models\MstObjective;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class AssessmentEvalController extends Controller
 {
@@ -37,8 +38,25 @@ class AssessmentEvalController extends Controller
     {
         try {
             $evaluation = $this->evaluationService->createNewEvaluation(Auth::id());
+            
+            $verifyEvaluation = $this->evaluationService->getEvaluationById($evaluation->eval_id);
+            
+            if (!$verifyEvaluation || $verifyEvaluation->user_id !== Auth::id()) {
+                Log::error("Created evaluation verification failed", [
+                    'eval_id' => $evaluation->eval_id,
+                    'user_id' => Auth::id(),
+                    'verification_result' => $verifyEvaluation ? 'found but wrong user' : 'not found'
+                ]);
+                throw new \Exception('Failed to verify created assessment');
+            }
+            
             return redirect()->route('assessment-eval.show', ['evalId' => $evaluation->eval_id]);
         } catch (\Exception $e) {
+            Log::error("Failed to create assessment", [
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return redirect()->back()->withErrors(['error' => 'Failed to create assessment: ' . $e->getMessage()]);
         }
     }
@@ -51,13 +69,33 @@ class AssessmentEvalController extends Controller
         try {
             $evaluation = $this->evaluationService->getEvaluationById($evalId);
             
-            if (!$evaluation || $evaluation->user_id !== Auth::id()) {
+            if (!$evaluation) {
+                Log::error("Assessment not found in database", [
+                    'eval_id' => $evalId,
+                    'user_id' => Auth::id(),
+                    'all_evaluations' => $this->evaluationService->getUserEvaluations()
+                ]);
+                abort(404, 'Assessment not found');
+            }
+            
+            if ($evaluation->user_id !== Auth::id()) {
+                Log::error("Assessment access denied", [
+                    'eval_id' => $evalId,
+                    'requesting_user_id' => Auth::id(),
+                    'owner_user_id' => $evaluation->user_id
+                ]);
                 abort(404, 'Assessment not found');
             }
 
             $objectives = MstObjective::with(['practices.activities'])->get();
             return view('assessment-eval.show', compact('objectives', 'evalId'));
         } catch (\Exception $e) {
+            Log::error("Failed to load assessment", [
+                'eval_id' => $evalId,
+                'user_id' => Auth::id(),
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
             return redirect()->route('assessment-eval.list')->withErrors(['error' => 'Failed to load assessment: ' . $e->getMessage()]);
         }
     }

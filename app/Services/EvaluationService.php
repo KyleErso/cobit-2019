@@ -6,6 +6,7 @@ use App\Models\MstEval;
 use App\Models\TrsActivityeval;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 
 class EvaluationService
 {
@@ -27,17 +28,19 @@ class EvaluationService
             );
 
             if (isset($data['activity_evaluations'])) {
+                // First, remove all existing activity evaluations for this assessment
+                TrsActivityeval::where('eval_id', $evaluation->eval_id)->delete();
+                
                 foreach ($data['activity_evaluations'] as $activityData) {
-                    TrsActivityeval::updateOrCreate(
-                        [
+                    // Only save activities that are not rated as 'N' (None)
+                    if ($activityData['level_achieved'] !== 'N') {
+                        TrsActivityeval::create([
                             'eval_id' => $evaluation->eval_id,
-                            'activity_id' => $activityData['activity_id']
-                        ],
-                        [
+                            'activity_id' => $activityData['activity_id'],
                             'level_achieved' => $activityData['level_achieved'],
                             'notes' => $activityData['notes'] ?? null
-                        ]
-                    );
+                        ]);
+                    }
                 }
             }
 
@@ -101,11 +104,14 @@ class EvaluationService
                         foreach ($levelData['activities'] as $activityId => $score) {
                             $levelAchieved = $this->scoreToLetter($score);
                             
-                            $activityEvaluations[] = [
-                                'activity_id' => $activityId,
-                                'level_achieved' => $levelAchieved,
-                                'notes' => $notes[$activityId] ?? null
-                            ];
+                            // Only include activities that are not rated as 'N' (None)
+                            if ($levelAchieved !== 'N') {
+                                $activityEvaluations[] = [
+                                    'activity_id' => $activityId,
+                                    'level_achieved' => $levelAchieved,
+                                    'notes' => $notes[$activityId] ?? null
+                                ];
+                            }
                         }
                     }
                 }
@@ -116,11 +122,14 @@ class EvaluationService
                     foreach ($levelData['activities'] as $activityId => $score) {
                         $levelAchieved = $this->scoreToLetter($score);
                         
-                        $activityEvaluations[] = [
-                            'activity_id' => $activityId,
-                            'level_achieved' => $levelAchieved,
-                            'notes' => $levelData['evidence'][$activityId] ?? null
-                        ];
+                        // Only include activities that are not rated as 'N' (None)
+                        if ($levelAchieved !== 'N') {
+                            $activityEvaluations[] = [
+                                'activity_id' => $activityId,
+                                'level_achieved' => $levelAchieved,
+                                'notes' => $levelData['evidence'][$activityId] ?? null
+                            ];
+                        }
                     }
                 }
             }
@@ -162,9 +171,48 @@ class EvaluationService
      */
     public function createNewEvaluation($userId)
     {
-        return MstEval::create([
-            'user_id' => $userId
-        ]);
+        try {
+            DB::beginTransaction();
+            
+            $evaluation = MstEval::create([
+                'user_id' => $userId
+            ]);
+            
+            DB::commit();
+            
+            if (app()->environment('production')) {
+                usleep(100000);
+            }
+            
+            $maxRetries = 3;
+            $retryCount = 0;
+            
+            while ($retryCount < $maxRetries) {
+                $verificationEvaluation = MstEval::where('eval_id', $evaluation->eval_id)
+                    ->where('user_id', $userId)
+                    ->first();
+                    
+                if ($verificationEvaluation) {
+                    return $verificationEvaluation;
+                }
+                
+                $retryCount++;
+                if ($retryCount < $maxRetries) {
+                    usleep(50000);
+                }
+            }
+            
+            throw new \Exception("Created evaluation could not be verified after {$maxRetries} attempts");
+            
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Log::error("Failed to create new evaluation", [
+                'user_id' => $userId,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            throw $e;
+        }
     }
 
     /**
@@ -172,7 +220,15 @@ class EvaluationService
      */
     public function getEvaluationById($evalId)
     {
-        return MstEval::find($evalId);
+        try {
+            return MstEval::where('eval_id', $evalId)->first();
+        } catch (\Exception $e) {
+            Log::error("Failed to get evaluation by ID", [
+                'eval_id' => $evalId,
+                'error' => $e->getMessage()
+            ]);
+            return null;
+        }
     }
 
     /**
