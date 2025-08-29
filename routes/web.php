@@ -22,6 +22,7 @@ use App\Http\Controllers\cobit2019\Step2Controller;
 use App\Http\Controllers\cobit2019\Step3Controller;
 use App\Http\Controllers\cobit2019\Step4Controller;
 use App\Http\Controllers\cobit2019\MstObjectiveController;
+use App\Http\Controllers\AssessmentEval\AssessmentEvalController;
 
 // Public routes
 
@@ -228,3 +229,8 @@ Route::get('/akses-df/toggle', function () {
     session(['jabatan_df_middleware_enabled' => !$current]);
     return back();
 })->name('akses-df.toggle');
+
+// Assessment Evaluation routes
+Route::get('/assessment-eval', [AssessmentEvalController::class, 'index'])
+     ->name('assessment-eval.index')
+     ->middleware('auth');

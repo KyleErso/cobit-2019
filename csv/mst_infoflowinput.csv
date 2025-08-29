@@ -1,2 +1,51 @@
 input_id,practice_id,from,description
 1,"""EDM01.01""","""MEA03.02""","""Communications of changed compliance requirements"""
+2,"""EDM01.01""","""Outside COBIT""","""• Constitution/bylaws/statutes of organization
+• Governance/decisionmaking model
+• Laws/regulations
+• Business environment trends"""
+3,"""EDM01.02""",,
+4,"""EDM01.03""","""MEA01.04""","""Performance reports"""
+5,"""EDM01.03""","""MEA01.05""","""Status and results of actions"""
+6,"""EDM01.03""","""MEA02.01""","""• Results of internal control monitoring and reviews
+• Results of benchmarking and other evaluations"""
+7,"""EDM01.03""","""MEA02.03""","""Results of reviews of self-assessments"""
+8,"""EDM01.03""","""MEA03.03""","""Compliance confirmations"""
+9,"""EDM01.03""","""MEA03.04""","""• Compliance assurance reports
+• Reports of noncompliance issues and root causes"""
+10,"""EDM01.03""","""MEA04.02""","""Assurance plans"""
+11,"""EDM01.03""","""Outside COBIT""","""• Audit reports
+• Obligations"""
+12,"""EDM02.01""","""APO02.05""","""• Definition of strategic initiatives
+• Risk assessment initiatives
+• Strategic road map"""
+13,"""EDM02.01""","""APO09.01""","""Definitions of standard services"""
+14,"""EDM02.01""","""BAI03.11""","""Service definitions"""
+15,"""EDM02.01""","""EDM02.03""","""Investment types and criteria"""
+16,"""EDM02.02""","""APO02.05""","""Strategic road map"""
+17,"""EDM02.02""","""APO05.01""","""Investment return expectations"""
+18,"""EDM02.02""","""APO05.02""","""Selected programs with ROI milestones"""
+19,"""EDM02.02""","""APO05.05""","""Benefit results and related communications"""
+20,"""EDM02.02""","""BAI01.06""","""Stage-gate review results"""
+21,"""EDM02.03""","""APO05.03""","""Investment portfolio performance reports"""
+22,"""EDM02.03""","""EDM02.01""","""Defined investment mix"""
+23,"""EDM02.04""","""APO05.03""","""Investment portfolio performance reports"""
+24,"""EDM03.01""","""APO12.01""","""Emerging risk issues and factors"""
+25,"""EDM03.01""","""Outside COBIT""","""Enterprise risk management (ERM) principles"""
+26,"""EDM03.02""","""APO12.03""","""Aggregated risk profile, including status of risk management actions"""
+27,"""EDM03.02""","""Outside COBIT""","""Enterprise risk management (ERM) profiles and mitigation plans"""
+28,"""EDM03.03""","""APO12.02""","""Risk analysis results"""
+29,"""EDM03.03""","""APO12.04""","""• Risk analysis and risk profile reports for stakeholders
+• Results of third-party risk assessments
+• Opportunities for acceptance of greater risk"""
+30,"""EDM04.01""","""APO002.04""","""Gaps and changes required to realize target capability"""
+31,"""EDM04.01""","""APO007.03""","""Skill development plans"""
+32,"""EDM04.01""","""APO010.02""","""Decision results of vendor evaluations"""
+33,"""EDM04.02""",,
+34,"""EDM04.03""",,
+35,"""EDM05.01""","""EDM02.04""","""Actions to improve value delivery"""
+36,"""EDM05.01""","""EDM03.03""","""Risk management issues for the board"""
+37,"""EDM05.01""","""EDM04.03""","""Feedback on allocation and effectiveness of resources and capabilities"""
+38,"""EDM05.02""","""APO12.04""","""Risk analysis and risk profile reports for stakeholders"""
+39,"""EDM05.03""","""MEA04.08""","""• Assurance review results
+• Assurance review report"""
