@@ -35,51 +35,64 @@
     @endif
 
     {{-- Assessments List --}}
-    @if($evaluations->count() > 0)
+    @if(isset($evaluations) && $evaluations->count() > 0)
         <div class="row">
             @foreach($evaluations as $evaluation)
                 <div class="col-md-6 col-lg-4 mb-4">
                     <div class="card h-100 shadow-sm">
                         <div class="card-header bg-light">
                             <div class="d-flex justify-content-between align-items-center">
-                                <h6 class="mb-0 fw-bold">
-                                    <i class="fas fa-file-alt text-primary me-2"></i>
-                                    Assessment #{{ $evaluation->eval_id }}
-                                </h6>
+                                <div>
+                                    <h6 class="mb-0 fw-bold">
+                                        <i class="fas fa-file-alt text-primary me-2"></i>
+                                        Assessment #{{ $evaluation->eval_id ?? '—' }}
+                                    </h6>
+                                    <small class="text-muted d-block">
+                                        <strong>DB ID:</strong> {{ $evaluation->id ?? '—' }} &middot;
+                                        <strong>Eval ID:</strong> {{ $evaluation->eval_id ?? '—' }}
+                                    </small>
+                                </div>
                             </div>
                         </div>
                         <div class="card-body">
                             <div class="mb-3">
                                 <small class="text-muted">
-                                    <strong>Created:</strong> {{ $evaluation->created_at->format('M d, Y g:i A') }}
+                                    <strong>Created:</strong> {{ optional($evaluation->created_at)->format('M d, Y g:i A') ?? '—' }}
                                 </small>
                                 <br>
                                 <small class="text-muted">
-                                    <strong>Last Updated:</strong> {{ $evaluation->updated_at->format('M d, Y g:i A') }}
+                                    <strong>Last Updated:</strong> {{ optional($evaluation->updated_at)->format('M d, Y g:i A') ?? '—' }}
                                 </small>
                             </div>
                             
                             @php
-                                $achievementCounts = $evaluation->activityEvaluations->groupBy('level_achieved')->map->count();
-                                
-                                // Get total ratable activities from the database
+                                // Safety: ensure activityEvaluations relation exists and is a collection
+                                $activityEvaluations = $evaluation->activityEvaluations ?? collect();
+                                $achievementCounts = $activityEvaluations->groupBy('level_achieved')->map->count();
+
+                                // Get total ratable activities from the database (model name as in your project)
                                 $totalRatableActivities = \App\Models\MstActivities::count();
-                                
+
                                 $ratedCounts = [
                                     'F' => $achievementCounts['F'] ?? 0,
                                     'L' => $achievementCounts['L'] ?? 0,
                                     'P' => $achievementCounts['P'] ?? 0,
                                 ];
-                                
+
                                 $totalRated = array_sum($ratedCounts);
-                                $noneCount = $totalRatableActivities - $totalRated;
-                                
-                                $percentages = [
-                                    'F' => round(($ratedCounts['F'] / $totalRatableActivities) * 100, 1),
-                                    'L' => round(($ratedCounts['L'] / $totalRatableActivities) * 100, 1),
-                                    'P' => round(($ratedCounts['P'] / $totalRatableActivities) * 100, 1),
-                                    'N' => round(($noneCount / $totalRatableActivities) * 100, 1)
-                                ];
+                                $noneCount = max(0, $totalRatableActivities - $totalRated);
+
+                                // Avoid division by zero
+                                if ($totalRatableActivities > 0) {
+                                    $percentages = [
+                                        'F' => round(($ratedCounts['F'] / $totalRatableActivities) * 100, 1),
+                                        'L' => round(($ratedCounts['L'] / $totalRatableActivities) * 100, 1),
+                                        'P' => round(($ratedCounts['P'] / $totalRatableActivities) * 100, 1),
+                                        'N' => round(($noneCount / $totalRatableActivities) * 100, 1)
+                                    ];
+                                } else {
+                                    $percentages = ['F' => 0, 'L' => 0, 'P' => 0, 'N' => 0];
+                                }
                             @endphp
                             
                             @if($totalRatableActivities > 0)
@@ -129,13 +142,14 @@
                         <div class="card-footer bg-light">
                             <div class="d-flex justify-content-between align-items-center">
                                 <a href="{{ route('assessment-eval.show', $evaluation->eval_id) }}" 
-                                   class="btn btn-primary btn-sm">
+                                   class="btn btn-primary btn-sm" title="View Assessment #{{ $evaluation->eval_id }}">
                                     <i class="fas fa-eye me-1"></i>
                                     View Assessment
                                 </a>
                                 <button class="btn btn-danger btn-sm delete-assessment" 
                                         data-eval-id="{{ $evaluation->eval_id }}"
-                                        title="Delete Assessment">
+                                        data-db-id="{{ $evaluation->id }}"
+                                        title="Delete Assessment #{{ $evaluation->eval_id }}">
                                     <i class="fas fa-trash me-1"></i>Delete
                                 </button>
                             </div>
@@ -175,26 +189,44 @@ document.addEventListener('DOMContentLoaded', function() {
         button.addEventListener('click', async function(e) {
             e.preventDefault();
             const evalId = this.getAttribute('data-eval-id');
-            console.log('Delete button clicked for eval ID:', evalId);
+            const dbId = this.getAttribute('data-db-id');
+            console.log('Delete button clicked for eval ID:', evalId, 'DB ID:', dbId);
             
-            if (confirm(`Are you sure you want to delete Assessment #${evalId}? This action cannot be undone.`)) {
+            if (!evalId && !dbId) {
+                alert('Unable to determine assessment id to delete.');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to delete Assessment #${evalId ?? dbId}? This action cannot be undone.`)) {
                 try {
-                    const response = await fetch(`/assessment-eval/${evalId}`, {
+                    // Prefer DB ID when it's numeric (common for primary keys),
+                    // otherwise fallback to evalId. This makes the frontend flexible.
+                    let idToUse = null;
+                    if (dbId && !isNaN(dbId)) {
+                        idToUse = dbId;
+                    } else {
+                        idToUse = evalId;
+                    }
+
+                    const response = await fetch(`/assessment-eval/${encodeURIComponent(idToUse)}`, {
                         method: 'DELETE',
                         headers: {
                             'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
-                            'Content-Type': 'application/json'
-                        }
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({}) // some servers expect body; safe to send empty object
                     });
 
                     const result = await response.json();
 
-                    if (result.success) {
+                    if (response.ok && result.success) {
                         showNotification('Assessment deleted successfully!', 'success');
                         setTimeout(() => {
                             window.location.reload();
-                        }, 1500);
+                        }, 1200);
                     } else {
+                        // show server message if any, fallback to generic
                         showNotification(result.message || 'Failed to delete assessment', 'error');
                     }
                 } catch (error) {
