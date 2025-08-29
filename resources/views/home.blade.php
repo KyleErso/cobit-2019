@@ -1,224 +1,176 @@
 @extends('layouts.app')
 
 @section('content')
-<div class="container">
-  <div class="row justify-content-center g-4">
-    <!-- Main Card -->
-    <div class="col-md-8">
+<div class="container-fluid">
+  <div class="row g-4">
+    <!-- Main Content -->
+    <div class="col-lg-8">
       <div class="card shadow-lg border-0 rounded-3 overflow-hidden">
-        <!-- Header Card -->
-        <div class="card-header bg-primary text-white text-center position-relative py-4">
-          <h3 class="mb-0 fw-semibold">{{ __('Selamat Datang!') }}</h3>
-          @if(Auth::user()->role === 'admin' || Auth::user()->role === 'pic')
-            <a href="{{ route('admin.assessments.index') }}"
-               class="btn btn-sm btn-secondary position-absolute"
-               style="top: 1rem; right: 1rem;">
-              <i class="fas fa-tachometer-alt me-1"></i>Dashboard
-            </a>
-          @endif
-          @if(Auth::user()->role === 'admin')
-            <a href="{{ route('admin.users.index') }}"
-               class="btn btn-sm btn-success position-absolute"
-               style="top: 1rem; right: 7.5rem;">
-              <i class="fas fa-tachometer-alt me-1"></i>Manage Users
-            </a>
-          @endif
+        <!-- Card Header -->
+        <div class="card-header bg-primary text-white py-4 position-relative">
+          <div class="d-flex justify-content-between align-items-center">
+            <h3 class="mb-0 fw-semibold">{{ __('COBIT 2019') }}</h3>
+          </div>
         </div>
 
-        <!-- Body Card -->
-        <div class="card-body p-4 p-xl-5">
-          <!-- Toolbar untuk memilih Tools -->
-          <div class="mt-4">
+        <!-- Card Body -->
+        <div class="card-body p-4">
+          <!-- Tools Section -->
+          <div class="mb-5">
             <h5 class="fw-bold text-primary text-center mb-4">Pilih Tools</h5>
-            <div class="scrollspy-example-horizontal d-flex justify-content-center"
-                 data-bs-spy="scroll"
-                 data-bs-target="#navbar-tools"
-                 data-bs-offset="0"
-                 tabindex="0"
-                 style="overflow-x: auto; white-space: nowrap;">
-              <!-- Tombol COBIT -->
-              <div class="d-inline-block mx-3" style="width: 200px;">
-                <a href="{{ route('cobit.home') }}"
-                   class="btn btn-outline-primary btn-lg px-4 py-2 fw-bold shadow-sm w-100">
-                  <img src="https://api.wakool.id/images/thumb900/2021041503045520200515230523COBIT2019_1623730934.jpg"
-                       alt="COBIT2019 Logo"
-                       class="img-fluid border">
-                </a>
+            <div class="row g-4 justify-content-center">
+              <!-- COBIT Component Card -->
+              <div class="col-md-6 col-xl-4">
+                <div class="card border-0 shadow p-3 h-100 transition-all hover-lift">
+                  <a href="{{ route('cobit2019.objectives.show', 'APO01') }}" class="text-decoration-none">
+                    <div class="card-body text-center p-4">
+                      <div class="icon-circle bg-warning-light mb-3 mx-auto">
+                        <i class="fas fa-puzzle-piece fa-2x text-warning"></i>
+                      </div>
+                      <h6 class="card-title fw-bold mb-1">COBIT Components</h6>
+                      <p class="text-muted small mb-0">Kamus komponen COBIT</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <!-- COBIT Desain Toolkit Card -->
+              <div class="col-md-6 col-xl-4">
+                <div class="card border-0 shadow p-3 h-100 transition-all hover-lift">
+                  <a href="{{ route('cobit.home') }}" class="text-decoration-none">
+                    <div class="card-body text-center p-4">
+                      <div class="icon-circle bg-danger-light mb-3 mx-auto">
+                        <i class="fas fa-cogs fa-2x text-danger"></i>
+                      </div>
+                      <h6 class="card-title fw-bold mb-1">COBIT Desain Toolkit</h6>
+                      <p class="text-muted small mb-0">Manajemen tata kelola TI</p>
+                    </div>
+                  </a>
+                </div>
+              </div>
+              <!-- Assessment Card -->
+              <div class="col-md-6 col-xl-4">
+                <div class="card border-0 shadow p-3 h-100 transition-all hover-lift">
+                  <a href="{{ route('assessment-eval.index') }}" class="text-decoration-none">
+                    <div class="card-body text-center p-4">
+                      <div class="icon-circle bg-info-light mb-3 mx-auto">
+                        <i class="fas fa-clipboard-check fa-2x text-info"></i>
+                      </div>
+                      <h6 class="card-title fw-bold mb-1">Assessment</h6>
+                      <p class="text-muted small mb-0">Evaluasi tata kelola TI</p>
+                    </div>
+                  </a>
+                </div>
               </div>
             </div>
           </div>
         </div>
 
-        <!-- Footer Card -->
-        <div class="card-footer text-center bg-opacity-5 py-3">
-          <small class="text-muted d-block mb-1">Butuh bantuan? Hubungi kami melalui:</small>
+        <!-- Card Footer -->
+        <div class="card-footer bg-light text-center py-3">
+          <small class="text-muted d-block mb-2">Butuh bantuan? Hubungi kami melalui:</small>
           <a href="https://wa.me/6287779511667?text=Halo%20saya%20ingin%20bertanya%20tentang%20COBIT2019"
              target="_blank"
-             class="btn btn-sm btn-success px-4 shadow-sm">
-            <i class="fab fa-whatsapp me-2"></i>WhatsApp
+             class="btn btn-success px-4">
+            <i class="fab fa-whatsapp me-2"></i>WhatsApp Support
           </a>
         </div>
       </div>
     </div>
 
-    <!-- Calendar Card -->
-    <div class="col-md-4">
-      <div class="card shadow-lg border-0 rounded-3 h-100 overflow-hidden">
-        <!-- Header Card -->
-        <div class="card-header bg-primary text-white text-center py-3">
-          <h5 class="mb-0 fw-semibold">{{ __('Kalender') }}</h5>
+    <!-- Sidebar -->
+    <div class="col-lg-4">
+      <!-- Jam & Tanggal Card -->
+      <div class="card shadow-lg border-0 rounded-3 mb-4">
+        <div class="card-header bg-primary text-white py-3">
+          <h5 class="mb-0 fw-semibold">Jam & Tanggal</h5>
         </div>
-
-        <!-- Body Card -->
-        <div class="card-body p-4">
-          <div class="text-center mb-4">
-            <div class="datetime-container bg-primary bg-opacity-10 p-3 rounded-3 border border-primary border-opacity-25">
-              <div class="h3 mb-2 text-primary fw-bold" id="current-time"></div>
-              <div class="text-primary mb-1" id="current-date"></div>
-              <div class="text-uppercase text-primary fw-semibold" id="current-day"></div>
-            </div>
+        <div class="card-body p-4 text-center">
+          <div class="datetime-container bg-light p-3 rounded-3 border">
+            <div class="display-4 fw-bold text-primary mb-0" id="current-time"></div>
+            <div class="h5 text-secondary mb-1" id="current-day"></div>
+            <div class="text-muted" id="current-date"></div>
           </div>
-          <div id="calendar" class="border-primary border-opacity-25 rounded-3"></div>
         </div>
       </div>
+
+      {{-- Tindakan: hanya ditampilkan untuk admin atau pic --}}
+      @if(in_array(Auth::user()->role, ['admin','pic']))
+        <div class="card shadow-lg border-0 rounded-3 mb-4">
+          <div class="card-header bg-primary text-white py-3">
+            <h5 class="mb-0 fw-semibold">Admin</h5>
+          </div>
+          <div class="card-body text-center">
+            <div class="d-grid gap-3">
+              <a href="{{ route('admin.assessments.index') }}"
+               class="btn btn-light btn-lg w-100 shadow-sm">
+              <i class="fas fa-tachometer-alt me-1"></i> Dashboard
+              </a>
+
+              @if(Auth::user()->role === 'admin')
+              <a href="{{ route('admin.users.index') }}"
+                 class="btn btn-success btn-lg w-100 shadow-sm">
+                <i class="fas fa-users me-1"></i> Manage Users
+              </a>
+              @endif
+            </div>
+          </div>
+        </div>
+      @endif
     </div>
   </div>
 </div>
 
 <!-- Styles -->
 <style>
-   /* Style tombol agar tetap putih saat hover */
-   a.btn-outline-primary:hover {
-        background-color: #fff !important;
-        color: inherit !important;
-        border-color: inherit !important;
-    }
-    /* Style lainnya... */
-    .shadow-primary-lg {
-      box-shadow: 0 0.5rem 1.5rem rgba(var(--bs-primary-rgb), 0.2) !important;
-    }
-    
-  /* Shadow */
-  .shadow-primary-lg {
-    box-shadow: 0 0.5rem 1.5rem rgba(var(--bs-primary-rgb), 0.2) !important;
+  :root {
+    --primary-light: rgba(13, 110, 253, 0.1);
+    --secondary-light: rgba(108, 117, 125, 0.1);
+    --success-light: rgba(25, 135, 84, 0.1);
+    --info-light: rgba(13, 202, 240, 0.1);
   }
-
-  /* Calendar Container */
-  #calendar {
-    border: 1px solid rgba(var(--bs-primary-rgb), 0.2);
-    border-radius: 0.5rem;
-  }
-
-  /* Calendar Header */
-  #calendar .fc-toolbar {
-    padding: 1rem;
-  }
-
-  #calendar .fc-toolbar-title {
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--bs-primary);
-  }
-  
-  #calendar .fc-button-primary {
-    background-color: var(--bs-primary) !important;
-    border-color: var(--bs-primary) !important;
-    font-size: 0.9rem;
-    padding: 0.4rem 0.8rem;
-  }
-
-  /* Calendar Body */
-  #calendar .fc-view-harness {
-    height: 300px !important;
-    overflow-y: auto !important;
-  }
-
-  #calendar .fc-scroller {
-    overflow-y: auto !important;
-  }
-
-  /* Scrollbar Styling */
-  #calendar .fc-scroller::-webkit-scrollbar {
-    width: 6px;
-  }
-
-  #calendar .fc-scroller::-webkit-scrollbar-track {
-    background: #f8f9fa;
-    border-radius: 3px;
-  }
-
-  #calendar .fc-scroller::-webkit-scrollbar-thumb {
-    background: var(--bs-primary);
-    border-radius: 3px;
-  }
-
-  /* Calendar Header Cells */
-  #calendar .fc-col-header {
-    position: sticky !important;
-    top: 0;
-    z-index: 1;
-    background: white;
-  }
-
-  #calendar .fc-col-header-cell {
-    background: var(--bs-primary) !important;
-    color: white !important;
-    padding: 0.5rem 0;
-  }
-
-  #calendar .fc-col-header-cell-cushion {
-    color: white !important;
-    text-decoration: none;
-  }
-
-  /* Calendar Days */
-  #calendar .fc-daygrid-day {
-    border: 1px solid rgba(var(--bs-primary-rgb), 0.1);
-  }
-
-  #calendar .fc-daygrid-day-number {
-    padding: 0.5rem;
-    color: var(--bs-primary);
-  }
-
-  #calendar .fc-day-today {
-    background-color: rgba(var(--bs-primary-rgb), 0.05) !important;
-  }
+  .card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+  .card.hover-lift:hover { transform: translateY(-5px); box-shadow: 0 1rem 3rem rgba(0,0,0,0.1) !important; }
+  .icon-circle { width: 70px; height: 70px; border-radius: 50%; display: flex; align-items: center; justify-content: center; }
+  .bg-primary-light { background-color: var(--primary-light); }
+  .bg-secondary-light { background-color: var(--secondary-light); }
+  .bg-info-light { background-color: var(--info-light); }
+  .bg-success-light { background-color: var(--success-light); }
+  .bg-warning-light { background-color: #fff3cd; }
+  .bg-danger-light { background-color: #f8d7da; }
+  .datetime-container { background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); }
 </style>
 
-<!-- Include FullCalendar CSS and JS -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css">
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/locales/id.min.js"></script>
-
-<!-- Initialize FullCalendar and Current Time -->
+<!-- Scripts -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
   document.addEventListener('DOMContentLoaded', function() {
-    // Update Current Time, Date, and Day
+    // Update time setiap detik
     function updateTime() {
       const now = new Date();
-      const timeString = now.toLocaleTimeString('id-ID');
-      const dateString = now.toLocaleDateString('id-ID');
-      const dayString = now.toLocaleDateString('id-ID', { weekday: 'long' });
-      document.getElementById('current-time').textContent = timeString;
-      document.getElementById('current-date').textContent = dateString;
-      document.getElementById('current-day').textContent = dayString;
+      document.getElementById('current-time').textContent =
+        now.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+      document.getElementById('current-date').textContent =
+        now.toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+      document.getElementById('current-day').textContent =
+        now.toLocaleDateString('id-ID', { weekday: 'long' });
     }
     setInterval(updateTime, 1000);
     updateTime();
 
-    // Initialize FullCalendar
-    const calendarEl = document.getElementById('calendar');
-    const calendar = new FullCalendar.Calendar(calendarEl, {
-      initialView: 'dayGridMonth',
-      locale: 'id',
-      headerToolbar: {
-        left: 'prev,next today',
-        center: 'title',
-        right: ''
-      },
-    });
-    calendar.render();
+    // SweetAlert2 untuk tombol Assessment
+    const assessBtn = document.getElementById('assessment-btn');
+    if (assessBtn) {
+      assessBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        Swal.fire({
+          icon: 'warning',
+          title: 'Under Construction!',
+          text: 'Fitur ini sedang dalam pengembangan 💻🔧',
+          confirmButtonText: 'OK'
+        });
+      });
+    }
   });
 </script>
 @endsection

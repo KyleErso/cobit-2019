@@ -144,57 +144,98 @@ Route::post('/step4/store', [Step4Controller::class, 'store'])
 // Routes untuk Design Factors
 
 // DF1
-Route::get('/df1/form/{id}', [DfController::class, 'showDesignFactorForm'])->name('df1.form')->middleware('auth');
-Route::post('/df1/store', [DfController::class, 'store'])->name('df1.store')->middleware('auth');
-Route::get('/df1/output/{id}', [DfController::class, 'showOutput'])->name('df1.output')->middleware('auth');
+Route::get('/df1/form/{id}', [DfController::class, 'showDesignFactorForm'])
+    ->name('df1.form')->middleware(['auth', 'jabatan.df:1']);
+Route::post('/df1/store', [DfController::class, 'store'])
+    ->name('df1.store')->middleware(['auth', 'jabatan.df:1']);
+Route::get('/df1/output/{id}', [DfController::class, 'showOutput'])
+    ->name('df1.output')->middleware(['auth', 'jabatan.df:1']);
 
 // DF2
-Route::get('/df2/form/{id}', [Df2Controller::class, 'showDesignFactor2Form'])->name('df2.form')->middleware('auth');
-Route::post('/df2/store', [Df2Controller::class, 'store'])->name('df2.store')->middleware('auth');
-Route::get('/df2/output/{id}', [Df2Controller::class, 'showOutput'])->name('df2.output')->middleware('auth');
+Route::get('/df2/form/{id}', [Df2Controller::class, 'showDesignFactor2Form'])
+    ->name('df2.form')->middleware(['auth', 'jabatan.df:2']);
+Route::post('/df2/store', [Df2Controller::class, 'store'])
+    ->name('df2.store')->middleware(['auth', 'jabatan.df:2']);
+Route::get('/df2/output/{id}', [Df2Controller::class, 'showOutput'])
+    ->name('df2.output')->middleware(['auth', 'jabatan.df:2']);
 
 // DF3
-Route::get('/df3/form/{id}', [Df3Controller::class, 'showDesignFactor3Form'])->name('df3.form')->middleware('auth');
-Route::post('/df3/store', [Df3Controller::class, 'store'])->name('df3.store')->middleware('auth');
-Route::get('/df3/output/{id}', [Df3Controller::class, 'showOutput'])->name('df3.output')->middleware('auth');
+Route::get('/df3/form/{id}', [Df3Controller::class, 'showDesignFactor3Form'])
+    ->name('df3.form')->middleware(['auth', 'jabatan.df:3']);
+Route::post('/df3/store', [Df3Controller::class, 'store'])
+    ->name('df3.store')->middleware(['auth', 'jabatan.df:3']);
+Route::get('/df3/output/{id}', [Df3Controller::class, 'showOutput'])
+    ->name('df3.output')->middleware(['auth', 'jabatan.df:3']);
 
 // DF4
-Route::get('/df4/form/{id}', [Df4Controller::class, 'showDesignFactor4Form'])->name('df4.form')->middleware('auth');
-Route::post('/df4/store', [Df4Controller::class, 'store'])->name('df4.store')->middleware('auth');
-Route::get('/df4/output/{id}', [Df4Controller::class, 'showOutput'])->name('df4.output')->middleware('auth');
+Route::get('/df4/form/{id}', [Df4Controller::class, 'showDesignFactor4Form'])
+    ->name('df4.form')->middleware(['auth', 'jabatan.df:4']);
+Route::post('/df4/store', [Df4Controller::class, 'store'])
+    ->name('df4.store')->middleware(['auth', 'jabatan.df:4']);
+Route::get('/df4/output/{id}', [Df4Controller::class, 'showOutput'])
+    ->name('df4.output')->middleware(['auth', 'jabatan.df:4']);
 
 // DF5
-Route::get('/df5/form/{id}', [Df5Controller::class, 'showDesignFactor5Form'])->name('df5.form')->middleware('auth');
-Route::post('/df5/store', [Df5Controller::class, 'store'])->name('df5.store')->middleware('auth');
-Route::get('/df5/output/{id}', [Df5Controller::class, 'showOutput'])->name('df5.output')->middleware('auth');
+Route::get('/df5/form/{id}', [Df5Controller::class, 'showDesignFactor5Form'])
+    ->name('df5.form')->middleware(['auth', 'jabatan.df:5']);
+Route::post('/df5/store', [Df5Controller::class, 'store'])
+    ->name('df5.store')->middleware(['auth', 'jabatan.df:5']);
+Route::get('/df5/output/{id}', [Df5Controller::class, 'showOutput'])
+    ->name('df5.output')->middleware(['auth', 'jabatan.df:5']);
 
 // DF6
-Route::get('/df6/form/{id}', [Df6Controller::class, 'showDesignFactor6Form'])->name('df6.form')->middleware('auth');
-Route::post('/df6/store', [Df6Controller::class, 'store'])->name('df6.store')->middleware('auth');
-Route::get('/df6/output/{id}', [Df6Controller::class, 'showOutput'])->name('df6.output')->middleware('auth');
+Route::get('/df6/form/{id}', [Df6Controller::class, 'showDesignFactor6Form'])
+    ->name('df6.form')->middleware(['auth', 'jabatan.df:6']);
+Route::post('/df6/store', [Df6Controller::class, 'store'])
+    ->name('df6.store')->middleware(['auth', 'jabatan.df:6']);
+Route::get('/df6/output/{id}', [Df6Controller::class, 'showOutput'])
+    ->name('df6.output')->middleware(['auth', 'jabatan.df:6']);
 
 // DF7
-Route::get('/df7/form/{id}', [Df7Controller::class, 'showDesignFactor7Form'])->name('df7.form')->middleware('auth');
-Route::post('/df7/store', [Df7Controller::class, 'store'])->name('df7.store')->middleware('auth');
-Route::get('/df7/output/{id}', [Df7Controller::class, 'showOutput'])->name('df7.output')->middleware('auth');
+Route::get('/df7/form/{id}', [Df7Controller::class, 'showDesignFactor7Form'])
+    ->name('df7.form')->middleware(['auth', 'jabatan.df:7']);
+Route::post('/df7/store', [Df7Controller::class, 'store'])
+    ->name('df7.store')->middleware(['auth', 'jabatan.df:7']);
+Route::get('/df7/output/{id}', [Df7Controller::class, 'showOutput'])
+    ->name('df7.output')->middleware(['auth', 'jabatan.df:7']);
 
 // DF8
-Route::get('/df8/form/{id}', [Df8Controller::class, 'showDesignFactor8Form'])->name('df8.form')->middleware('auth');
-Route::post('/df8/store', [Df8Controller::class, 'store'])->name('df8.store')->middleware('auth');
-Route::get('/df8/output/{id}', [Df8Controller::class, 'showOutput'])->name('df8.output')->middleware('auth');
+Route::get('/df8/form/{id}', [Df8Controller::class, 'showDesignFactor8Form'])
+    ->name('df8.form')->middleware(['auth', 'jabatan.df:8']);
+Route::post('/df8/store', [Df8Controller::class, 'store'])
+    ->name('df8.store')->middleware(['auth', 'jabatan.df:8']);
+Route::get('/df8/output/{id}', [Df8Controller::class, 'showOutput'])
+    ->name('df8.output')->middleware(['auth', 'jabatan.df:8']);
 
 // DF9
-Route::get('/df9/form/{id}', [Df9Controller::class, 'showDesignFactor9Form'])->name('df9.form')->middleware('auth');
-Route::post('/df9/store', [Df9Controller::class, 'store'])->name('df9.store')->middleware('auth');
-Route::get('/df9/output/{id}', [Df9Controller::class, 'showOutput'])->name('df9.output')->middleware('auth');
+Route::get('/df9/form/{id}', [Df9Controller::class, 'showDesignFactor9Form'])
+    ->name('df9.form')->middleware(['auth', 'jabatan.df:9']);
+Route::post('/df9/store', [Df9Controller::class, 'store'])
+    ->name('df9.store')->middleware(['auth', 'jabatan.df:9']);
+Route::get('/df9/output/{id}', [Df9Controller::class, 'showOutput'])
+    ->name('df9.output')->middleware(['auth', 'jabatan.df:9']);
 
 // DF10
-Route::get('/df10/form/{id}', [Df10Controller::class, 'showDesignFactor10Form'])->name('df10.form')->middleware('auth');
-Route::post('/df10/store', [Df10Controller::class, 'store'])->name('df10.store')->middleware('auth');
-Route::get('/df10/output/{id}', [Df10Controller::class, 'showOutput'])->name('df10.output')->middleware('auth');
+Route::get('/df10/form/{id}', [Df10Controller::class, 'showDesignFactor10Form'])
+    ->name('df10.form')->middleware(['auth', 'jabatan.df:10']);
+Route::post('/df10/store', [Df10Controller::class, 'store'])
+    ->name('df10.store')->middleware(['auth', 'jabatan.df:10']);
+Route::get('/df10/output/{id}', [Df10Controller::class, 'showOutput'])
+    ->name('df10.output')->middleware(['auth', 'jabatan.df:10']);
+
+// Route untuk toggle akses DF middleware
+Route::get('/akses-df/toggle', function () {
+    $current = session('jabatan_df_middleware_enabled', true);
+    session(['jabatan_df_middleware_enabled' => !$current]);
+    return back();
+})->name('akses-df.toggle');
 
 // Assessment Evaluation routes
-Route::get('/assessment-eval', [AssessmentEvalController::class, 'listAssessments'])
+Route::get('/assessment-eval', [AssessmentEvalController::class, 'index'])
+     ->name('assessment-eval.index')
+     ->middleware('auth');
+
+Route::get('/assessment-eval/list', [AssessmentEvalController::class, 'listAssessments'])
      ->name('assessment-eval.list')
      ->middleware('auth');
 

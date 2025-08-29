@@ -22,9 +22,6 @@
                         <button type="button" class="btn btn-light btn-sm" id="save-assessment" title="Save Assessment">
                             <i class="fas fa-save me-1"></i>Save
                         </button>
-                        <button type="button" class="btn btn-light btn-sm" id="load-assessment" title="Load Assessment">
-                            <i class="fas fa-sync me-1"></i>Reload
-                        </button>
                     </div>
                 </div>
             </div>
