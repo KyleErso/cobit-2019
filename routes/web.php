@@ -230,9 +230,12 @@ Route::get('/akses-df/toggle', function () {
     return back();
 })->name('akses-df.toggle');
 
-// --- Assessment Evaluation routes (resolved & merged) ---
-Route::get('/assessment-eval', [AssessmentEvalController::class, 'listAssessments'])
+// Assessment Evaluation routes
+Route::get('/assessment-eval', [AssessmentEvalController::class, 'index'])
      ->name('assessment-eval.index')
+     ->middleware('auth');
+Route::get('/assessment-eval', [AssessmentEvalController::class, 'listAssessments'])
+     ->name('assessment-eval.list')
      ->middleware('auth');
 
 Route::post('/assessment-eval/create', [AssessmentEvalController::class, 'createAssessment'])
@@ -254,4 +257,3 @@ Route::get('/assessment-eval/{evalId}/load', [AssessmentEvalController::class, '
 Route::delete('/assessment-eval/{evalId}', [AssessmentEvalController::class, 'delete'])
      ->name('assessment-eval.delete')
      ->middleware('auth');
-// --- end assessment-eval ---
