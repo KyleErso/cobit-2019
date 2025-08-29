@@ -46,9 +46,6 @@
                                     <i class="fas fa-file-alt text-primary me-2"></i>
                                     Assessment #{{ $evaluation->eval_id }}
                                 </h6>
-                                <span class="badge bg-secondary">
-                                    {{ $evaluation->activityEvaluations->count() }} activities
-                                </span>
                             </div>
                         </div>
                         <div class="card-body">
@@ -62,50 +59,63 @@
                                 </small>
                             </div>
                             
-                            @if($evaluation->activityEvaluations->count() > 0)
+                            @php
+                                $achievementCounts = $evaluation->activityEvaluations->groupBy('level_achieved')->map->count();
+                                
+                                // Get total ratable activities from the database
+                                $totalRatableActivities = \App\Models\MstActivities::count();
+                                
+                                $ratedCounts = [
+                                    'F' => $achievementCounts['F'] ?? 0,
+                                    'L' => $achievementCounts['L'] ?? 0,
+                                    'P' => $achievementCounts['P'] ?? 0,
+                                ];
+                                
+                                $totalRated = array_sum($ratedCounts);
+                                $noneCount = $totalRatableActivities - $totalRated;
+                                
+                                $percentages = [
+                                    'F' => round(($ratedCounts['F'] / $totalRatableActivities) * 100, 1),
+                                    'L' => round(($ratedCounts['L'] / $totalRatableActivities) * 100, 1),
+                                    'P' => round(($ratedCounts['P'] / $totalRatableActivities) * 100, 1),
+                                    'N' => round(($noneCount / $totalRatableActivities) * 100, 1)
+                                ];
+                            @endphp
+                            
+                            @if($totalRatableActivities > 0)
                                 <div class="progress mb-3" style="height: 6px;">
-                                    @php
-                                        $achievementCounts = $evaluation->activityEvaluations->groupBy('level_achieved')->map->count();
-                                        $total = $evaluation->activityEvaluations->count();
-                                        $percentages = [
-                                            'F' => round((($achievementCounts['F'] ?? 0) / $total) * 100, 1),
-                                            'L' => round((($achievementCounts['L'] ?? 0) / $total) * 100, 1),
-                                            'P' => round((($achievementCounts['P'] ?? 0) / $total) * 100, 1),
-                                            'N' => round((($achievementCounts['N'] ?? 0) / $total) * 100, 1)
-                                        ];
-                                    @endphp
                                     @if($percentages['F'] > 0)
                                         <div class="progress-bar bg-success" style="width: {{ $percentages['F'] }}%" 
-                                             title="Fully: {{ $achievementCounts['F'] ?? 0 }} ({{ $percentages['F'] }}%)"></div>
+                                             title="Fully: {{ $ratedCounts['F'] }} ({{ $percentages['F'] }}%)"></div>
                                     @endif
                                     @if($percentages['L'] > 0)
                                         <div class="progress-bar bg-info" style="width: {{ $percentages['L'] }}%" 
-                                             title="Largely: {{ $achievementCounts['L'] ?? 0 }} ({{ $percentages['L'] }}%)"></div>
+                                             title="Largely: {{ $ratedCounts['L'] }} ({{ $percentages['L'] }}%)"></div>
                                     @endif
                                     @if($percentages['P'] > 0)
                                         <div class="progress-bar bg-warning" style="width: {{ $percentages['P'] }}%" 
-                                             title="Partial: {{ $achievementCounts['P'] ?? 0 }} ({{ $percentages['P'] }}%)"></div>
+                                             title="Partial: {{ $ratedCounts['P'] }} ({{ $percentages['P'] }}%)"></div>
                                     @endif
                                     @if($percentages['N'] > 0)
                                         <div class="progress-bar bg-danger" style="width: {{ $percentages['N'] }}%" 
-                                             title="None: {{ $achievementCounts['N'] ?? 0 }} ({{ $percentages['N'] }}%)"></div>
+                                             title="None: {{ $noneCount }} ({{ $percentages['N'] }}%)"></div>
                                     @endif
                                 </div>
                                 <div class="d-flex justify-content-between text-center">
                                     <div>
-                                        <div class="fw-bold text-success">{{ $achievementCounts['F'] ?? 0 }}</div>
+                                        <div class="fw-bold text-success">{{ $ratedCounts['F'] }}</div>
                                         <small class="text-muted">Fully</small>
                                     </div>
                                     <div>
-                                        <div class="fw-bold text-info">{{ $achievementCounts['L'] ?? 0 }}</div>
+                                        <div class="fw-bold text-info">{{ $ratedCounts['L'] }}</div>
                                         <small class="text-muted">Largely</small>
                                     </div>
                                     <div>
-                                        <div class="fw-bold text-warning">{{ $achievementCounts['P'] ?? 0 }}</div>
+                                        <div class="fw-bold text-warning">{{ $ratedCounts['P'] }}</div>
                                         <small class="text-muted">Partial</small>
                                     </div>
                                     <div>
-                                        <div class="fw-bold text-danger">{{ $achievementCounts['N'] ?? 0 }}</div>
+                                        <div class="fw-bold text-danger">{{ $noneCount }}</div>
                                         <small class="text-muted">None</small>
                                     </div>
                                 </div>
